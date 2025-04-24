@@ -7,13 +7,13 @@ services:
       - /storage/Immich/uploads:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
     environment:
-      - DB_DATABASE_NAME=immich
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=immich123 
+      - DB_DATABASE_NAME=${DB_DATABASE_NAME:-immich}
+      - DB_USERNAME=${DB_USERNAME:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOSTNAME=database
       - REDIS_HOSTNAME=redis
       - UPLOAD_LOCATION=/storage/Immich/uploads
-      - JWT_SECRET=7f75d9074fcdbcc2a85b83160e3967de77fc6d8e2bb3edc131811033b0862c240f29936e85ffdd33a2c85b8fadb0bf23be16c6f7af371dc78a58c09a7461beb4a1bb7331c682a3da2da730b1f9b124b2a3fced0e400357c4c2772d0077ef81def374469d465c53a65edd303a2c9fb5e0ed89bccf3fc1cb924c1e19b6257034f7
+      - JWT_SECRET=${JWT_SECRET}
       - SERVER_ENDPOINT=https://photos.alimunee.com
     depends_on:
       - redis
@@ -65,14 +65,15 @@ services:
     container_name: database
     image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
     environment:
-      - POSTGRES_PASSWORD=immich123 
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=immich
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_INITDB_ARGS=--data-checksums
     volumes:
       - /storage/Immich/database:/var/lib/postgresql/data
     networks:
       - immich_internal
+      - db_network
     healthcheck:
       test: >-
         pg_isready --dbname="$${POSTGRES_DB}" --username="$${POSTGRES_USER}" || exit 1;
@@ -98,3 +99,6 @@ networks:
     external: true
   immich_internal:
     name: immich_internal
+  db_network:
+    driver: bridge
+    name: db_network

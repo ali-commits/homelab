@@ -9,11 +9,11 @@ services:
       - POSTGRES_HOST=nextcloud-db
       - POSTGRES_DB=nextcloud
       - POSTGRES_USER=nextcloud
-      - POSTGRES_PASSWORD=your_strong_db_password_here
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - REDIS_HOST=nextcloud-redis
-      - REDIS_HOST_PASSWORD=your_strong_redis_password_here
-      - NEXTCLOUD_ADMIN_USER=admin
-      - NEXTCLOUD_ADMIN_PASSWORD=your_strong_admin_password_here
+      - REDIS_HOST_PASSWORD=${REDIS_HOST_PASSWORD}
+      - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
+      - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
       - NEXTCLOUD_TRUSTED_DOMAINS=cloud.alimunee.com
       - PHP_MEMORY_LIMIT=2G
       - PHP_UPLOAD_LIMIT=16G
@@ -57,12 +57,13 @@ services:
     environment:
       - POSTGRES_DB=nextcloud
       - POSTGRES_USER=nextcloud
-      - POSTGRES_PASSWORD=your_strong_db_password_here
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - /storage/nextcloud/db:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
     networks:
       - nextcloud_internal
+      - db_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER"]
       interval: 10s
@@ -74,7 +75,7 @@ services:
     image: redis:alpine
     container_name: nextcloud-redis
     restart: unless-stopped
-    command: redis-server --requirepass your_strong_redis_password_here
+    command: redis-server --requirepass ${REDIS_HOST_PASSWORD}
     volumes:
       - /storage/nextcloud/redis:/data
       - /etc/localtime:/etc/localtime:ro
@@ -108,3 +109,6 @@ networks:
   nextcloud_internal:
     name: nextcloud_internal
     driver: bridge
+  db_network:
+    driver: bridge
+    name: db_network

@@ -6,13 +6,14 @@ services:
     container_name: authentik-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-authentik}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Authentik database password required}
-      POSTGRES_DB: ${POSTGRES_DB:-authentik}
+      POSTGRES_USER: authentik
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: authentik
     volumes:
       - authentik-db:/var/lib/postgresql/data
     networks:
-      - proxy  # Connect to your shared network
+      - proxy
+      - db_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
       interval: 10s
@@ -27,23 +28,23 @@ services:
     environment:
       AUTHENTIK_REDIS__HOST: authentik-redis
       AUTHENTIK_POSTGRESQL__HOST: authentik-postgresql
-      AUTHENTIK_POSTGRESQL__USER: ${POSTGRES_USER:-authentik}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD:?Database password required}
-      AUTHENTIK_POSTGRESQL__NAME: ${POSTGRES_DB:-authentik}
-      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?Authentik secret key required}
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD}
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
       # Authentik bootstrap (initial admin user)
-      AUTHENTIK_BOOTSTRAP_EMAIL: ${AUTHENTIK_BOOTSTRAP_EMAIL:-newaaa4@gmail.com} # CHANGE THIS!
-      AUTHENTIK_BOOTSTRAP_PASSWORD: ${AUTHENTIK_BOOTSTRAP_PASSWORD:?Initial admin password required}
-      AUTHENTIK_BOOTSTRAP_TOKEN: ${AUTHENTIK_BOOTSTRAP_TOKEN:-}  # Optional, for API access
+      AUTHENTIK_BOOTSTRAP_EMAIL: newaaa4@gmail.com
+      AUTHENTIK_BOOTSTRAP_PASSWORD: ${AUTHENTIK_BOOTSTRAP_PASSWORD}
+      AUTHENTIK_BOOTSTRAP_TOKEN:
       # Disable TLS for internal communication (Cloudflare handles TLS)
       AUTHENTIK_DISABLE_TLS: "true"
-      AUTHENTIK_OUTPOSTS__EXTERNAL_HOST: "https://auth.alimunee.com"  # Change to HTTPS since Cloudflare handles TLS
+      AUTHENTIK_OUTPOSTS__EXTERNAL_HOST: "https://auth.alimunee.com"
       AUTHENTIK_DEFAULT_REDIRECT: "https://auth.alimunee.com"
       AUTHENTIK_ERROR_REPORTING__ENABLED: "false"
       AUTHENTIK_PROXY__MODE__ENABLED: "true"
       AUTHENTIK_COOKIE__DOMAIN: "alimunee.com"
-      AUTHENTIK_PROXY__TRUSTED_PROXIES: "0.0.0.0/0"  # Trust proxies since we're behind Cloudflare
-      
+      AUTHENTIK_PROXY__TRUSTED_PROXIES: "0.0.0.0/0"
+
     volumes:
       - /storage/data/authentik/media:/media
       - authentik-certs:/certs
@@ -76,10 +77,10 @@ services:
     environment:
       AUTHENTIK_REDIS__HOST: authentik-redis
       AUTHENTIK_POSTGRESQL__HOST: authentik-postgresql
-      AUTHENTIK_POSTGRESQL__USER: ${POSTGRES_USER:-authentik}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD:?Database password required}
-      AUTHENTIK_POSTGRESQL__NAME: ${POSTGRES_DB:-authentik}
-      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?Authentik secret key required}
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD}
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
       # Disable TLS for internal communication (Cloudflare handles TLS)
       AUTHENTIK_DISABLE_TLS: "true"
     volumes:
@@ -118,3 +119,6 @@ volumes:
 networks:
   proxy:
     external: true
+  db_network:
+    driver: bridge
+    name: db_network

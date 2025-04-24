@@ -7,8 +7,8 @@ services:
     #   - "3000:3000"
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_SUPABASE_URL=https://egyftvbjozasyqkmjpmt.supabase.co
-      - NEXT_PUBLIC_SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVneWZ0dmJqb3phc3lxa21qcG10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE1OTUyNDUsImV4cCI6MjA1NzE3MTI0NX0.WjGkn48hxVepnnJRB-1PBZyTZBcnwQCjN3H9YvVfAAk
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_KEY=${NEXT_PUBLIC_SUPABASE_KEY}
     restart: unless-stopped
     networks:
       - proxy

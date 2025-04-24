@@ -4,6 +4,7 @@ services:
   jellyfin:
     image: linuxserver/jellyfin:latest
     container_name: jellyfin
+    restart: unless-stopped
     environment:
       - PUID=1000
       - PGID=1000
@@ -31,7 +32,6 @@ services:
       - 'traefik.http.routers.jellyfin.rule=Host(`tv.alimunee.com`)'
       - 'traefik.http.services.jellyfin.loadbalancer.server.port=8096'
       - 'traefik.docker.network=proxy'
-    restart: unless-stopped
     deploy:
       resources:
         limits:

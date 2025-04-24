@@ -11,46 +11,18 @@ services:
       - /storage/data/adguard/work:/opt/adguardhome/work
       - /storage/data/adguard/conf:/opt/adguardhome/conf
     ports:
-      - "53:53/tcp"   # DNS
-      - "53:53/udp"   # DNS
-      - "8989:80"
-      - "3333:3000"
+      - '53:53/tcp' # DNS
+      - '53:53/udp' # DNS
+      - '8989:80'
+      - '3333:3000'
     labels:
-      # Main router with forward auth for dynamic content
-      # - "traefik.enable=true"
-      # - "traefik.http.routers.adguard.rule=Host(`adguard.alimunee.com`)"
-      # - "traefik.http.routers.adguard.entrypoints=web"
-      # - "traefik.http.routers.adguard.middlewares=authentik-forwardauth,adguard-headers"
-      # - "traefik.http.services.adguard.loadbalancer.server.port=80"
-      # Dedicated router for static assets without forward auth
-      # - "traefik.http.routers.adguard-static.rule=Host(`adguard.alimunee.com`) && PathPrefix(`/static`)"
-      # - "traefik.http.routers.adguard-static.priority=100"
-      # - "traefik.http.routers.adguard-static.entrypoints=web"
-      # - "traefik.http.routers.adguard-static.service=adguard"
-      # # Forward auth middleware configuration
-      # - "traefik.http.middlewares.authentik-forwardauth.forwardauth.address=https://auth.alimunee.com/outpost/traefik"
-      # - "traefik.http.middlewares.authentik-forwardauth.forwardauth.trustForwardHeader=true"
-      # - "traefik.http.middlewares.adguard-headers.headers.customRequestHeaders.X-Forwarded-Proto=https"
-      
-      # ## HTTP Routers
-      # - "traefik.http.routers.adguard-rtr.rule=Host(`adguard.alimunee.com`)"
-      # ## Middlewares
-      # - "traefik.http.routers.adguard-rtr.middlewares=middlewares-authentik@file"
-
-    
-      - "traefik.enable=true"
-      - "traefik.http.routers.adguard.rule=Host(`adguard.alimunee.com`)"
-      - "traefik.http.services.adguard.loadbalancer.server.port=80"
-      - "traefik.http.middlewares.adguard-headers.headers.customRequestHeaders.X-Forwarded-Proto=https"
-      - "traefik.http.routers.adguard.middlewares=adguard-headers"
-
-      # - "traefik.http.middlewares.adguard-auth.forwardauth.address=http://authentik-server:9000/outpost.goauthentik.io/auth/traefik"
-      # - "traefik.http.middlewares.adguard-auth.forwardauth.trustForwardHeader=true"
-      # - "traefik.http.middlewares.adguard-auth.forwardauth.authResponseHeaders=X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid"
-      # # Chain the middlewares (both headers and auth)
-      # - "traefik.http.routers.adguard.middlewares=adguard-headers,adguard-auth"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.adguard.rule=Host(`adguard.alimunee.com`)'
+      - 'traefik.http.services.adguard.loadbalancer.server.port=80'
+      - 'traefik.http.middlewares.adguard-headers.headers.customRequestHeaders.X-Forwarded-Proto=https'
+      - 'traefik.http.routers.adguard.middlewares=adguard-headers'
     cap_add:
-      - NET_ADMIN  # Required for DNS server functionality
+      - NET_ADMIN # Required for DNS server functionality
 
 networks:
   proxy:
