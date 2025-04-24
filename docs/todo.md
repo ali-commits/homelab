@@ -275,14 +275,6 @@
     - [ ] Integrate with Authentik SSO
     - [x] Set up automatic library scanning
 
-  - [ ] ~~Configure Tdarr:~~
-
-    - [x] ~~Set up Tdarr Server~~
-    - [x] ~~Configure GPU access~~
-    - [ ] ~~Configure Tdarr Node~~
-    - [ ] ~~Set up transcoding workflows~~
-    - [ ] ~~Set up health checks~~
-    - [ ] ~~Configure notification alerts~~
 
   - [x] Configure qBittorrent:
 
