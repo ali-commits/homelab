@@ -1,0 +1,47 @@
+services:
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    environment:
+      # Time zone setting
+      TZ: Asia/Kuala_Lumpur
+      
+      # Update schedule - run at 4 AM daily
+      WATCHTOWER_SCHEDULE: "0 0 4 * * *"
+      
+      # Cleanup old images
+      WATCHTOWER_CLEANUP: 'true'
+      
+      # Monitor but don't update selected containers
+      WATCHTOWER_MONITOR_ONLY: "authentik-server,authentik-worker,authentik-redis,authentik-postgresql,traefik,database,redis,immich-database"
+      
+      # Notification settings - using a simpler template that works with startup notifications
+      WATCHTOWER_NOTIFICATIONS: "shoutrrr"
+      WATCHTOWER_NOTIFICATION_URL: "ntfy://ntfy.alimunee.com/watchtower"
+      WATCHTOWER_NOTIFICATION_USERNAME: "admin"
+      WATCHTOWER_NOTIFICATION_PASSWORD: "pass123"
+      WATCHTOWER_NOTIFICATION_TEMPLATE: "\n🐳 Watchtower Update\n_________________________\n\n{{range .}}📝 {{.Message}}\n\n{{end}}"      
+      # Update behavior
+      WATCHTOWER_ROLLING_RESTART: 'true'
+      WATCHTOWER_INCLUDE_STOPPED: 'false'
+      WATCHTOWER_WARN_ON_HEAD_FAILURE: 'true'
+      WATCHTOWER_NO_RESTART: 'false'
+      
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"  # Don't update itself
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  proxy:
+    external: true

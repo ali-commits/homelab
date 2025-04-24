@@ -1,0 +1,59 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: linkwarden-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: postgres
+    volumes:
+      - /storage/data/linkwarden/db:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      
+  linkwarden:
+    image: ghcr.io/linkwarden/linkwarden:latest
+    container_name: linkwarden
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://postgres:pass123@postgres:5432/postgres
+      - NEXTAUTH_SECRET=Z0DkpUlzSXGMGgiDT7uT9znM08Lcw/GZydXLY/2moYE=
+      - NEXT_PUBLIC_AUTHENTIK_ENABLED=true
+      - AUTHENTIK_CLIENT_ID=CexvhAeQ6Tk7RIlzbq1oooMN9tu7VquRFkHsLIYw
+      - AUTHENTIK_CLIENT_SECRET=hwCJ8ecCUbd5PRXjtrJg7SDL3ubtg2kNnjDlB4hgyPnAdx1Fh8sF5FPX5fclxaHmxxkDCsrdJ9DyMH6MMnjtBfORXKlw1NKjmzoFeE5LDShm2vxUTlTZTPrxan7gz9lX
+      - AUTHENTIK_CONFIG_URL=https://auth.alimunee.com/application/o/linkwarden/.well-known/openid-configuration
+      - NEXTAUTH_DEBUG=true
+      - DISABLE_REGISTRATION=false
+      - NEXTAUTH_BASE_PATH=/api/auth  # Add this line
+    volumes:
+      - /storage/data/linkwarden/data:/data/data
+    networks:
+      - proxy
+      - internal
+    depends_on:
+      postgres:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.linkwarden.rule=Host(`links.alimunee.com`)"
+      - "traefik.http.services.linkwarden.loadbalancer.server.port=3000"
+      - "traefik.docker.network=proxy"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '2'
+        reservations:
+          memory: 256M
+networks:
+  proxy:
+    external: true
+  internal:
+    name: linkwarden_internal

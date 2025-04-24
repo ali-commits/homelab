@@ -1,0 +1,110 @@
+version: '3.8'
+
+services:
+  nextcloud:
+    image: nextcloud:latest
+    container_name: nextcloud
+    restart: unless-stopped
+    environment:
+      - POSTGRES_HOST=nextcloud-db
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=your_strong_db_password_here
+      - REDIS_HOST=nextcloud-redis
+      - REDIS_HOST_PASSWORD=your_strong_redis_password_here
+      - NEXTCLOUD_ADMIN_USER=admin
+      - NEXTCLOUD_ADMIN_PASSWORD=your_strong_admin_password_here
+      - NEXTCLOUD_TRUSTED_DOMAINS=cloud.alimunee.com
+      - PHP_MEMORY_LIMIT=2G
+      - PHP_UPLOAD_LIMIT=16G
+      - APACHE_DISABLE_REWRITE_IP=1
+      - TRUSTED_PROXIES=172.0.0.0/8
+    volumes:
+      - /storage/nextcloud/data:/var/www/html/data
+      - /storage/nextcloud/config:/var/www/html/config
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - proxy
+      - nextcloud_internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud.rule=Host(`cloud.alimunee.com`)"
+      - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.middlewares.nextcloud-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.nextcloud-headers.headers.customrequestheaders.X-Forwarded-Host=cloud.alimunee.com"
+      - "traefik.http.middlewares.nextcloud-secure.headers.stsSeconds=15552000"
+      - "traefik.http.middlewares.nextcloud-secure.headers.stsIncludeSubdomains=true"
+      - "traefik.http.middlewares.nextcloud-secure.headers.stsPreload=true"
+      - "traefik.http.middlewares.nextcloud-secure.headers.contentTypeNosniff=true"
+      - "traefik.http.middlewares.nextcloud-secure.headers.browserXssFilter=true"
+      - "traefik.http.middlewares.nextcloud-secure.headers.customFrameOptionsValue=SAMEORIGIN"
+      - "traefik.http.routers.nextcloud.middlewares=nextcloud-secure,nextcloud-headers"
+    depends_on:
+      - nextcloud-db
+      - nextcloud-redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/status.php"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  nextcloud-db:
+    image: postgres:16-alpine
+    container_name: nextcloud-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=your_strong_db_password_here
+    volumes:
+      - /storage/nextcloud/db:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - nextcloud_internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  nextcloud-redis:
+    image: redis:alpine
+    container_name: nextcloud-redis
+    restart: unless-stopped
+    command: redis-server --requirepass your_strong_redis_password_here
+    volumes:
+      - /storage/nextcloud/redis:/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - nextcloud_internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  nextcloud-cron:
+    image: nextcloud:latest
+    container_name: nextcloud-cron
+    restart: unless-stopped
+    volumes:
+      - /storage/nextcloud/data:/var/www/html/data
+      - /storage/nextcloud/config:/var/www/html/config
+      - /etc/localtime:/etc/localtime:ro
+    entrypoint: /cron.sh
+    networks:
+      - nextcloud_internal
+    depends_on:
+      - nextcloud
+      - nextcloud-db
+      - nextcloud-redis
+
+networks:
+  proxy:
+    external: true
+  nextcloud_internal:
+    name: nextcloud_internal
+    driver: bridge

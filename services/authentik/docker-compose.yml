@@ -1,0 +1,120 @@
+version: '3.8'
+
+services:
+  authentik-postgresql:
+    image: postgres:16-alpine
+    container_name: authentik-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-authentik}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Authentik database password required}
+      POSTGRES_DB: ${POSTGRES_DB:-authentik}
+    volumes:
+      - authentik-db:/var/lib/postgresql/data
+    networks:
+      - proxy  # Connect to your shared network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  authentik-server:
+    image: ghcr.io/goauthentik/server:2025.2
+    container_name: authentik-server
+    restart: unless-stopped
+    command: server
+    environment:
+      AUTHENTIK_REDIS__HOST: authentik-redis
+      AUTHENTIK_POSTGRESQL__HOST: authentik-postgresql
+      AUTHENTIK_POSTGRESQL__USER: ${POSTGRES_USER:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD:?Database password required}
+      AUTHENTIK_POSTGRESQL__NAME: ${POSTGRES_DB:-authentik}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?Authentik secret key required}
+      # Authentik bootstrap (initial admin user)
+      AUTHENTIK_BOOTSTRAP_EMAIL: ${AUTHENTIK_BOOTSTRAP_EMAIL:-newaaa4@gmail.com} # CHANGE THIS!
+      AUTHENTIK_BOOTSTRAP_PASSWORD: ${AUTHENTIK_BOOTSTRAP_PASSWORD:?Initial admin password required}
+      AUTHENTIK_BOOTSTRAP_TOKEN: ${AUTHENTIK_BOOTSTRAP_TOKEN:-}  # Optional, for API access
+      # Disable TLS for internal communication (Cloudflare handles TLS)
+      AUTHENTIK_DISABLE_TLS: "true"
+      AUTHENTIK_OUTPOSTS__EXTERNAL_HOST: "https://auth.alimunee.com"  # Change to HTTPS since Cloudflare handles TLS
+      AUTHENTIK_DEFAULT_REDIRECT: "https://auth.alimunee.com"
+      AUTHENTIK_ERROR_REPORTING__ENABLED: "false"
+      AUTHENTIK_PROXY__MODE__ENABLED: "true"
+      AUTHENTIK_COOKIE__DOMAIN: "alimunee.com"
+      AUTHENTIK_PROXY__TRUSTED_PROXIES: "0.0.0.0/0"  # Trust proxies since we're behind Cloudflare
+      
+    volumes:
+      - /storage/data/authentik/media:/media
+      - authentik-certs:/certs
+    ports:
+      - "9999:9000" # Exposing this is OK because Traefik handles routing
+      - "389:389"
+      - "636:636"
+    networks:
+      - proxy
+    depends_on:
+      authentik-postgresql:
+        condition: service_healthy
+      authentik-redis:
+        condition: service_healthy
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.authentik.rule=Host(`auth.alimunee.com`)"
+      - "traefik.http.services.authentik.loadbalancer.server.port=9000"
+      - "traefik.http.middlewares.authentik-headers.headers.customRequestHeaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.authentik-headers.headers.customRequestHeaders.X-Forwarded-Host=auth.alimunee.com"
+      - "traefik.http.routers.authentik.middlewares=authentik-headers"
+      - "traefik.docker.network=proxy"
+
+  authentik-worker:
+    image: ghcr.io/goauthentik/server:2025.2
+    container_name: authentik-worker
+    restart: unless-stopped
+    command: worker
+    environment:
+      AUTHENTIK_REDIS__HOST: authentik-redis
+      AUTHENTIK_POSTGRESQL__HOST: authentik-postgresql
+      AUTHENTIK_POSTGRESQL__USER: ${POSTGRES_USER:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD:?Database password required}
+      AUTHENTIK_POSTGRESQL__NAME: ${POSTGRES_DB:-authentik}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?Authentik secret key required}
+      # Disable TLS for internal communication (Cloudflare handles TLS)
+      AUTHENTIK_DISABLE_TLS: "true"
+    volumes:
+      - /storage/data/authentik/media:/media\
+      - /var/run/docker.sock:/var/run/docker.sock
+      - authentik-certs:/certs
+    networks:
+      - proxy
+    depends_on:
+      - authentik-postgresql
+      - authentik-redis
+
+  authentik-redis:
+    image: redis:alpine
+    container_name: authentik-redis
+    restart: unless-stopped
+    networks:
+      - proxy
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - authentik-redis:/data
+
+
+volumes:
+  authentik-db:
+    driver: local
+  authentik-redis:
+    driver: local
+  authentik-certs:  #  Not strictly necessary since we're using HTTP, but good practice
+    driver: local
+
+networks:
+  proxy:
+    external: true

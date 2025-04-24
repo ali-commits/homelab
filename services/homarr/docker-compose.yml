@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  homarr:
+    image: ghcr.io/ajnart/homarr:latest
+    container_name: homarr
+    restart: unless-stopped
+    volumes:
+      - /storage/data/homarr:/app/data  # Persistent configuration
+      - /var/run/docker.sock:/var/run/docker.sock # Optional, for Docker integration
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homarr.rule=Host(`alimunee.com`)"
+      - "traefik.http.routers.homarr.entrypoints=web" # Use the 'web' entrypoint (Cloudflare handles HTTPS)
+      - "traefik.http.services.homarr.loadbalancer.server.port=7575"
+      - "traefik.docker.network=proxy"
+
+      # Authentik Integration (Optional, but HIGHLY RECOMMENDED)
+      # - "traefik.http.routers.homarr.middlewares=authentik@docker"
+
+      # If NOT using Authentik, you could use basic auth (less secure):
+      # - "traefik.http.middlewares.homarr-auth.basicauth.users=admin:$$apr1$$YOUR_HASHED_PASSWORD"  # Replace with a generated htpasswd
+      # - "traefik.http.routers.homarr.middlewares=homarr-auth"
+    ports:
+      - "7575:7575"
+
+networks:
+  proxy:
+    external: true
