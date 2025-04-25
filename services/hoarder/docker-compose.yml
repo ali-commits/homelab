@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  karakeep:
+    image: ghcr.io/karakeep-app/karakeep:latest
+    container_name: karakeep
+    restart: unless-stopped
+    env_file: .env # Use .env file for environment variables
+    volumes:
+      - /storage/data/karakeep:/data
+    networks:
+      - proxy
+      - karakeep_internal
+    depends_on:
+      - meilisearch
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.karakeep.rule=Host(`bookmarks.alimunee.com`)'
+      - 'traefik.http.services.karakeep.loadbalancer.server.port=3000'
+      - 'traefik.docker.network=proxy'
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: karakeep-meilisearch
+    restart: unless-stopped
+    env_file: .env # Use .env file for environment variables
+    environment:
+      # Secrets are now in .env
+      # - MEILI_MASTER_KEY=
+      # Non-secret vars can stay or move to .env
+      - MEILI_NO_ANALYTICS=true
+      - MEILI_ENV=production
+    volumes:
+      - /storage/data/karakeep-meilisearch:/data.ms
+    networks:
+      - karakeep_internal
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+
+networks:
+  proxy:
+    external: true
+  karakeep_internal:
+    driver: bridge
+    internal: true

@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  joplin:
+    image: joplin/server:latest
+    container_name: joplin
+    restart: unless-stopped
+    env_file: .env # Use .env file for environment variables
+    environment:
+      # Secrets are now in .env
+      # - POSTGRES_PASSWORD=
+      # - MAILER_AUTH_PASSWORD=
+      # Non-secret vars can stay or move to .env
+      - APP_PORT=22300
+      - DB_CLIENT=pg
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=joplin-db
+      # Email is optional - uncomment and configure if needed in .env
+      # - MAILER_ENABLED=1
+      # - MAILER_HOST=
+      # - MAILER_PORT=
+      # - MAILER_SECURITY=
+      # - MAILER_AUTH_USER=
+      # - MAILER_NOREPLY_NAME=
+      # - MAILER_NOREPLY_EMAIL=
+    volumes:
+      - /storage/data/joplin:/data
+    networks:
+      - proxy
+      - joplin_internal
+    depends_on:
+      - joplin-db
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.joplin.rule=Host(`joplin.alimunee.com`)'
+      - 'traefik.http.services.joplin.loadbalancer.server.port=22300'
+      - 'traefik.docker.network=proxy'
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+
+  joplin-db:
+    image: postgres:15-alpine
+    container_name: joplin-db
+    restart: unless-stopped
+    env_file: .env # Use .env file for environment variables
+    environment:
+      # Use variables from .env
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+    volumes:
+      - /storage/data/joplin-db:/var/lib/postgresql/data
+    networks:
+      - joplin_internal
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+
+networks:
+  proxy:
+    external: true
+  joplin_internal:
+    driver: bridge
+    internal: true

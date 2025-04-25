@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  stirling-pdf:
+    image: frooodle/s-pdf:latest
+    container_name: stirling-pdf
+    restart: unless-stopped
+    env_file: .env # Use .env file for environment variables
+    environment:
+      # Secrets are now in .env
+      # - SECURITY_PASSWORD=
+      # Non-secret vars can stay or move to .env
+      - ENABLE_SECURITY=false # Change to true if authentication is needed
+      - DEFAULT_PDF_SAVE_LOCATION=/app/storage
+      - DOCKER_ENABLE_SECURITY=false
+    volumes:
+      - /storage/data/stirling-pdf/config:/configs
+      - /storage/data/stirling-pdf/storage:/app/storage
+    networks:
+      - proxy
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.stirling-pdf.rule=Host(`pdf.alimunee.com`)'
+      - 'traefik.http.services.stirling-pdf.loadbalancer.server.port=8080'
+      - 'traefik.docker.network=proxy'
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+
+networks:
+  proxy:
+    external: true

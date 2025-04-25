@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  lobe-chat:
+    image: lobehub/lobe-chat:latest
+    container_name: lobe-chat
+    restart: unless-stopped
+    env_file: .env # Use .env file for environment variables
+    environment:
+      # Secrets are now in .env
+      # - ACCESS_CODE=
+      # - OPENAI_API_KEY=
+      # - AZURE_API_KEY=
+      # - ZHIPU_API_KEY=
+      # - GOOGLE_API_KEY=
+      # - MOONSHOT_API_KEY=
+      # - MISTRAL_API_KEY=
+      # - ANTHROPIC_API_KEY=
+      # - PERPLEXITY_API_KEY=
+      # - GROQ_API_KEY=
+      # - OPENROUTER_API_KEY=
+      # - ZEROONE_API_KEY=
+      # - TOGETHERAI_API_KEY=
+      # Non-secret vars can stay or move to .env
+      # - OPENAI_PROXY_URL=
+      # - AZURE_API_VERSION=
+      # - AZURE_ENDPOINT=
+      # - OLLAMA_PROXY_URL=
+    volumes:
+      - /storage/data/lobe-chat:/data
+    networks:
+      - proxy
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.lobe-chat.rule=Host(`chat.alimunee.com`)'
+      - 'traefik.http.services.lobe-chat.loadbalancer.server.port=3210'
+      - 'traefik.docker.network=proxy'
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+
+networks:
+  proxy:
+    external: true

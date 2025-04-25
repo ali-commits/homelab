@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  scrutiny:
+    image: linuxserver/scrutiny:latest
+    container_name: scrutiny
+    restart: unless-stopped
+    env_file: .env # Use .env file for environment variables
+    environment:
+      # Non-secret vars can stay or move to .env
+      - SCRUTINY_API_ENDPOINT=http://localhost:8080
+      - SCRUTINY_WEB=true
+      - SCRUTINY_COLLECTOR=true
+    volumes:
+      - /storage/data/scrutiny:/config
+      - /run/udev:/run/udev:ro
+      # Necessary for SMART disk access
+      - /dev/disk:/dev/disk
+    cap_add:
+      - SYS_RAWIO # Required for accessing disk SMART data
+    devices:
+      - /dev/sda:/dev/sda # Adjust these to match your actual disks
+      - /dev/sdb:/dev/sdb
+      - /dev/sdc:/dev/sdc
+    networks:
+      - proxy
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.scrutiny.rule=Host(`disks.alimunee.com`)'
+      - 'traefik.http.services.scrutiny.loadbalancer.server.port=8080'
+      - 'traefik.docker.network=proxy'
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 128M
+
+networks:
+  proxy:
+    external: true

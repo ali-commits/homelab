@@ -36,29 +36,45 @@ This document details the Docker infrastructure setup powering our homelab envir
 
 ## Service Reference
 
-| Service                                       | Port Mappings    | Networks          | Domain                    | Purpose                            | Documentation                                   |
-| --------------------------------------------- | ---------------- | ----------------- | ------------------------- | ---------------------------------- | ----------------------------------------------- |
-| [adguard](../services/adguard/docker-compose.yml) | 53 (TCP/UDP), 8989, 3333 | proxy             | adguard.alimunee.com      | DNS and ad blocking                | [Link](../services/adguard/documentation.md)       |
-| [authentik](../services/authentik/docker-compose.yml) | 9999             | proxy, db_network | auth.alimunee.com         | Authentication service             | [Link](../services/authentik/documentation.md)     |
-| [bazarr](../services/bazarr/docker-compose.yml) | 6767             | proxy             | bazarr.alimunee.com       | Subtitle management                | [Link](../services/bazarr/documentation.md)        |
-| [cloudflared](../services/cloudflared/docker-compose.yml) | None             | proxy             | N/A (Cloudflare Tunnel)   | Cloudflare Tunnel                  | [Link](../services/cloudflared/documentation.md)   |
-| [flaresolverr](../services/flaresolverr/docker-compose.yml) | 8191             | proxy             | flaresolverr.alimunee.com | Cloudflare bypass service          | [Link](../services/flaresolverr/documentation.md)  |
-| [homarr](../services/homarr/docker-compose.yml) | 7575             | proxy             | alimunee.com              | Dashboard                          | [Link](../services/homarr/documentation.md)        |
-| [immich](../services/immich/docker-compose.yml) | 2283             | proxy, immich_internal | photos.alimunee.com       | Photo management system            | [Link](../services/immich/documentation.md)        |
-| [jellyfin](../services/jellyfin/docker-compose.yml) | 8096             | proxy             | tv.alimunee.com           | Media streaming service            | [Link](../services/jellyfin/documentation.md)      |
-| [jellyseerr](../services/jellyseerr/docker-compose.yml) | 5055             | proxy             | request.alimunee.com      | Media request management           | [Link](../services/jellyseerr/documentation.md)    |
-| [kuma](../services/kuma/docker-compose.yml)         | 3001             | proxy             | uptime.alimunee.com       | Monitoring and status page         | [Link](../services/kuma/documentation.md)          |
-| [linkwarden](../services/linkwarden/)         | 3000             | proxy, linkwarden_internal | links.alimunee.com        | Bookmark & link manager            | [Link](../services/linkwarden/documentation.md)    |
-| [nextcloud](../services/nextcloud/docker-compose.yml) | 80               | proxy, nextcloud_internal | cloud.alimunee.com        | File storage & collaboration       | [Link](../services/nextcloud/documentation.md)     |
-| [ntfy](../services/ntfy/docker-compose.yml)         | 8888             | proxy             | ntfy.alimunee.com         | Notification service               | [Link](../services/ntfy/documentation.md)          |
-| [ourstory](../services/ourstory/docker-compose.yml) | None             | proxy             | story.alimunee.com        | Platform for sharing stories       | [Link](../services/ourstory/documentation.md)      |
-| [portainer](../services/portainer/)    | 8000, 9443       | proxy             | portainer.alimunee.com    | Container management               | [Link](../services/portainer/documentation.md)     |
-| [prowlarr](../services/prowlarr/docker-compose.yml) | 9696             | proxy             | prowlarr.alimunee.com     | Indexer management                 | [Link](../services/prowlarr/documentation.md)      |
-| [qbit](../services/qbit/docker-compose.yml)         | 8088, 6881       | proxy             | qbit.alimunee.com         | Download client                    | [Link](../services/qbit/documentation.md)          |
-| [radarr](../services/radarr/docker-compose.yml) | 7878             | proxy             | radarr.alimunee.com       | Movie collection manager           | [Link](../services/radarr/documentation.md)        |
-| [sonarr](../services/sonarr/docker-compose.yml) | 8989             | proxy             | sonarr.alimunee.com       | TV shows collection manager        | [Link](../services/sonarr/documentation.md)        |
-| [traefik](../services/traefik/docker-compose.yml) | 80, 443, 8080    | proxy             | traefik.alimunee.com      | Edge router and reverse proxy      | [Link](../services/traefik/documentation.md)       |
-| [watchtower](../services/watchtower/docker-compose.yml) | None             | proxy             | N/A                       | Automated container updates        | [Link](../services/watchtower/documentation.md)    |
+| Service                                                               | Port Mappings            | Networks                   | Domain                    | Purpose                          | Documentation                                          |
+| --------------------------------------------------------------------- | ------------------------ | -------------------------- | ------------------------- | -------------------------------- | ------------------------------------------------------ |
+| [adguard](../services/adguard/docker-compose.yml)                     | 53 (TCP/UDP), 8989, 3333 | proxy                      | adguard.alimunee.com      | DNS and ad blocking              | [Link](../services/adguard/documentation.md)           |
+| [AFFiNE](../services/AFFiNE/docker-compose.yml)                       | 3000                     | proxy                      | notes.alimunee.com        | Knowledge base (Notion/Miro alt) | [Link](../services/AFFiNE/documentation.md)            |
+| [authentik](../services/authentik/docker-compose.yml)                 | 9999                     | proxy, db_network          | auth.alimunee.com         | Authentication service           | [Link](../services/authentik/documentation.md)         |
+| [bazarr](../services/bazarr/docker-compose.yml)                       | 6767                     | proxy                      | bazarr.alimunee.com       | Subtitle management              | [Link](../services/bazarr/documentation.md)            |
+| [chartdb-chartdb](../services/chartdb-chartdb/docker-compose.yml)     | 3000                     | proxy                      | dbdiagram.alimunee.com    | Database diagramming editor      | [Link](../services/chartdb-chartdb/documentation.md)   |
+| [cloudflared](../services/cloudflared/docker-compose.yml)             | None                     | proxy                      | N/A (Cloudflare Tunnel)   | Cloudflare Tunnel                | [Link](../services/cloudflared/documentation.md)       |
+| [convertx](../services/convertx/docker-compose.yml)                   | 3000                     | proxy                      | convert.alimunee.com      | Online file converter            | [Link](../services/convertx/documentation.md)          |
+| [dozzle](../services/dozzle/docker-compose.yml)                       | 8080                     | proxy                      | logs.alimunee.com         | Docker log viewer                | [Link](../services/dozzle/documentation.md)            |
+| [draw.io](../services/draw.io/docker-compose.yml)                     | 8080                     | proxy                      | diagram.alimunee.com      | Diagramming tool                 | [Link](../services/draw.io/documentation.md)           |
+| [excalidraw](../services/excalidraw/docker-compose.yml)               | 80                       | proxy                      | draw.alimunee.com         | Collaborative whiteboard         | [Link](../services/excalidraw/documentation.md)        |
+| [firefly-iii](../services/firefly-iii/docker-compose.yml)             | 8080                     | proxy, firefly_internal    | finance.alimunee.com      | Personal finance manager         | [Link](../services/firefly-iii/documentation.md)       |
+| [flaresolverr](../services/flaresolverr/docker-compose.yml)           | 8191                     | proxy                      | flaresolverr.alimunee.com | Cloudflare bypass service        | [Link](../services/flaresolverr/documentation.md)      |
+| [hoarder (Karakeep)](../services/hoarder/docker-compose.yml)          | 3000                     | proxy, karakeep_internal   | bookmarks.alimunee.com    | Bookmark manager (AI tagging)    | [Link](../services/hoarder/documentation.md)           |
+| [homarr](../services/homarr/docker-compose.yml)                       | 7575                     | proxy                      | alimunee.com              | Dashboard                        | [Link](../services/homarr/documentation.md)            |
+| [immich](../services/immich/docker-compose.yml)                       | 2283                     | proxy, immich_internal     | photos.alimunee.com       | Photo management system          | [Link](../services/immich/documentation.md)            |
+| [it-tools](../services/it-tools/docker-compose.yml)                   | 80                       | proxy                      | tools.alimunee.com        | Developer/IT online tools        | [Link](../services/it-tools/documentation.md)          |
+| [jellyfin](../services/jellyfin/docker-compose.yml)                   | 8096                     | proxy                      | tv.alimunee.com           | Media streaming service          | [Link](../services/jellyfin/documentation.md)          |
+| [jellyseerr](../services/jellyseerr/docker-compose.yml)               | 5055                     | proxy                      | request.alimunee.com      | Media request management         | [Link](../services/jellyseerr/documentation.md)        |
+| [joplin](../services/joplin/docker-compose.yml)                       | 22300                    | proxy, joplin_internal     | joplin.alimunee.com       | Note-taking sync server          | [Link](../services/joplin/documentation.md)            |
+| [khoj-ai-khoj](../services/khoj-ai-khoj/docker-compose.yml)           | 8000                     | proxy                      | khoj.alimunee.com         | Personal AI assistant            | [Link](../services/khoj-ai-khoj/documentation.md)      |
+| [kuma](../services/kuma/docker-compose.yml)                           | 3001                     | proxy                      | uptime.alimunee.com       | Monitoring and status page       | [Link](../services/kuma/documentation.md)              |
+| [linkwarden](../services/linkwarden/)                                 | 3000                     | proxy, linkwarden_internal | links.alimunee.com        | Bookmark & link manager          | [Link](../services/linkwarden/documentation.md)        |
+| [lobehub-lobe-chat](../services/lobehub-lobe-chat/docker-compose.yml) | 3210                     | proxy                      | chat.alimunee.com         | AI chat framework                | [Link](../services/lobehub-lobe-chat/documentation.md) |
+| [n8n-io-n8n](../services/n8n-io-n8n/docker-compose.yml)               | 5678                     | proxy                      | automate.alimunee.com     | Workflow automation              | [Link](../services/n8n-io-n8n/documentation.md)        |
+| [nextcloud](../services/nextcloud/docker-compose.yml)                 | 80                       | proxy, nextcloud_internal  | cloud.alimunee.com        | File storage & collaboration     | [Link](../services/nextcloud/documentation.md)         |
+| [ntfy](../services/ntfy/docker-compose.yml)                           | 8888                     | proxy                      | ntfy.alimunee.com         | Notification service             | [Link](../services/ntfy/documentation.md)              |
+| [ourstory](../services/ourstory/docker-compose.yml)                   | None                     | proxy                      | story.alimunee.com        | Platform for sharing stories     | [Link](../services/ourstory/documentation.md)          |
+| [paperless-ngx](../services/paperless-ngx/docker-compose.yml)         | 8000                     | proxy, paperless_internal  | docs.alimunee.com         | Document management system       | [Link](../services/paperless-ngx/documentation.md)     |
+| [prowlarr](../services/prowlarr/docker-compose.yml)                   | 9696                     | proxy                      | prowlarr.alimunee.com     | Indexer management               | [Link](../services/prowlarr/documentation.md)          |
+| [qbit](../services/qbit/docker-compose.yml)                           | 8088, 6881               | proxy                      | qbit.alimunee.com         | Download client                  | [Link](../services/qbit/documentation.md)              |
+| [radarr](../services/radarr/docker-compose.yml)                       | 7878                     | proxy                      | radarr.alimunee.com       | Movie collection manager         | [Link](../services/radarr/documentation.md)            |
+| [scrutiny](../services/scrutiny/docker-compose.yml)                   | 8080                     | proxy                      | hdd.alimunee.com          | Hard drive health monitoring     | [Link](../services/scrutiny/documentation.md)          |
+| [sonarr](../services/sonarr/docker-compose.yml)                       | 8989                     | proxy                      | sonarr.alimunee.com       | TV shows collection manager      | [Link](../services/sonarr/documentation.md)            |
+| [stirling-pdf](../services/stirling-pdf/docker-compose.yml)           | 8080                     | proxy                      | pdf.alimunee.com          | PDF manipulation tool            | [Link](../services/stirling-pdf/documentation.md)      |
+| [traefik](../services/traefik/docker-compose.yml)                     | 80, 443, 8080            | proxy                      | traefik.alimunee.com      | Edge router and reverse proxy    | [Link](../services/traefik/documentation.md)           |
+| [vaultwarden](../services/vaultwarden/docker-compose.yml)             | 80, 3012                 | proxy                      | vault.alimunee.com        | Password manager                 | [Link](../services/vaultwarden/documentation.md)       |
+| [watchtower](../services/watchtower/docker-compose.yml)               | None                     | proxy                      | N/A                       | Automated container updates      | [Link](../services/watchtower/documentation.md)        |
 
 ## File Structure
 
@@ -70,19 +86,44 @@ This document details the Docker infrastructure setup powering our homelab envir
 |   |-- uploads
 |-- data
 |   |-- adguard
+|   |-- affine
 |   |-- authentik
 |   |-- bazarr
+|   |-- chartdb
+|   |-- convertx
+|   |-- firefly-iii
+|   |   |-- db
+|   |   `-- upload
 |   |-- jellyfin
 |   |-- jellyseerr
+|   |-- joplin
+|   |-- joplin-db
+|   |-- karakeep
+|   |-- karakeep-meilisearch
+|   |-- khoj
+|   |-- lobe-chat
+|   |-- n8n
 |   |-- ntfy
+|   |-- paperless
+|   |   |-- consume
+|   |   |-- data
+|   |   |-- db
+|   |   |-- export
+|   |   `-- media
 |   |-- portainer
 |   |-- prowlarr
 |   |-- qbittorrent
 |   |-- radarr
+|   |-- scrutiny
 |   |-- sonarr
+|   |-- stirling-pdf
+|   |   |-- config
+|   |   `-- storage
 |   |-- tdarr
 |   |-- traefik
-|   `-- uptime-kuma
+|   |-- uptime-kuma
+|   `-- vaultwarden
+|       `-- data
 |-- media
 |   |-- anime
 |   |-- download
@@ -192,7 +233,6 @@ e963823c489e   proxy      bridge    local
 DRIVER    VOLUME NAME
 local     portainer_data
 ```
-
 
 **Performance Optimizations**:
 
@@ -346,3 +386,4 @@ docker stats --no-stream
 
 # Disk usage alerts
 docker system df -v | grep "Size:"
+```

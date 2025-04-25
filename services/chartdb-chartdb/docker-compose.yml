@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  chartdb:
+    image: ghcr.io/chartdb/chartdb:latest
+    container_name: chartdb
+    restart: unless-stopped
+    env_file: .env # Use .env file for environment variables
+    environment:
+      # Secrets are now in .env
+      # - OPENAI_API_KEY=
+    volumes:
+      # Although likely stateless, map a volume in case config is stored
+      - /storage/data/chartdb:/data
+    networks:
+      - proxy
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.chartdb.rule=Host(`dbdiagram.alimunee.com`)'
+      # Default port seems to be 3000 based on similar apps
+      - 'traefik.http.services.chartdb.loadbalancer.server.port=3000'
+      - 'traefik.docker.network=proxy'
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+networks:
+  proxy:
+    external: true

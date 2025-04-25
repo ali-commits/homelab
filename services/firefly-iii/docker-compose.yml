@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  firefly-iii:
+    image: fireflyiii/core:latest
+    container_name: firefly-iii
+    restart: unless-stopped
+    env_file: .env # Use .env file for environment variables
+    environment:
+      # Secrets are now in .env
+      # - APP_KEY=
+      # - DB_PASSWORD=
+      # Non-secret vars can stay or move to .env
+      - DB_CONNECTION=pgsql
+      - DB_HOST=firefly-db
+      - DB_PORT=5432
+      - TRUSTED_PROXIES=**
+      # Optional: Site owner email for registration (can be in .env)
+      # - SITE_OWNER=
+    volumes:
+      - /storage/data/firefly-iii/upload:/var/www/html/storage/upload
+    networks:
+      - proxy
+      - firefly_internal
+    depends_on:
+      - firefly-db
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.firefly-iii.rule=Host(`finance.alimunee.com`)'
+      - 'traefik.http.services.firefly-iii.loadbalancer.server.port=8080'
+      - 'traefik.docker.network=proxy'
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+
+  firefly-db:
+    image: postgres:15-alpine
+    container_name: firefly-db
+    restart: unless-stopped
+    env_file: .env # Use .env file for environment variables
+    environment:
+      # Use variables from .env
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - /storage/data/firefly-iii/db:/var/lib/postgresql/data
+    networks:
+      - firefly_internal
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+
+networks:
+  proxy:
+    external: true
+  firefly_internal:
+    driver: bridge
+    internal: true
