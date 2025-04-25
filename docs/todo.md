@@ -162,8 +162,6 @@
 - [ ] Plan service rollout order
 - [ ] Configure container resource limits
 - [ ] Container management tools setup
-- [x] Network configuration for containers
-- [x] Set up portainer
 <!-- - [ ] Set up CasaOS?
 - [ ] Set up Casmos Cloud? -->
 
@@ -173,7 +171,6 @@
 - [x] Deploy core infrastructure (reverse proxy, monitoring):
 
   - [x] Set up Traefik reverse proxy:
-
     - [x] Configure Docker integration
     - [x] Set up HTTP endpoints
     - [x] Configure dashboard access
@@ -182,7 +179,6 @@
     - [ ] Set up middleware chains
 
   - [x] Set up Cloudflared:
-
     - [x] Configure tunnel connection
     - [x] Set up tunnel token
     - [x] Set up DNS routing
@@ -190,16 +186,7 @@
     - [x] Configure automatic restart
     - [x] Set no-autoupdate flag
 
-  - [x] Deploy Portainer:
-
-    - [x] Configure persistent storage
-    - [x] Set up reverse proxy access
-    - [x] Enable container management
-    - [x] Integrate with authentik for SSO
-    - [ ] Configure backup strategy
-
   - [x] Set up Authentik:
-
     - [x] Configure PostgreSQL backend
     - [x] Set up Redis cache
     - [x] Configure persistent storage
@@ -212,7 +199,6 @@
     - [ ] Set up login with security key (mobile)
 
   - [ ] Set up AdGuard Home:
-
     - [x] Configure Docker container with persistent storage
     - [ ] Set up DNS over HTTPS (DoH) upstream servers
     - [x] Configure DNS blacklists and whitelists
@@ -223,7 +209,6 @@
     - [x] Document DNS configuration for local network (setup each device)
 
   - [x] Set up NTFY:
-
     - [x] Configure Docker container
     - [x] Set up persistent storage
     - [ ] Configure authentication
@@ -235,7 +220,6 @@
     - [x] setup ntfy for system status monitoring (reboot, update, snapshot)
 
   - [x] Set up Uptime Kuma: (needs to add more endpoints)
-
     - [x] Configure Docker container
     - [x] Set up persistent storage
     - [x] Configure monitoring endpoints
@@ -247,7 +231,6 @@
     - [x] Set up authentication
 
   - [ ] Deploy Watchtower:
-
     - [x] Configure Docker container
     - [x] Set up update schedule (24 hours)
     - [x] Configure container inclusions/exclusions
@@ -262,7 +245,6 @@
 - [ ] Deploy Media Server Stack:
 
   - [x] Set up Jellyfin:
-
     - [x] Configure Docker container
     - [x] Set up media directories
     - [x] Configure hardware transcoding
@@ -275,16 +257,13 @@
     - [ ] Integrate with Authentik SSO
     - [x] Set up automatic library scanning
 
-
   - [x] Configure qBittorrent:
-
     - [x] Set up container
     - [x] change password
     - [x] Configure bandwidth limits
     - [ ] Configure authentication
 
   - [ ] Deploy \*Arr Stack:
-
     - [x] Set up Radarr for movies
     - [x] Set up Sonarr for TV shows
     - [x] Configure Prowlarr for indexers
@@ -297,7 +276,6 @@
     - [x] Implement automated library organization
 
     - [x] Media Storage Configuration:
-
       - [x] Plan directory structure
       - [x] Set up permissions
       - [x] Configure shared mounts
@@ -311,208 +289,258 @@
       - [x] Implement SSO authentication
       - [x] Set up monitoring
 
-  - [x] Deploy File Storage Stack:
+- [x] Deploy File Storage Stack:
 
-    - [x] Set up Nextcloud:
+  - [x] Set up Nextcloud:
+    - [x] Configure Docker container
+    - [x] Set up persistent storage
+    - [x] Configure database backend
+    - [x] Set up admin account
+    - [x] Configure reverse proxy
+    - [x] Integrate with Authentik SSO
+    - [x] Set up automatic updates
+    - [x] Configure backup strategy
 
-      - [x] Configure Docker container
-      - [x] Set up persistent storage
-      - [x] Configure database backend
-      - [x] Set up admin account
-      - [x] Configure reverse proxy
-      - [x] Integrate with Authentik SSO
-      - [x] Set up automatic updates
-      - [x] Configure backup strategy
+  - [x] Deploy Immich:
+    - [x] Configure Docker container
+    - [x] Set up storage volumes
+    - [x] Configure database
+    - [x] Set up machine learning
+    - [x] Configure backup strategy
+    - [x] Set up photo import automation
+    - [x] Configure face recognition
+    - [x] Set up mobile app sync
+    - [x] integrate with Authentik SSO (OAuth)
 
-    - [x] Deploy Immich:
-      - [x] Configure Docker container
-      - [x] Set up storage volumes
-      - [x] Configure database
-      - [x] Set up machine learning
-      - [x] Configure backup strategy
-      - [x] Set up photo import automation
-      - [x] Configure face recognition
-      - [x] Set up mobile app sync
-      - [x] integrate with Authentik SSO (OAuth)
+- [ ] Deploy Document Management Stack:
 
-  - [ ] Deploy Document Management Stack:
+  - [ ] Set up Paperless-ngx:
+    - [ ] Configure container and storage
+    - [ ] Set up OCR processing
+    - [ ] Configure document categories
+    - [ ] Set up backup strategy
+    - [ ] Configure notifications
+    - [ ] Set up automated filing rules
 
-    - [ ] Set up Paperless-ngx:
+  - [ ] Deploy Vaultwarden:
+    - [ ] Configure container setup
+    - [ ] Set up persistent storage
+    - [ ] Configure SSL/TLS
+    - [ ] Set up backup strategy
+    - [ ] Configure emergency access
+    - [ ] Set up SSO integration
+    - [ ] Configure email notifications
 
-      - [ ] Configure container and storage
-      - [ ] Set up OCR processing
-      - [ ] Configure document categories
-      - [ ] Set up backup strategy
-      - [ ] Configure notifications
-      - [ ] Set up automated filing rules
+  - [ ] Deploy AFFiNE:
+    - [ ] Configure Docker container
+    - [ ] Set up persistent storage
+    - [ ] Configure authentication
+    - [ ] Set up backup strategy
+    - [ ] Integrate with Authentik SSO
 
-    - [ ] Deploy Vaultwarden:
+- [ ] Deploy IT Tools Stack:
 
-      - [ ] Configure container setup
-      - [ ] Set up persistent storage
-      - [ ] Configure SSL/TLS
-      - [ ] Set up backup strategy
-      - [ ] Configure emergency access
-      - [ ] Set up SSO integration
-      - [ ] Configure email notifications
+  - [x] Set up Linkwarden:
+    - [x] Configure Docker container
+    - [x] Set up bookmark storage
+    - [ ] Configure authentication
+    - [ ] Configure tag management
+    - [ ] Set up collections
+    - [ ] Organize bookmarks by category
+    - [ ] Configure browser extension
+    - [ ] Set up automatic backups
+    - [x] Intgrate with Authentik SSO (not working yet)
 
-    - [ ] Deploy AFFiNE:
-      - [ ] Configure Docker container
-      - [ ] Set up persistent storage
-      - [ ] Configure authentication
-      - [ ] Set up backup strategy
-      - [ ] Integrate with Authentik SSO
+  - [ ] Set up Scrutiny:
+    - [ ] Configure Docker container
+    - [ ] Configure SMART monitoring
+    - [ ] Set up alert notifications
+    - [ ] Configure disk health checks
+    - [ ] Set up dashboard access
 
-  - [ ] Deploy IT Tools Stack:
+  - [ ] Set up IT-Tools:
+    - [ ] Configure Docker container
+    - [ ] Set up required modules
+    - [ ] Configure access control
+    - [ ] Set up backup strategy
 
-    - [x] Set up Linkwarden:
+  - [ ] Set up Stirling-PDF:
+    - [ ] Configure Docker container
+    - [ ] Set up processing options
+    - [ ] Configure storage
+    - [ ] Set up backup strategy
 
-      - [x] Configure Docker container
-      - [x] Set up bookmark storage
-      - [ ] Configure authentication
-      - [ ] Configure tag management
-      - [ ] Set up collections
-      - [ ] Organize bookmarks by category
-      - [ ] Configure browser extension
-      - [ ] Set up automatic backups
-      - [x] Intgrate with Authentik SSO (not working yet)
+  - [ ] Set up ConvertX:
+    - [ ] Configure Docker container
+    - [ ] Set up media conversion options
+    - [ ] Configure storage volumes
+    - [ ] Set up resource limits
+    - [ ] Integrate with Authentik SSO
+    - [ ] Set up backup strategy
 
-    - [ ] Deploy Scrutiny:
+  - [ ] Set up Excalidraw:
+    - [ ] Configure Docker container
+    - [ ] Set up persistent storage
+    - [ ] Set up authentication
+    - [ ] Configure sharing features
+    - [ ] Integrate with Authentik SSO
+    - [ ] Set up backup strategy
 
-      - [ ] Set up Docker container
-      - [ ] Configure SMART monitoring
-      - [ ] Set up alert notifications
-      - [ ] Configure disk health checks
-      - [ ] Set up dashboard access
+  - [ ] Set up Draw.io:
+    - [ ] Configure Docker container
+    - [ ] Set up persistent storage
+    - [ ] Configure authentication
+    - [ ] Set up custom libraries
+    - [ ] Integrate with Authentik SSO
+    - [ ] Set up backup strategy
 
-    - [ ] Set up IT-Tools:
+  - [ ] Set up Dozzle:
+    - [ ] Configure Docker container
+    - [ ] Set up access controls
+    - [ ] Configure log retention
+    - [ ] Set up filtering rules
+    - [ ] Integrate with Authentik SSO
+    - [ ] Configure notification alerts
 
-      - [ ] Configure Docker container
-      - [ ] Set up required modules
-      - [ ] Configure access control
-      - [ ] Set up backup strategy
+  - [ ] Set up Hoarder:
+    - [ ] Configure Docker container
+    - [ ] Set up persistent storage
+    - [ ] Configure collection categories
+    - [ ] Set up indexing
+    - [ ] Configure search functionality
+    - [ ] Integrate with Authentik SSO
+    - [ ] Set up backup strategy
 
-    - [ ] Deploy Stirling-PDF:
-      - [ ] Configure Docker container
-      - [ ] Set up processing options
-      - [ ] Configure storage
-      - [ ] Set up backup strategy
-    - [ ] Deploy ConvertX:
-      - [ ] Configure Docker container
-      - [ ] Set up media conversion options
-      - [ ] Configure storage volumes
-      - [ ] Set up resource limits
-      - [ ] Integrate with Authentik SSO
-      - [ ] Configure backup strategy
-    - [ ] Deploy Excalidraw:
-      - [ ] Configure Docker container
-      - [ ] Set up persistent storage
-      - [ ] Set up authentication
-      - [ ] Configure sharing features
-      - [ ] Integrate with Authentik SSO
-      - [ ] Set up backup strategy
-    - [ ] Deploy Draw.io:
-      - [ ] Configure Docker container
-      - [ ] Set up persistent storage
-      - [ ] Configure authentication
-      - [ ] Set up custom libraries
-      - [ ] Integrate with Authentik SSO
-      - [ ] Set up backup strategy
-    - [ ] Deploy Dozzle:
-      - [ ] Configure Docker container
-      - [ ] Set up access controls
-      - [ ] Configure log retention
-      - [ ] Set up filtering rules
-      - [ ] Integrate with Authentik SSO
-      - [ ] Configure notification alerts
-    - [ ] Deploy Hoarder:
-      - [ ] Configure Docker container
-      - [ ] Set up persistent storage
-      - [ ] Configure collection categories
-      - [ ] Set up indexing
-      - [ ] Configure search functionality
-      - [ ] Integrate with Authentik SSO
-      - [ ] Set up backup strategy
-    - [ ] Set up Joplin:
+  - [ ] Set up Joplin:
+    - [ ] Configure Docker container
+    - [ ] Set up sync server
+    - [ ] Configure storage
+    - [ ] Set up backup strategy
+    - [ ] Configure authentication
+    - [ ] Integrate with Authentik SSO
 
-      - [ ] Configure Docker container
-      - [ ] Set up sync server
-      - [ ] Configure storage
-      - [ ] Set up backup strategy
-      - [ ] Configure authentication
-      - [ ] Integrate with Authentik SSO
+  - [ ] Set up Khoj:
+    - [ ] Configure Docker container
+    - [ ] Set up persistent storage
+    - [ ] Configure authentication
+    - [ ] Set up backup strategy
+    - [ ] Integrate with Authentik SSO
+    - [ ] Configure scaling options (on-device vs cloud)
 
-    - [ ] Deploy Khoj:
-      - [ ] Configure Docker container
-      - [ ] Set up persistent storage
-      - [ ] Configure authentication
-      - [ ] Set up backup strategy
-      - [ ] Integrate with Authentik SSO
-      - [ ] Configure scaling options (on-device vs cloud)
+  - [x] Deploy ntfy:
+    - [x] Configure Docker container
+    - [x] Set up notification topics
+    - [x] Configure authentication
+    - [ ] Set up retention policies
+    - [ ] Configure authentication with Authentik
 
-    - [x] Deploy ntfy:
-      - [x] Configure Docker container
-      - [x] Set up notification topics
-      - [x] Configure authentication
-      - [ ] Set up retention policies
-      - [ ] Configure authentication with Authentik
+- [x] Deploy Network Management Stack:
 
-  - [x] Deploy Network Management Stack:
+  - [x] Set up AdGuard Home:
+    - [x] Configure Docker container
+    - [x] Set up DNS filtering
+    - [x] Set up statistics collection
 
-    - [x] Set up AdGuard Home:
+  - [x] Deploy Cloudflare Tunnel:
+    - [x] Set up tunnel configuration
+    - [x] Configure DNS routing
 
-      - [x] Configure Docker container
-      - [x] Set up DNS filtering
-      - [x] Set up statistics collection
+- [ ] Deploy Monitoring Stack:
 
-    - [x] Deploy Cloudflare Tunnel:
+  - [x] Set up Uptime Kuma:
+    - [x] Configure Docker container
+    - [x] Set up persistent storage
+    - [x] Configure monitoring endpoints
+    - [x] Set up status page
+    - [x] Configure notification channels
+    - [x] Integrate with NTFY
+    - [x] Configure healthcheck
+    - [x] Set up no-new-privileges security
+    - [x] Set up authentication
 
-      - [x] Set up tunnel configuration
-      - [x] Configure DNS routing
+  - [ ] Deploy Prometheus + Grafana:
+    - [ ] Configure Prometheus
+    - [ ] Set up data retention
+    - [ ] Configure alert rules
+    - [ ] Set up Grafana dashboards
 
-  - [ ] Deploy Monitoring Stack:
+- [ ] Deploy Dashboard:
 
-    - [x] Set up Uptime Kuma:
+  - [x] Set up Homarr:
+    - [x] Configure Docker container
+    - [ ] Set up service integration
+    - [ ] Configure widgets
+    - [ ] Set up user preferences
 
-      - [x] Configure endpoints
-      - [x] Set up notifications
-      - [x] Configure status pages
+- [ ] Deploy Remote Access:
 
-    - [ ] Deploy Prometheus + Grafana:
-      - [ ] Configure Prometheus
-      - [ ] Set up data retention
-      - [ ] Configure alert rules
-      - [ ] Set up Grafana dashboards
+  - [ ] Set up RustDesk:
+    - [ ] Configure relay server
+    - [ ] Set up authentication
+    - [ ] Configure access controls
+    - [ ] Set up monitoring
 
-  - [ ] Deploy Dashboard:
+- [ ] Deploy Financial Management Stack:
+  - [ ] Set up Firefly III:
+    - [ ] Configure Docker container
+    - [ ] Set up persistent storage
+    - [ ] Configure database backend
+    - [ ] Set up admin account
+    - [ ] Configure categories and budgets
+    - [ ] Set up initial accounts
+    - [ ] Configure automatic import
+    - [ ] Integrate with Authentik SSO
+    - [ ] Set up backup strategy
+    - [ ] Configure recurring transactions
+    - [ ] Set up rules for transaction categorization
 
-    - [x] Set up Homarr:
-      - [x] Configure Docker container
-      - [ ] Set up service integration
-      - [ ] Configure widgets
-      - [ ] Set up user preferences
+- [ ] Deploy Database Tools Stack:
+  - [ ] Set up drawdb-io/drawdb:
+    - [ ] Configure Docker container (if using Docker)
+    - [ ] Access to database connections (for reverse engineering)
+    - [ ] Web browser for UI access
+  - [ ] Set up chartdb/chartdb:
+    - [ ] Configure Docker container (if using Docker)
+    - [ ] Access to database connections
+    - [ ] Web browser for UI access
+    - [ ] OpenAI API key (for AI features)
 
-  - [ ] Deploy Remote Access:
+- [ ] Deploy Development & Deployment Tools Stack:
+  - [ ] Set up KOMODO:
+    - [ ] Docker on target servers
+    - [ ] SSH access to target servers (implied for deployment)
+    - [ ] Suitable environment for building and deploying
 
-    - [ ] Set up RustDesk:
-      - [ ] Configure relay server
-      - [ ] Set up authentication
-      - [ ] Configure access controls
-      - [ ] Set up monitoring
+- [ ] Deploy AI Services Stack:
+  - [ ] Set up kortix-ai/suna:
+    - [ ] Configure Docker container
+    - [ ] Persistent storage for data and configuration
+    - [ ] Significant resources (CPU, RAM, storage) for LLMs and operations
+    - [ ] Setup for integrations (browser, file system, command line, APIs)
+  - [ ] Set up lobehub/lobe-chat:
+    - [ ] Configure Docker container
+    - [ ] OpenAI API key (or other AI provider keys)
+    - [ ] Persistent storage for configuration and data
+    - [ ] Web browser for access
+    - [ ] Optional: Database
+  - [ ] Set up wandb/openui:
+    - [ ] Configure Docker container
+    - [ ] LLM provider (supported via LiteLLM)
+    - [ ] Persistent storage for configuration and data
+    - [ ] Web browser for access
 
-  - [ ] Deploy Financial Management Stack:
-    - [ ] Set up Firefly III:
-      - [ ] Configure Docker container
-      - [ ] Set up persistent storage
-      - [ ] Configure database backend
-      - [ ] Set up admin account
-      - [ ] Configure categories and budgets
-      - [ ] Set up initial accounts
-      - [ ] Configure automatic import
-      - [ ] Integrate with Authentik SSO
-      - [ ] Set up backup strategy
-      - [ ] Configure recurring transactions
-      - [ ] Set up rules for transaction categorization
+- [ ] Deploy Automation Stack:
+  - [ ] Set up n8n-io/n8n:
+    - [ ] Configure Docker container
+    - [ ] Persistent storage for data and configuration
+    - [ ] Web browser for access
+    - [ ] Optional: Database, Redis
+
+- [ ] Deploy Cloud Storage Stack:
+  - [ ] Set up DioCrafts/OxiCloud:
+    - [ ] Suitable environment to run a Rust application or Docker (if image becomes available)
+    - [ ] Persistent storage for file data
+    - [ ] Web browser for access (implied for a file storage solution)
 
 ## Documentation
 

@@ -2,3 +2,26 @@
 .vscode/
 *.code-workspace
 .env
+.pnpm
+# Docker
+Dockerfile
+docker-compose.yml
+docker-compose.override.yml
+.docker/
+*.dockerfile
+.dockerignore
+
+# Docker volumes
+docker-volumes/
+volumes/
+
+# Docker environment variables
+.env.docker
+docker.env
+
+# Docker logs
+docker-logs/
+*.log
+
+# Docker build context
+.buildx/
