@@ -1,0 +1,66 @@
+# Homelab fail2ban configuration
+# Custom settings for Fedora 42 Server with firewalld integration
+
+[DEFAULT]
+# Ban time: start with 10 minutes, increase with repeat offenders
+bantime = 10m
+bantime.increment = true
+bantime.maxtime = 24h
+bantime.factor = 2
+
+# Find time window (10 minutes)
+findtime = 10m
+
+# Max retries before ban
+maxretry = 3
+
+# Email notifications (configure if desired)
+#destemail = your-email@domain.com
+#sendername = Fail2Ban-Homelab
+#mta = sendmail
+
+# Use firewalld for banning (already configured via 00-firewalld.conf)
+
+# Ignore local networks (adjust for your network)
+ignoreip = 127.0.0.1/8 ::1 192.168.1.0/24
+
+[sshd]
+enabled = true
+port = ssh
+filter = sshd
+logpath = /var/log/secure
+maxretry = 3
+bantime = 1h
+findtime = 10m
+# Use aggressive mode for better SSH protection
+mode = aggressive
+
+[sshd-ddos]
+enabled = true
+port = ssh
+filter = sshd[mode=ddos]
+logpath = /var/log/secure
+maxretry = 2
+bantime = 2h
+findtime = 5m
+
+# HTTP-related protections (for future web services)
+[nginx-http-auth]
+enabled = false
+port = http,https
+logpath = /var/log/nginx/error.log
+
+[nginx-limit-req]
+enabled = false
+port = http,https
+logpath = /var/log/nginx/error.log
+
+[apache-auth]
+enabled = false
+port = http,https
+logpath = /var/log/httpd/error_log
+
+[apache-badbots]
+enabled = false
+port = http,https
+logpath = /var/log/httpd/access_log

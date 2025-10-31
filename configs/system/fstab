@@ -1,0 +1,27 @@
+#
+# /etc/fstab
+# Created by anaconda on Thu Jul 31 08:33:21 2025
+# Updated for Fedora 42 homelab with Threadripper system
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk/'.
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info.
+#
+# After editing this file, run 'systemctl daemon-reload' to update systemd
+# units generated from this file.
+#
+
+# NVMe System Drive (1TB) - Btrfs subvolumes
+UUID=cfe839e4-9e04-499f-afab-d4a502232a7a /                       btrfs   subvol=@,compress=zstd:1 0 0
+UUID=A4BC-D787          /boot/efi               vfat    umask=0077,shortname=winnt 0 2
+UUID=cfe839e4-9e04-499f-afab-d4a502232a7a /storage/data           btrfs   subvol=@data,compress=zstd:1 0 0
+UUID=cfe839e4-9e04-499f-afab-d4a502232a7a /tmp                    btrfs   subvol=@tmp,compress=zstd:1 0 0
+UUID=cfe839e4-9e04-499f-afab-d4a502232a7a /var                    btrfs   subvol=@var,compress=zstd:1 0 0
+UUID=cfe839e4-9e04-499f-afab-d4a502232a7a /var/cache              btrfs   subvol=@cache,compress=zstd:1 0 0
+UUID=cfe839e4-9e04-499f-afab-d4a502232a7a /var/lib/docker         btrfs   subvol=@docker,compress=zstd:1 0 0
+UUID=cfe839e4-9e04-499f-afab-d4a502232a7a /var/logs               btrfs   subvol=@logs,compress=zstd:1 0 0
+
+# HDD Storage Drive (3.6TB) - Btrfs subvolumes
+UUID=b57a5e4e-4648-40bf-916c-4e17b958d47e /storage/media          btrfs   defaults,noatime,compress=zstd:3,space_cache=v2,subvol=@media     0       0
+UUID=b57a5e4e-4648-40bf-916c-4e17b958d47e /storage/Immich         btrfs   defaults,noatime,compress=zstd:3,space_cache=v2,subvol=@immich    0       0
+UUID=b57a5e4e-4648-40bf-916c-4e17b958d47e /storage/nextcloud      btrfs   defaults,noatime,compress=zstd:3,space_cache=v2,subvol=@nextcloud 0       0
+UUID=b57a5e4e-4648-40bf-916c-4e17b958d47e /storage/shared         btrfs   defaults,noatime,compress=zstd:3,space_cache=v2,subvol=@shared    0       0

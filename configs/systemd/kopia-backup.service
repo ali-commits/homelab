@@ -1,0 +1,15 @@
+[Unit]
+Description=Kopia Backup Service
+After=network-online.target
+Wants=kopia-backup.timer
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/default/kopia-backup
+ExecStart=/usr/local/bin/kopia-backup.sh
+User=root
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

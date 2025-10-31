@@ -1,0 +1,27 @@
+services:
+  dockge:
+    image: louislam/dockge:1
+    container_name: dockge
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /storage/data/dockge:/app/data
+      - /HOMELAB/services:/opt/stacks
+      - /usr/bin/docker:/usr/bin/docker:ro # Docker CLI
+      - /usr/libexec/docker/cli-plugins:/usr/libexec/docker/cli-plugins:ro # Docker compose plugin
+    environment:
+      - DOCKGE_STACKS_DIR=/opt/stacks
+      - DOCKGE_ENABLE_CONSOLE=true
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.dockge.rule=Host(`dockge.alimunee.com`)
+      - traefik.http.services.dockge.loadbalancer.server.port=5001
+      - traefik.docker.network=proxy
+      # Zitadel SSO integration (commented out until configured)
+      # - "traefik.http.routers.dockge.middlewares=Zitadel@docker"
+
+networks:
+  proxy:
+    external: true

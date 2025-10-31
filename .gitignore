@@ -1,0 +1,11 @@
+# Ignore Visual Studio Code files
+.vscode/
+*.code-workspace
+.env
+.pnpm
+
+# Ignore sensitive configuration files
+configs/defaults/*
+
+calligraphy-compare*
+.github

@@ -1,0 +1,143 @@
+services:
+  firefly-iii:
+    image: fireflyiii/core:latest
+    container_name: firefly_iii
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=firefly-iii-db
+      - DB_PORT=3306
+      - DB_CONNECTION=mysql
+      - DB_DATABASE=firefly
+      - DB_USERNAME=firefly
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=firefly-iii-redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - REDIS_CACHE_DB=1
+      - APP_URL=https://budget.alimunee.com
+      - TRUSTED_PROXIES=172.0.0.0/8
+      - TZ=Asia/Kuala_Lumpur
+    volumes:
+      - /storage/data/firefly-iii/upload:/var/www/html/storage/upload
+      - /storage/data/firefly-iii/export:/var/www/html/storage/export
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - proxy
+      - firefly_internal
+      - mail_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.firefly-iii.rule=Host(`budget.alimunee.com`)"
+      - "traefik.http.services.firefly-iii.loadbalancer.server.port=8080"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.middlewares.firefly-secure.headers.stsSeconds=15552000"
+      - "traefik.http.middlewares.firefly-secure.headers.stsIncludeSubdomains=true"
+      - "traefik.http.middlewares.firefly-secure.headers.contentTypeNosniff=true"
+      - "traefik.http.middlewares.firefly-secure.headers.browserXssFilter=true"
+      - "traefik.http.routers.firefly-iii.middlewares=firefly-secure"
+      - "watchtower.enable=true"
+    depends_on:
+      firefly-iii-db:
+        condition: service_healthy
+      firefly-iii-redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 256M
+
+  firefly-iii-db:
+    image: mariadb:lts
+    container_name: firefly_iii_db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=firefly
+      - MYSQL_USER=firefly
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MARIADB_AUTO_UPGRADE=1
+      - MARIADB_DISABLE_UPGRADE_BACKUP=1
+    volumes:
+      - /storage/data/firefly-iii/db:/var/lib/mysql
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - firefly_internal
+      - db_network
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --max_connections=200
+      --innodb_buffer_pool_size=256M
+      --innodb_log_file_size=64M
+      --innodb_flush_log_at_trx_commit=2
+      --innodb_flush_method=O_DIRECT
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  firefly-iii-redis:
+    image: redis:alpine
+    container_name: firefly_iii_redis
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD}
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+    volumes:
+      - /storage/data/firefly-iii/redis:/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - firefly_internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "--pass", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  firefly-iii-cron:
+    image: alpine
+    container_name: firefly_iii_cron
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - TZ=Asia/Kuala_Lumpur
+    command: sh -c "
+      apk add --no-cache tzdata wget &&
+      ln -sf /usr/share/zoneinfo/$$TZ /etc/localtime &&
+      echo \"0 3 * * * wget -qO- http://firefly-iii:8080/api/v1/cron/$$STATIC_CRON_TOKEN >/dev/null 2>&1\" | crontab - &&
+      crond -f -L /dev/stdout"
+    networks:
+      - firefly_internal
+    depends_on:
+      firefly-iii:
+        condition: service_started
+
+networks:
+  proxy:
+    external: true
+  firefly_internal:
+    name: firefly_internal
+    driver: bridge
+  db_network:
+    external: true
+    name: db_network
+  mail_network:
+    external: true
+    name: mail_network

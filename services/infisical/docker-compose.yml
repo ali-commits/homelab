@@ -1,0 +1,100 @@
+services:
+  infisical:
+    image: infisical/infisical:latest-postgres
+    container_name: infisical_backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - DB_CONNECTION_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@infisical-db:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://infisical-redis:6379
+      - SITE_URL=https://secrets.alimunee.com
+      - TRUST_PROXY=true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - proxy
+      - infisical_internal
+      - mail_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.infisical.rule=Host(`secrets.alimunee.com`)"
+      - "traefik.http.services.infisical.loadbalancer.server.port=8080"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.middlewares.infisical-secure.headers.stsSeconds=15552000"
+      - "traefik.http.middlewares.infisical-secure.headers.stsIncludeSubdomains=true"
+      - "traefik.http.middlewares.infisical-secure.headers.contentTypeNosniff=true"
+      - "traefik.http.middlewares.infisical-secure.headers.browserXssFilter=true"
+      - "traefik.http.middlewares.infisical-secure.headers.customFrameOptionsValue=SAMEORIGIN"
+      - "traefik.http.routers.infisical.middlewares=infisical-secure"
+      - "watchtower.enable=true"
+    depends_on:
+      infisical-db:
+        condition: service_healthy
+      infisical-redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
+
+  infisical-db:
+    image: postgres:17-alpine
+    container_name: infisical_db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - /storage/data/infisical/db:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - infisical_internal
+      - db_network
+    command: >
+      postgres -c shared_preload_libraries=pg_stat_statements -c max_connections=200 -c shared_buffers=256MB -c effective_cache_size=1GB -c maintenance_work_mem=64MB -c checkpoint_completion_target=0.9 -c wal_buffers=16MB -c default_statistics_target=100 -c random_page_cost=1.1 -c effective_io_concurrency=200
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  infisical-redis:
+    image: redis:alpine
+    container_name: infisical_redis
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: >
+      redis-server --maxmemory 512mb --maxmemory-policy allkeys-lru --save 900 1 --save 300 10 --save 60 10000
+    volumes:
+      - /storage/data/infisical/redis:/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - infisical_internal
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  proxy:
+    external: true
+  infisical_internal:
+    name: infisical_internal
+    driver: bridge
+  db_network:
+    external: true
+    name: db_network
+  mail_network:
+    external: true
+    name: mail_network

@@ -1,0 +1,44 @@
+
+services:
+  jellyfin:
+    image: linuxserver/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kuala_Lumpur
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    volumes:
+      - /storage/data/jellyfin:/config
+      - /storage/media/movies:/movies
+      - /storage/media/tv:/tv
+      - /storage/media/anime:/anime
+    devices:
+      - /dev/nvidia0:/dev/nvidia0
+      - /dev/nvidiactl:/dev/nvidiactl
+      - /dev/nvidia-uvm:/dev/nvidia-uvm
+      - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
+    group_add:
+      - "105" # render group for GPU access
+      - "39"  # video group for GPU access
+    ports:
+      - 8096:8096 # For local network access
+    networks:
+      - proxy
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.jellyfin.rule=Host(`tv.alimunee.com`)'
+      - 'traefik.http.services.jellyfin.loadbalancer.server.port=8096'
+      - 'traefik.docker.network=proxy'
+    deploy:
+      resources:
+        limits:
+          memory: 12G
+        reservations:
+          memory: 1G
+
+networks:
+  proxy:
+    external: true

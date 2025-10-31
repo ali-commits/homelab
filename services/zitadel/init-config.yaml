@@ -1,0 +1,32 @@
+FirstInstance:
+  Org:
+    Name: "ZITADEL"
+    Human:
+      UserName: newaaa4@gmail.com
+      Password: TempPassword123!
+      PasswordChangeRequired: true
+      Profile:
+        FirstName: System
+        LastName: Administrator
+        DisplayName: System Administrator
+        PreferredLanguage: en
+      Email:
+        Address: zitadel-admin@zitadel.alimunee.com
+        IsVerified: true
+    Machine:
+      Machine:
+        Username: zitadel-admin-sa
+        Name: "Admin Service Account"
+      MachineKey:
+        Type: 1
+      Pat:
+        ExpirationDate: "2029-01-01T00:00:00Z"
+        Path: /current-dir/admin.pat
+    LoginClient:
+      Machine:
+        Username: zitadel-login-client
+        Name: "Login UI Client"
+      Pat:
+        ExpirationDate: "2029-01-01T00:00:00Z"
+        Path: /current-dir/login-client.pat
+

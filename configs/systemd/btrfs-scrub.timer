@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Btrfs scrub weekly
+Requires=btrfs-scrub.service
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+RandomizedDelaySec=3600
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Btrfs and SMART monitoring every hour
+Requires=btrfs-smart-monitor.service
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=1h
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,37 @@
+services:
+  drawdb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: drawdb
+    restart: unless-stopped
+    environment:
+      - TZ=America/New_York
+      - NODE_ENV=production
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.drawdb.rule=Host(`drawdb.alimunee.com`)"
+      - "traefik.http.services.drawdb.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+      # Watchtower labels (disabled for custom build)
+      - "com.centurylinklabs.watchtower.enable=false"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+networks:
+  proxy:
+    external: true

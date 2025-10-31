@@ -1,0 +1,29 @@
+services:
+  bazarr:
+    image: linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kuala_Lumpur
+    volumes:
+      - /storage/data/bazarr:/config
+      - /storage/media/movies:/movies
+      - /storage/media/tv:/tv
+      - /storage/media/anime:/anime
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.alimunee.com`)"
+      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
+      - "traefik.docker.network=proxy"
+      # - "traefik.http.middlewares.bazarr-headers.headers.customrequestheaders.X-Forwarded-Host=bazarr.alimunee.com"
+      # - "traefik.http.middlewares.bazarr-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      # - "traefik.http.middlewares.bazarr-headers.headers.customrequestheaders.X-Forwarded-For=0.0.0.0"
+      # - "traefik.http.routers.bazarr.middlewares=Zitadel@docker"
+    restart: unless-stopped
+
+networks:
+  proxy:
+    external: true

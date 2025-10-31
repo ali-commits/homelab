@@ -1,0 +1,33 @@
+services:
+  dozzle:
+    image: amir20/dozzle:v8.8.3
+    container_name: dozzle
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /storage/data/dozzle:/data
+    environment:
+      - TZ=America/New_York
+      - DOZZLE_ENABLE_ACTIONS=true
+      - DOZZLE_HOSTNAME=logs.alimunee.com
+    networks:
+      - proxy
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: [ "CMD", "/dozzle", "healthcheck" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dozzle.rule=Host(`logs.alimunee.com`)"
+      - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
+      - "traefik.docker.network=proxy"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+
+networks:
+  proxy:
+    external: true

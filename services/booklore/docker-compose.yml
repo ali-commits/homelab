@@ -1,0 +1,68 @@
+services:
+  booklore:
+    image: booklore/booklore:latest
+    container_name: booklore
+    restart: unless-stopped
+    environment:
+      - USER_ID=1000
+      - GROUP_ID=1000
+      - TZ=Asia/Kuala_Lumpur
+      - DATABASE_URL=jdbc:mariadb://booklore-db:3306/booklore
+      - DATABASE_USERNAME=booklore
+      - DATABASE_PASSWORD=${DB_PASSWORD}
+      - BOOKLORE_PORT=6060
+    volumes:
+      - /storage/data/booklore/data:/app/data
+      - /storage/media/books:/books
+      - /storage/data/booklore/bookdrop:/bookdrop
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "6060:6060"
+    networks:
+      - proxy
+      - booklore_internal
+      - mail_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.books.rule=Host(`books.alimunee.com`)"
+      - "traefik.http.services.books.loadbalancer.server.port=6060"
+      - "traefik.docker.network=proxy"
+      - "com.centurylinklabs.watchtower.enable=true"
+    depends_on:
+      booklore-db:
+        condition: service_healthy
+
+  booklore-db:
+    image: lscr.io/linuxserver/mariadb:11.4.5
+    container_name: booklore-db
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kuala_Lumpur
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=booklore
+      - MYSQL_USER=booklore
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - /storage/data/booklore/db:/config
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - booklore_internal
+      - db_network
+    healthcheck:
+      test: [ "CMD", "mariadb-admin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+networks:
+  proxy:
+    external: true
+  booklore_internal:
+    driver: bridge
+  db_network:
+    external: true
+  mail_network:
+    external: true

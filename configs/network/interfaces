@@ -1,0 +1,30 @@
+# Network configuration for Fedora 42 Server
+# Note: Fedora uses NetworkManager by default instead of /etc/network/interfaces
+# This file is kept for reference but not used on Fedora systems
+#
+# Current Configuration (managed by NetworkManager):
+# Interface: enp3s0
+# IP: 192.168.1.2/24
+# Gateway: 192.168.1.1
+# DNS: 1.1.1.1, 8.8.8.8
+#
+# To apply this configuration on Fedora, use:
+# sudo nmcli connection modify enp3s0 ipv4.addresses 192.168.1.2/24
+# sudo nmcli connection modify enp3s0 ipv4.gateway 192.168.1.1
+# sudo nmcli connection modify enp3s0 ipv4.dns "1.1.1.1 8.8.8.8"
+# sudo nmcli connection modify enp3s0 ipv4.method manual
+# sudo nmcli connection up enp3s0
+#
+# Traditional Debian/Ubuntu format (for reference):
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface (updated for new hardware)
+auto enp3s0
+iface enp3s0 inet static
+        address 192.168.1.2/24
+        gateway 192.168.1.1
+        dns-nameservers  1.1.1.1 8.8.8.8

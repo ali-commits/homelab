@@ -1,0 +1,13 @@
+Include /etc/ssh/sshd_config.d/*.conf
+
+Port 22
+# SSH Hardening Configuration
+PermitRootLogin no
+MaxAuthTries 3
+PubkeyAuthentication yes
+PasswordAuthentication no
+PermitEmptyPasswords no
+X11Forwarding no
+MaxSessions 10 
+LoginGraceTime 30
+Subsystem sftp /usr/lib/openssh/sftp-server

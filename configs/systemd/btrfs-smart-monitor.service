@@ -1,0 +1,15 @@
+[Unit]
+Description=Btrfs and SMART Monitoring Service
+After=network.target
+Wants=btrfs-smart-monitor.timer
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/default/notification-settings
+ExecStart=/usr/local/bin/btrfs-smart-monitor.sh
+User=root
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

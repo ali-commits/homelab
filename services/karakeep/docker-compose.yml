@@ -1,0 +1,93 @@
+services:
+  karakeep:
+    image: ghcr.io/karakeep-app/karakeep:${KARAKEEP_VERSION:-release}
+    container_name: karakeep
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - TZ=America/New_York
+      - DATA_DIR=/data
+      - NEXTAUTH_URL=https://keep.alimunee.com
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - MEILI_ADDR=http://meilisearch:7700
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+      - DATABASE_URL=postgresql://karakeep:${DB_PASSWORD}@karakeep-db:5432/karakeep
+      # AI Configuration (Gemini)
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - INFERENCE_TEXT_MODEL=${INFERENCE_TEXT_MODEL:-gemini-2.0-flash-exp}
+      - INFERENCE_IMAGE_MODEL=${INFERENCE_IMAGE_MODEL:-gemini-2.0-flash-exp}
+      # SSO Configuration (Zitadel) - Correct OAuth Variables
+      - DISABLE_SIGNUPS=false
+      - DISABLE_PASSWORD_AUTH=false
+      - OAUTH_WELLKNOWN_URL=https://zitadel.alimunee.com/.well-known/openid-configuration
+      - OAUTH_CLIENT_ID=${ZITADEL_CLIENT_ID}
+      - OAUTH_CLIENT_SECRET=${ZITADEL_CLIENT_SECRET}
+      - OAUTH_PROVIDER_NAME=Zitadel
+      - OAUTH_SCOPE=openid email profile
+      - OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING=true
+
+    volumes:
+      - /storage/data/karakeep/data:/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - proxy
+      - karakeep_internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keep.rule=Host(`keep.alimunee.com`)"
+      - "traefik.http.services.keep.loadbalancer.server.port=3000"
+      - "traefik.docker.network=proxy"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+    depends_on:
+      - karakeep-db
+      - meilisearch
+
+  karakeep-db:
+    image: postgres:16-alpine
+    container_name: karakeep-db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=karakeep
+      - POSTGRES_USER=karakeep
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - /storage/data/karakeep/db:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - karakeep_internal
+      - db_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d karakeep -U karakeep" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.12.8
+    container_name: karakeep-meilisearch
+    restart: unless-stopped
+    environment:
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+      - MEILI_ENV=production
+    volumes:
+      - /storage/data/karakeep/meili_data:/meili_data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - karakeep_internal
+
+networks:
+  proxy:
+    external: true
+  karakeep_internal:
+    name: karakeep_internal
+    driver: bridge
+  db_network:
+    external: true
+    name: db_network

@@ -1,0 +1,57 @@
+# Enable automatic snapshot timeline creation
+TIMELINE_CREATE="yes"
+
+# Enable automatic cleanup of timeline snapshots
+TIMELINE_CLEANUP="yes"
+
+# Minimum age in seconds before a snapshot can be cleaned up (30 minutes)
+TIMELINE_MIN_AGE="1800"
+
+# Maximum number of hourly snapshots to keep
+TIMELINE_LIMIT_HOURLY="0"
+
+# Maximum number of daily snapshots to keep
+TIMELINE_LIMIT_DAILY="7"
+
+# Maximum number of weekly snapshots to keep
+TIMELINE_LIMIT_WEEKLY="0"
+
+# Maximum number of monthly snapshots to keep
+TIMELINE_LIMIT_MONTHLY="4"
+
+# Maximum number of yearly snapshots to keep (disabled)
+TIMELINE_LIMIT_YEARLY="0"
+
+# Limit of used space the snapshots may occupy (20%)
+SPACE_LIMIT="0.2"
+
+# Minimum free space that should be available (20%)
+FREE_LIMIT="0.2"
+
+# Default quota for new subvolumes (20%)
+PRESET_QUOTA="20%"
+
+# Enable cleanup based on snapshot number
+NUMBER_CLEANUP="yes"
+
+# Minimum age (in seconds) for number cleanup (30 minutes)
+NUMBER_MIN_AGE="1800"
+
+# Maximum number of snapshots to keep for number cleanup
+NUMBER_LIMIT="10"
+
+# Maximum number of important snapshots to keep
+NUMBER_LIMIT_IMPORTANT="10"
+
+# Sync Access Control Lists
+SYNC_ACL="yes"
+
+# Enable background comparison of snapshots
+BACKGROUND_COMPARISON="yes"
+
+# Remove empty pre/post snapshot pairs
+EMPTY_PRE_POST_CLEANUP="yes"
+
+# Storage data filesystem configuration
+SUBVOLUME="/storage/data"
+FSTYPE="btrfs"

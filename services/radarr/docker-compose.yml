@@ -1,0 +1,35 @@
+services:
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: radarr
+    env_file:
+      - .env
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kuala_Lumpur
+      - AUTHENTICATION_METHOD=None
+    volumes:
+      - /storage/data/radarr:/config
+      - /storage/media/movies:/movies
+      - /storage/media/downloads:/downloads
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.alimunee.com`)"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+      - "traefik.docker.network=proxy"
+      # Zitadel Integration
+      # - 'traefik.http.routers.radarr.middlewares=Zitadel@docker'
+      # - "traefik.http.middlewares.radarr-auth.headers.x-api-key=${RADARR_API_KEY}"
+
+      # - "traefik.http.middlewares.radarr-headers.headers.customrequestheaders.X-Forwarded-Host=radarr.alimunee.com"
+      # - "traefik.http.middlewares.radarr-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      # - "traefik.http.middlewares.radarr-headers.headers.customrequestheaders.X-Forwarded-For=0.0.0.0"
+      # - "traefik.http.routers.radarr.middlewares=Zitadel@docker,radarr-headers"
+    restart: unless-stopped
+
+networks:
+  proxy:
+    external: true

@@ -1,0 +1,83 @@
+services:
+  linkwarden:
+    image: ghcr.io/linkwarden/linkwarden:latest
+    container_name: linkwarden
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://linkwarden:${DB_PASSWORD}@linkwarden-db:5432/linkwarden
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=https://bookmarks.alimunee.com/api/v1/auth
+      - NEXT_PUBLIC_DISABLE_REGISTRATION=false
+      - MEILI_ADDR=http://meilisearch:7700
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+      # Zitadel SSO Configuration (Official)
+      - NEXT_PUBLIC_ZITADEL_ENABLED=true
+      - ZITADEL_CUSTOM_NAME=Zitadel SSO
+      - ZITADEL_ISSUER=https://zitadel.alimunee.com
+      - ZITADEL_CLIENT_ID=${ZITADEL_CLIENT_ID}
+      - ZITADEL_CLIENT_SECRET=${ZITADEL_CLIENT_SECRET}
+    volumes:
+      - /storage/data/linkwarden/data:/data/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - proxy
+      - linkwarden_internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bookmarks.rule=Host(`bookmarks.alimunee.com`)"
+      - "traefik.http.services.bookmarks.loadbalancer.server.port=3000"
+      - "traefik.docker.network=proxy"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+    depends_on:
+      - linkwarden-db
+      - meilisearch
+
+  linkwarden-db:
+    image: postgres:16-alpine
+    container_name: linkwarden-db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=linkwarden
+      - POSTGRES_USER=linkwarden
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - /storage/data/linkwarden/db:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - linkwarden_internal
+      - db_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d linkwarden -U linkwarden" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.12.8
+    container_name: linkwarden-meilisearch
+    restart: unless-stopped
+    environment:
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY}
+      - MEILI_ENV=production
+    volumes:
+      - /storage/data/linkwarden/meili_data:/meili_data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - linkwarden_internal
+
+networks:
+  proxy:
+    external: true
+  linkwarden_internal:
+    name: linkwarden_internal
+    driver: bridge
+  db_network:
+    external: true
+    name: db_network

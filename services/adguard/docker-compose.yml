@@ -1,0 +1,25 @@
+services:
+  adguard:
+    image: adguard/adguardhome:latest
+    container_name: adguard
+    restart: unless-stopped
+    networks:
+      - proxy
+    volumes:
+      - /storage/data/adguard/work:/opt/adguardhome/work
+      - /storage/data/adguard/conf:/opt/adguardhome/conf
+    ports:
+      - '53:53/tcp'
+      - '53:53/udp'
+      - '8989:80'
+      - '3333:3000'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.adguard.rule=Host(`adguard.alimunee.com`)'
+      - 'traefik.http.services.adguard.loadbalancer.server.port=80'
+    cap_add:
+      - NET_ADMIN # Required for DNS server functionality
+
+networks:
+  proxy:
+    external: true

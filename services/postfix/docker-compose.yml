@@ -1,0 +1,47 @@
+services:
+  postfix:
+    image: juanluisbaptiste/postfix:latest
+    container_name: postfix_relay
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - SMTP_SERVER=${BREVO_SMTP_HOST}
+      - SMTP_PORT=${BREVO_SMTP_PORT}
+      - SMTP_USERNAME=${BREVO_SMTP_USERNAME}
+      - SMTP_PASSWORD=${BREVO_SMTP_PASSWORD}
+      - SERVER_HOSTNAME=${MAIL_HOSTNAME}
+      - SMTP_NETWORKS=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      - TZ=Asia/Kuala_Lumpur
+    ports:
+      - "25:25"
+      - "587:587"
+    volumes:
+      - /storage/data/postfix/spool:/var/spool/postfix
+      - /storage/data/postfix/logs:/var/log
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - proxy
+      - mail_network
+    labels:
+      - "traefik.enable=false"
+      - "watchtower.enable=true"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "25" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  proxy:
+    external: true
+  mail_network:
+    name: mail_network
+    driver: bridge

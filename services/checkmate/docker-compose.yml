@@ -1,0 +1,67 @@
+services:
+  checkmate-server:
+    image: ghcr.io/bluewave-labs/checkmate-backend-mono:latest
+    container_name: checkmate_server
+    pull_policy: always
+    restart: unless-stopped
+    environment:
+      - TZ=America/New_York
+      - UPTIME_APP_API_BASE_URL=https://checkmate.alimunee.com/api/v1
+      - UPTIME_APP_CLIENT_HOST=https://checkmate.alimunee.com
+      - DB_CONNECTION_STRING=mongodb://mongodb:27017/uptime_db
+      - CLIENT_HOST=https://checkmate.alimunee.com
+      - JWT_SECRET=${JWT_SECRET}
+      - SMTP_HOST=postfix
+      - SMTP_PORT=25
+      - SMTP_FROM=checkmate@alimunee.com
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - proxy
+      - checkmate_internal
+      - mail_network
+    depends_on:
+      - mongodb
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:52345/', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.checkmate.rule=Host(`checkmate.alimunee.com`)"
+      - "traefik.http.services.checkmate.loadbalancer.server.port=52345"
+      - "traefik.docker.network=proxy"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  mongodb:
+    image: ghcr.io/bluewave-labs/checkmate-mongo:latest
+    container_name: checkmate_mongodb
+    restart: unless-stopped
+    command: [ "mongod", "--quiet", "--bind_ip_all" ]
+    volumes:
+      - /storage/data/checkmate/mongodb:/data/db
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - checkmate_internal
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')", "--quiet" ]
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+      start_interval: 1s
+      retries: 30
+
+networks:
+  proxy:
+    external: true
+  mail_network:
+    external: true
+  checkmate_internal:
+    driver: bridge

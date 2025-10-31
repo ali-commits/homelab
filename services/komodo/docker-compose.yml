@@ -1,0 +1,72 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: komodo-mongo
+    restart: unless-stopped
+    command: --quiet --wiredTigerCacheSizeGB 0.25
+    logging:
+      driver: local
+    networks:
+      - komodo_internal
+    volumes:
+      - /storage/data/komodo/mongo/data:/data/db
+      - /storage/data/komodo/mongo/config:/data/configdb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  core:
+    image: ghcr.io/mbecker20/komodo:${COMPOSE_KOMODO_IMAGE_TAG:-latest}
+    container_name: komodo-core
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    logging:
+      driver: local
+    networks:
+      - proxy
+      - komodo_internal
+    env_file: .env
+    environment:
+      KOMODO_DATABASE_ADDRESS: mongo:27017
+      KOMODO_DATABASE_USERNAME: ${DB_USERNAME}
+      KOMODO_DATABASE_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - /storage/data/komodo/core/repo-cache:/repo-cache
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.komodo.rule=Host(`komodo.alimunee.com`)"
+      - "traefik.http.services.komodo.loadbalancer.server.port=9120"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.middlewares.komodo-headers.headers.customRequestHeaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.komodo-headers.headers.customRequestHeaders.X-Forwarded-Host=komodo.alimunee.com"
+      - "traefik.http.routers.komodo.middlewares=komodo-headers"
+
+  periphery:
+    image: ghcr.io/mbecker20/periphery:${COMPOSE_KOMODO_IMAGE_TAG:-latest}
+    container_name: komodo-periphery
+    restart: unless-stopped
+    logging:
+      driver: local
+    networks:
+      - komodo_internal
+    env_file: .env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc:/proc
+      - /storage/data/komodo/periphery/ssl:/etc/komodo/ssl
+      - /storage/data/komodo/periphery/repos:/etc/komodo/repos
+      - /HOMELAB/services:/etc/komodo/stacks
+
+networks:
+  proxy:
+    external: true
+  komodo_internal:
+    name: komodo_internal
+    driver: bridge

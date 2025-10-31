@@ -1,0 +1,29 @@
+services:
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kuala_Lumpur
+    volumes:
+      - /storage/data/sonarr:/config
+      - /storage/media/tv:/tv
+      - /storage/media/anime:/anime
+      - /storage/media/downloads:/downloads
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.alimunee.com`)"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+      - "traefik.docker.network=proxy"
+      # - "traefik.http.middlewares.sonarr-headers.headers.customrequestheaders.X-Forwarded-Host=sonarr.alimunee.com"
+      # - "traefik.http.middlewares.sonarr-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      # - "traefik.http.middlewares.sonarr-headers.headers.customrequestheaders.X-Forwarded-For=0.0.0.0"
+      # - "traefik.http.routers.sonarr.middlewares=Zitadel@docker,sonarr-headers"
+    restart: unless-stopped
+
+networks:
+  proxy:
+    external: true

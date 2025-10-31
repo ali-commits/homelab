@@ -1,0 +1,39 @@
+services:
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - TZ=Asia/Kuala_Lumpur
+      - WATCHTOWER_SCHEDULE=0 0 4 * * *
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_NOTIFICATIONS=shoutrrr
+      - WATCHTOWER_NOTIFICATION_URL=ntfy://ntfy:80/watchtower?scheme=http
+      - WATCHTOWER_NOTIFICATION_USERNAME=${WATCHTOWER_NOTIFICATION_USERNAME}
+      - WATCHTOWER_NOTIFICATION_PASSWORD=${WATCHTOWER_NOTIFICATION_PASSWORD}
+      - WATCHTOWER_NOTIFICATION_REPORT=true
+      - WATCHTOWER_NOTIFICATION_TEMPLATE_FILE=/watchtower_notification.tmpl
+      - WATCHTOWER_ROLLING_RESTART=true
+      - WATCHTOWER_INCLUDE_STOPPED=false
+      - WATCHTOWER_WARN_ON_HEAD_FAILURE=true
+      - WATCHTOWER_NO_RESTART=false
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./watchtower_notification.tmpl:/watchtower_notification.tmpl:ro
+    networks:
+      - proxy
+    labels:
+      - com.centurylinklabs.watchtower.enable=false # Don't update itself
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+networks:
+  proxy:
+    external: true

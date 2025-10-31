@@ -1,0 +1,38 @@
+services:
+  chartdb:
+    image: ghcr.io/chartdb/chartdb:latest
+    container_name: chartdb
+    restart: unless-stopped
+    environment:
+      - TZ=America/New_York
+      # Optional: Add OpenAI API key for AI features
+      # - OPENAI_API_KEY=${OPENAI_API_KEY}
+      # Optional: Disable analytics
+      - DISABLE_ANALYTICS=true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.chartdb.rule=Host(`chartdb.alimunee.com`)"
+      - "traefik.http.services.chartdb.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:80" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+networks:
+  proxy:
+    external: true

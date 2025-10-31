@@ -1,0 +1,12 @@
+[Unit]
+Description=Daily Kopia Backup Timer
+Requires=kopia-backup.service
+
+[Timer]
+# Run daily at 2:00 AM
+OnCalendar=daily
+Persistent=true
+RandomizedDelaySec=30m
+
+[Install]
+WantedBy=timers.target

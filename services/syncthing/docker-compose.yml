@@ -1,0 +1,38 @@
+services:
+  syncthing:
+    image: syncthing/syncthing:latest
+    container_name: syncthing
+    hostname: homelab-syncthing
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - /storage/data/syncthing/config:/var/syncthing/config
+      - /storage/data/syncthing/data:/var/syncthing/data
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "8384:8384" # Web UI (local + Cloudflare tunnel)
+      - "22000:22000/tcp" # TCP file transfers (local network only)
+      - "22000:22000/udp" # QUIC file transfers (local network only)
+      - "21027:21027/udp" # Local discovery broadcasts
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.syncthing.rule=Host(`sync.alimunee.com`)"
+      - "traefik.http.services.syncthing.loadbalancer.server.port=8384"
+      - "traefik.docker.network=proxy"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+    healthcheck:
+      test: [ "CMD", "curl", "-fkLsS", "-m", "2", "127.0.0.1:8384/rest/noauth/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  proxy:
+    external: true

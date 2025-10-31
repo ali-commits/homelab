@@ -1,0 +1,67 @@
+services:
+  paperless-gpt:
+    image: icereed/paperless-gpt:latest
+    container_name: paperless-gpt
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - TZ=America/New_York
+      # Paperless-ngx Integration
+      - PAPERLESS_BASE_URL=http://paperless-ngx:8000
+      - PAPERLESS_API_TOKEN=${PAPERLESS_API_TOKEN}
+      - PAPERLESS_PUBLIC_URL=https://docs.alimunee.com
+
+      # Tags Configuration
+      - MANUAL_TAG=paperless-gpt
+      - AUTO_TAG=paperless-gpt-auto
+      - AUTO_OCR_TAG=paperless-gpt-ocr-auto
+
+      # LLM Configuration - Using Gemini via OpenAI-compatible API
+      - LLM_PROVIDER=openai
+      - LLM_MODEL=gemini-1.5-pro
+      - OPENAI_API_KEY=${GEMINI_API_KEY}
+      - OPENAI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
+      - LLM_LANGUAGE=English
+
+      # OCR Configuration - Using Gemini Vision for OCR
+      - OCR_PROVIDER=llm
+      - VISION_LLM_PROVIDER=openai
+      - VISION_LLM_MODEL=gemini-1.5-pro-vision
+      - OCR_PROCESS_MODE=image
+      - PDF_SKIP_EXISTING_OCR=false
+      - OCR_LIMIT_PAGES=10
+
+      # Enhanced OCR Features
+      - CREATE_LOCAL_HOCR=false
+      - CREATE_LOCAL_PDF=true
+      - LOCAL_PDF_PATH=/app/pdf
+      - PDF_UPLOAD=true
+      - PDF_REPLACE=false
+      - PDF_COPY_METADATA=true
+      - PDF_OCR_TAGGING=true
+      - PDF_OCR_COMPLETE_TAG=paperless-gpt-ocr-complete
+
+      # Logging
+      - LOG_LEVEL=info
+    volumes:
+      - /storage/data/paperless-gpt/prompts:/app/prompts
+      - /storage/data/paperless-gpt/pdf:/app/pdf
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - proxy
+      - paperless_internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.paperless-gpt.rule=Host(`aidocs.alimunee.com`)"
+      - "traefik.http.services.paperless-gpt.loadbalancer.server.port=8080"
+      - "traefik.docker.network=proxy"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+
+networks:
+  proxy:
+    external: true
+  paperless_internal:
+    external: true
+    name: paperless_internal

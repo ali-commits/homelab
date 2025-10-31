@@ -1,0 +1,27 @@
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    restart: unless-stopped
+    volumes:
+      - /storage/data/uptime-kuma:/app/data
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - proxy
+    healthcheck:
+      test: [ 'CMD', 'curl', '-f', 'http://localhost:3001' ]
+      interval: 60s
+      timeout: 3s
+      retries: 3
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.uptime.rule=Host(`uptime.alimunee.com`)'
+      - 'traefik.http.services.uptime.loadbalancer.server.port=3001'
+      - 'traefik.docker.network=proxy'
+      # Zitadel Integration (disabled until Zitadel is deployed)
+      # - 'traefik.http.routers.uptime.middlewares=Zitadel@docker'
+
+networks:
+  proxy:
+    external: true
