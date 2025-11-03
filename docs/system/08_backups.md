@@ -35,6 +35,7 @@ The backup system follows the **3-2-1 rule** by creating an off-site, encrypted,
 - **Format**: Kopia format version 3 with content compression
 - **Splitter**: DYNAMIC-4M-BUZHASH for optimal deduplication
 - **Max Pack Length**: 21 MB for efficient S3 uploads
+- **Maintenance Policy**: Glacier-compatible (full maintenance disabled, quick maintenance only)
 
 ### Backup Targets
 
@@ -55,13 +56,15 @@ The backup system follows the **3-2-1 rule** by creating an off-site, encrypted,
       "Transitions": [
         {
           "Days": 1,
-          "StorageClass": "GLACIER"
+          "StorageClass": "GLACIER_DEEP_ARCHIVE"
         }
       ]
     }
   ]
 }
 ```
+
+**Note**: This configuration prioritizes maximum cost savings (~$0.00099/GB/month) over storage optimization. Kopia maintenance is configured to avoid operations that require accessing archived blobs in Glacier Deep Archive, preventing "storage class" errors while maintaining full backup functionality.
 
 ## Management Commands
 
@@ -215,6 +218,16 @@ sudo kopia repository status
 sudo kopia repository connect s3 --bucket=myhomelab-backups
 ```
 
+#### Glacier Storage Class Errors
+**Problem**: "The operation is not valid for the object's storage class"
+**Cause**: Maintenance operations trying to access objects in Glacier Deep Archive
+**Solution**: This is expected behavior with current configuration. The backup script automatically handles this by:
+- Disabling full maintenance operations (`--enable-full=false`)
+- Running only quick maintenance for snapshot cleanup
+- Setting full maintenance interval to 1 year (`--full-interval=8760h`)
+
+**Status**: ✅ Resolved - Backup system configured for Glacier compatibility
+
 #### Permission Errors During Backup
 **Problem**: Cannot read certain files (databases, system files)
 **Cause**: Normal behavior - some files are locked or have restricted permissions
@@ -278,16 +291,17 @@ curl -X POST "http://homelab.local:8080/homelab-alerts" \
 ## Current Backup Status
 
 ### Repository Statistics
-- **Total Size**: ~141 GB (before compression/deduplication)
-- **Stored Size**: ~97 KB (after deduplication and compression)
+- **Total Size**: ~145 GB (before compression/deduplication)
+- **Active Snapshots**: 3 subvolumes backed up successfully
 - **Compression Ratio**: Excellent due to Kopia's deduplication
-- **Snapshots**: 3 active (1 per subvolume)
+- **Maintenance Mode**: Glacier-compatible (quick maintenance only)
 - **Retention**: 10 daily + 12 monthly snapshots
+- **Last Backup**: ✅ Successful (all subvolumes)
 
 ### Storage Costs
 - **S3 Standard**: First 24 hours (~$0.023/GB/month)
-- **S3 Glacier**: After 24 hours (~$0.004/GB/month)
-- **Estimated Monthly Cost**: <$10 for full retention
+- **S3 Glacier Deep Archive**: After 24 hours (~$0.00099/GB/month)
+- **Estimated Monthly Cost**: <$2 for full retention (~145GB)
 
 ## Backup Logs
 
@@ -350,6 +364,7 @@ Check ntfy web interface or mobile app for backup notification history.
 
 ---
 
-*Last updated: 2025-10-30*
-*System status: ✅ Operational*
+*Last updated: 2025-11-03*
+*System status: ✅ Operational (Glacier Deep Archive compatible)*
+*Configuration: Cost-optimized with Glacier Deep Archive storage*
 *Next backup: Daily at 2:00 AM*
