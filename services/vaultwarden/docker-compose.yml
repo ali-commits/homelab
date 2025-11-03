@@ -1,0 +1,65 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DOMAIN=https://vaultwarden.alimunee.com
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
+      - SIGNUPS_ALLOWED=${SIGNUPS_ALLOWED}
+      - SIGNUPS_VERIFY=${SIGNUPS_VERIFY}
+      - ENABLE_WEBSOCKET=true
+      - SENDS_ALLOWED=true
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_FROM=${SMTP_FROM}
+      - SMTP_FROM_NAME=${SMTP_FROM_NAME}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_SECURITY=${SMTP_SECURITY}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SMTP_TIMEOUT=15
+      - LOG_LEVEL=warn
+      - EXTENDED_LOGGING=true
+      - TZ=Asia/Kuala_Lumpur
+    volumes:
+      - /storage/data/vaultwarden:/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - proxy
+      - mail_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vaultwarden.rule=Host(`vaultwarden.alimunee.com`)"
+      - "traefik.http.routers.vaultwarden.entrypoints=web"
+      - "traefik.http.routers.vaultwarden.service=vaultwarden"
+      - "traefik.http.services.vaultwarden.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+      # Forward headers so Vaultwarden knows it's HTTPS
+      - "traefik.http.middlewares.vaultwarden-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.vaultwarden-headers.headers.customrequestheaders.X-Forwarded-Host=vaultwarden.alimunee.com"
+      - "traefik.http.routers.vaultwarden.middlewares=vaultwarden-headers@docker"
+      # WebSocket support for real-time sync
+      - "traefik.http.routers.vaultwarden-websocket.rule=Host(`vaultwarden.alimunee.com`) && Path(`/notifications/hub`)"
+      - "traefik.http.services.vaultwarden-websocket.loadbalancer.server.port=3012"
+      - "traefik.http.routers.vaultwarden-websocket.entrypoints=web"
+      - "traefik.http.routers.vaultwarden-websocket.service=vaultwarden-websocket"
+      - "traefik.http.routers.vaultwarden-websocket.middlewares=vaultwarden-headers@docker"
+      - "traefik.docker.network=proxy"
+      # Watchtower labels
+      - "com.centurylinklabs.watchtower.enable=true"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  proxy:
+    external: true
+  mail_network:
+    external: true
+    name: mail_network
+
