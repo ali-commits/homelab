@@ -44,6 +44,16 @@
 - **Enhanced Health Checks**: Improved service monitoring
 - **NGINX Ingress Provider**: Additional provider support
 
+## Experimental Plugins
+
+| Plugin                | Version | Purpose                                   |
+| --------------------- | ------- | ----------------------------------------- |
+| **Sablier**           | v1.10.1 | Dynamic container scaling and hibernation |
+| **Traefik OIDC Auth** | v0.16.0 | OpenID Connect authentication middleware  |
+| **Cloudflare Warp**   | v1.3.3  | Cloudflare Zero Trust integration         |
+
+
+
 ## Integration
 
 All services use Traefik labels for automatic discovery:

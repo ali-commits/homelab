@@ -16,6 +16,13 @@ services:
       - --log.level=DEBUG
       - --accesslog=true
       - --providers.docker.network=proxy
+      # Experimental Plugins
+      - --experimental.plugins.sablier.modulename=github.com/sablierapp/sablier
+      - --experimental.plugins.sablier.version=v1.10.1
+      - --experimental.plugins.traefik-oidc-auth.modulename=github.com/sevensolutions/traefik-oidc-auth
+      - --experimental.plugins.traefik-oidc-auth.version=v0.16.0
+      - --experimental.plugins.cloudflarewarp.modulename=github.com/BetterCorp/cloudflarewarp
+      - --experimental.plugins.cloudflarewarp.version=v1.3.3
     ports:
       - "80:80"
       - "443:443"
