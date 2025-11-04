@@ -1,0 +1,37 @@
+services:
+  arcane:
+    image: ghcr.io/ofkm/arcane:latest
+    container_name: arcane
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /storage/data/arcane:/app/data
+      - /HOMELAB/services:/app/stacks:ro
+    environment:
+      - APP_ENV=production
+      - PUBLIC_SESSION_SECRET=${SESSION_SECRET}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - PUID=1000
+      - PGID=1000
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.arcane.rule=Host(`manage.alimunee.com`)
+      - traefik.http.services.arcane.loadbalancer.server.port=3552
+      - traefik.docker.network=proxy
+      - com.centurylinklabs.watchtower.enable=true
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3552/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  proxy:
+    external: true
