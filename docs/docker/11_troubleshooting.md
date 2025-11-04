@@ -2,18 +2,19 @@
 
 ## Common Issues
 
-| Issue                    | Diagnosis                      | Solution                                            |
-| ------------------------ | ------------------------------ | --------------------------------------------------- |
-| **Service won't start**  | `docker logs <service>`        | Check logs for errors, verify configuration         |
-| **Network connectivity** | `docker network inspect proxy` | Verify network configuration and service assignment |
-| **Database connection**  | Check database logs            | Restart database container, verify credentials      |
-| **SSL/TLS issues**       | Check Traefik logs             | Verify domain/certificate config, restart Traefik   |
-| **Permission issues**    | Check volume mounts            | Fix ownership: `chown -R user:group /path`          |
-| **AI API failures**      | Check Gemini API quota         | Verify API keys and billing in Google Cloud         |
-| **OCR not working**      | Check Tesseract languages      | Install required language packs                     |
-| **Sync conflicts**       | Check Syncthing web UI         | Resolve conflicts manually                          |
-| **Out of disk space**    | `df -h /storage/`              | Clean up old data, expand storage                   |
-| **Memory issues**        | `docker stats`                 | Increase container memory limits                    |
+| Issue                    | Diagnosis                      | Solution                                                |
+| ------------------------ | ------------------------------ | ------------------------------------------------------- |
+| **Service won't start**  | `docker logs <service>`        | Check logs for errors, verify configuration             |
+| **Network connectivity** | `docker network inspect proxy` | Verify network configuration and service assignment     |
+| **Database connection**  | Check database logs            | Restart database container, verify credentials          |
+| **SSL/TLS issues**       | Check Traefik logs             | Verify domain/certificate config, restart Traefik       |
+| **Permission issues**    | Check volume mounts            | Fix ownership: `chown -R user:group /path`              |
+| **AI API failures**      | Check Gemini API quota         | Verify API keys and billing in Google Cloud             |
+| **OCR not working**      | Check Tesseract languages      | Install required language packs                         |
+| **Sync conflicts**       | Check Syncthing web UI         | Resolve conflicts manually                              |
+| **Out of disk space**    | `df -h /storage/`              | Clean up old data, expand storage                       |
+| **Memory issues**        | `docker stats`                 | Increase container memory limits                        |
+| **DNS resolution fails** | Test with `nslookup`/`dig`     | Verify DNS config (8.8.8.8, 1.1.1.1), restart container |
 
 ## Diagnostic Commands
 
@@ -37,6 +38,13 @@ docker network inspect proxy db_network mail_network
 
 # Test connectivity
 docker exec [service] nc -zv [target] [port]
+
+# DNS resolution testing
+docker exec [service] nslookup google.com
+docker exec [service] dig @8.8.8.8 example.com
+
+# Check DNS configuration
+docker inspect [service] | jq '.[0].HostConfig.Dns'
 ```
 
 ### Performance Diagnostics

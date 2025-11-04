@@ -2,7 +2,7 @@
 
 ## Quick Status Dashboard
 - **Total Services**: 46 deployed and running
-- **Last Updated**: October 28, 2025
+- **Last Updated**: November 4, 2025
 - **Infrastructure Health**: ✅ All systems operational
 
 ## Service Categories & Quick Access
@@ -77,12 +77,15 @@ Modern containerized infrastructure with:
 - **Routing**: Traefik reverse proxy with SSL
 - **Monitoring**: Uptime Kuma + ntfy notifications
 - **Storage**: Btrfs with compression and snapshots
+- **DNS**: Standardized DNS (8.8.8.8, 1.1.1.1) across all services
 
 ### Network Topology
 ```
 Internet → Cloudflare → Cloudflared → Traefik → Services
                                                     ↓
                                     Zitadel (SSO)  |  Postfix (SMTP) → Brevo
+                                                    ↓
+                                DNS (8.8.8.8, 1.1.1.1) → All Containers
 ```
 
 ## Quick Commands

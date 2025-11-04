@@ -75,6 +75,13 @@ Internet → Cloudflare → Cloudflared → Traefik → Services
 
 ## Docker Configuration
 
+### DNS Configuration
+All services are configured with standardized DNS servers for reliable name resolution:
+- **Primary DNS**: 8.8.8.8 (Google DNS)
+- **Secondary DNS**: 1.1.1.1 (Cloudflare DNS)
+
+This ensures consistent DNS resolution across all containers, bypassing potential issues with local DNS configuration.
+
 ### System Configuration Files
 - **System**: `/etc/docker/daemon.json` (NVIDIA runtime)
 - **Homelab**: [`/HOMELAB/configs/docker/daemon.json`](../../configs/docker/daemon.json) (logging, networks)

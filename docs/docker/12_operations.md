@@ -23,28 +23,41 @@ Day-to-day operational procedures, maintenance tasks, and emergency procedures f
    nano .env
    ```
 
-3. **Network & Stor
+3. **Network & Storage Setup**
    ```bash
    # Create required networks
    docker network create proxy
    docker network create db_network
    docker network create mail_network
 
-   # Create rtorage directories
+   # Create storage directories
    sudo mkdir -p /storage/data/[service]/
    sudo chown -R 1000:1000 /storage/data/[service]/
    ```
 
-4. **Service Deployment**
+4. **DNS Configuration Verification**
+   ```bash
+   # Verify DNS configuration in docker-compose.yml
+   grep -A2 "dns:" docker-compose.yml
+   # Should show:
+   #   dns:
+   #     - 8.8.8.8
+   #     - 1.1.1.1
+   ```
+
+5. **Service Deployment**
    ```bash
    docker compose up -d
    docker compose ps
    docker compose logs -f
    ```
 
-5. **Verification**
+6. **Verification**
    ```bash
    curl -f https://[service].alimunee.com/
+
+   # Test DNS resolution inside container
+   docker exec [service] nslookup google.com
    ```
 
 ### Environment Variables Template

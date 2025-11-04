@@ -76,6 +76,9 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /storage/data/[service]/:/app/data
+    dns:
+      - 8.8.8.8                 # Google DNS (primary)
+      - 1.1.1.1                 # Cloudflare DNS (secondary)
     networks:
       - proxy                   # For web-accessible services
       - [service]_internal      # For multi-container services

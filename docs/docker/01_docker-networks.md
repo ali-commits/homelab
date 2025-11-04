@@ -41,14 +41,28 @@ Internet → Cloudflare → Cloudflared → Traefik → Services
 
 ## Network Configuration Patterns
 
+### Standard DNS Configuration
+All services use standardized DNS servers for reliable name resolution:
+```yaml
+dns:
+  - 8.8.8.8             # Google DNS (primary)
+  - 1.1.1.1             # Cloudflare DNS (secondary)
+```
+
 ### Web-Accessible Services
 ```yaml
+dns:
+  - 8.8.8.8
+  - 1.1.1.1
 networks:
   - proxy              # Required for Traefik routing
 ```
 
 ### Database-Backed Services
 ```yaml
+dns:
+  - 8.8.8.8
+  - 1.1.1.1
 networks:
   - proxy              # Web access via Traefik
   - db_network         # Shared database access
@@ -57,6 +71,9 @@ networks:
 
 ### Email-Enabled Services
 ```yaml
+dns:
+  - 8.8.8.8
+  - 1.1.1.1
 networks:
   - proxy              # Web access
   - mail_network       # SMTP relay access
@@ -65,11 +82,38 @@ networks:
 
 ### Multi-Container Stacks
 ```yaml
+dns:
+  - 8.8.8.8
+  - 1.1.1.1
 networks:
   - proxy                 # External web access
   - [service]_internal    # Internal service communication
   - db_network           # Database access (if shared)
   - mail_network         # Email access (if needed)
+```
+
+## DNS Configuration
+
+### Standardized DNS Servers
+All containers use consistent DNS configuration to ensure reliable name resolution:
+
+- **8.8.8.8** (Google DNS) - Primary DNS server
+- **1.1.1.1** (Cloudflare DNS) - Secondary DNS server
+
+### Benefits
+- **Consistent Resolution**: Bypasses potential local DNS issues
+- **Reliability**: Multiple DNS providers ensure high availability
+- **Performance**: Fast, globally distributed DNS infrastructure
+- **Security**: Trusted DNS providers with security features
+
+### DNS Troubleshooting
+```bash
+# Test DNS resolution inside container
+docker exec [container] nslookup google.com
+docker exec [container] dig @8.8.8.8 example.com
+
+# Check container DNS configuration
+docker inspect [container] | jq '.[0].HostConfig.Dns'
 ```
 
 ## Network Security
