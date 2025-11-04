@@ -31,6 +31,9 @@ services:
     volumes:
       - /storage/data/karakeep/data:/data
       - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - karakeep_internal

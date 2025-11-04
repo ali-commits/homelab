@@ -28,6 +28,9 @@ services:
       - /storage/data/stirling-pdf/logs:/logs:rw
       - /storage/data/stirling-pdf/customFiles:/customFiles:rw
       - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
     labels:

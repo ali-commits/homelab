@@ -2,6 +2,7 @@ volumes:
   db_storage:
   n8n_storage:
 
+
 services:
   n8n:
     image: docker.n8n.io/n8nio/n8n
@@ -28,7 +29,7 @@ services:
       n8n-postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5678/healthz || exit 1"]
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5678/healthz || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -41,6 +42,9 @@ services:
       - "traefik.docker.network=proxy"
       # Watchtower labels
       - "com.centurylinklabs.watchtower.enable=true"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - n8n_internal
@@ -62,7 +66,7 @@ services:
       - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh:ro
       - /etc/localtime:/etc/localtime:ro
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      test: [ 'CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}' ]
       interval: 10s
       timeout: 5s
       retries: 5

@@ -48,6 +48,9 @@ services:
       - /storage/data/paperless-gpt/prompts:/app/prompts
       - /storage/data/paperless-gpt/pdf:/app/pdf
       - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - paperless_internal

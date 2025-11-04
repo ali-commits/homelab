@@ -35,6 +35,9 @@ services:
     command: tunnel --no-autoupdate run --token ${CLOUDFLARED_TUNNEL_TOKEN}
     env_file:
       - .env
+    dns:
+       - 1.1.1.1
+       - 8.8.8.8
     networks:
       - proxy
 ```

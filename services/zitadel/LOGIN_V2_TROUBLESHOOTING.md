@@ -139,6 +139,9 @@ Create internal Traefik routes that ensure proper headers:
       - NEXT_PUBLIC_BASE_PATH=/ui/v2/login
       - ZITADEL_SERVICE_USER_TOKEN_FILE=/current-dir/login-client.pat
     user: "${UID:-1000}"
+    dns:
+       - 1.1.1.1
+       - 8.8.8.8
     networks:
       - proxy
       - zitadel_internal

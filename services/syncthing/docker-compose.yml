@@ -17,6 +17,9 @@ services:
       - "22000:22000/tcp" # TCP file transfers (local network only)
       - "22000:22000/udp" # QUIC file transfers (local network only)
       - "21027:21027/udp" # Local discovery broadcasts
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
     labels:

@@ -25,7 +25,7 @@ services:
       ZITADEL_OIDC_DEFAULTLOGOUTURLV2: https://zitadel.alimunee.com/ui/v2/login/logout?post_logout_redirect=
       ZITADEL_SAML_DEFAULTLOGINURLV2: https://zitadel.alimunee.com/ui/v2/login/login?samlRequest=
     healthcheck:
-      test: ["CMD", "/app/zitadel", "ready"]
+      test: [ "CMD", "/app/zitadel", "ready" ]
       interval: 10s
       timeout: 60s
       retries: 5
@@ -36,6 +36,9 @@ services:
     ports:
       - "8081:8080"
       - "3001:3000"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - zitadel_internal
@@ -71,6 +74,9 @@ services:
       - NEXT_PUBLIC_BASE_PATH=/ui/v2/login
       - ZITADEL_SERVICE_USER_TOKEN_FILE=/current-dir/login-client.pat
     user: "${UID:-1000}"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - zitadel_internal
@@ -93,7 +99,7 @@ services:
     volumes:
       - /storage/data/zitadel/zitadel-db:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d zitadel -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -d zitadel -U postgres" ]
       interval: 10s
       timeout: 30s
       retries: 5

@@ -21,6 +21,9 @@ services:
     volumes:
       - /storage/data/linkwarden/data:/data/data
       - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - linkwarden_internal

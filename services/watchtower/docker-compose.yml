@@ -13,6 +13,9 @@ services:
       - WATCHTOWER_NO_RESTART=false
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
     labels:
@@ -41,6 +44,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./notify-webhook.sh:/notify.sh:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
 

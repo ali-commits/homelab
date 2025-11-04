@@ -19,6 +19,9 @@ services:
     volumes:
       - /storage/data/cloudreve:/cloudreve/data
       - /storage/data/cloudreve/uploads:/cloudreve/uploads
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - cloudreve_internal

@@ -9,7 +9,10 @@ services:
       - /storage/data/ntfy/cache:/var/cache/ntfy
       - /storage/data/ntfy/etc:/etc/ntfy
     ports:
-      - "8888:80"  # Local network access
+      - "8888:80" # Local network access
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
     labels:

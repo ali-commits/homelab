@@ -50,6 +50,9 @@ services:
       - /storage/data/paperless-ngx/consume:/usr/src/paperless/consume
       - /storage/data/paperless-ngx/export:/usr/src/paperless/export
       - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - paperless_internal

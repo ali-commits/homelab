@@ -11,6 +11,9 @@ services:
       - /storage/media/movies:/movies
       - /storage/media/tv:/tv
       - /storage/media/anime:/anime
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
     labels:

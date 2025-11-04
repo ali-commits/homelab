@@ -13,6 +13,9 @@ services:
       - TRUST_PROXY=true
     volumes:
       - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - infisical_internal

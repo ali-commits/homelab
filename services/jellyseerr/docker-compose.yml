@@ -8,6 +8,9 @@ services:
       - TZ=Asia/Kuala_Lumpur
     volumes:
       - /storage/data/jellyseerr:/app/config
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
     labels:

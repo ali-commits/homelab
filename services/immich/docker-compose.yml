@@ -16,6 +16,9 @@ services:
       - redis
       - database
     restart: unless-stopped
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - immich_internal

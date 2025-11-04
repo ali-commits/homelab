@@ -24,6 +24,9 @@ services:
       - /storage/data/firefly-iii/upload:/var/www/html/storage/upload
       - /storage/data/firefly-iii/export:/var/www/html/storage/export
       - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - firefly_internal
@@ -71,15 +74,9 @@ services:
       - firefly_internal
       - db_network
     command: >
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_unicode_ci
-      --max_connections=200
-      --innodb_buffer_pool_size=256M
-      --innodb_log_file_size=64M
-      --innodb_flush_log_at_trx_commit=2
-      --innodb_flush_method=O_DIRECT
+      --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max_connections=200 --innodb_buffer_pool_size=256M --innodb_log_file_size=64M --innodb_flush_log_at_trx_commit=2 --innodb_flush_method=O_DIRECT
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -92,20 +89,14 @@ services:
     env_file:
       - .env
     command: >
-      redis-server
-      --requirepass ${REDIS_PASSWORD}
-      --maxmemory 256mb
-      --maxmemory-policy allkeys-lru
-      --save 900 1
-      --save 300 10
-      --save 60 10000
+      redis-server --requirepass ${REDIS_PASSWORD} --maxmemory 256mb --maxmemory-policy allkeys-lru --save 900 1 --save 300 10 --save 60 10000
     volumes:
       - /storage/data/firefly-iii/redis:/data
       - /etc/localtime:/etc/localtime:ro
     networks:
       - firefly_internal
     healthcheck:
-      test: ["CMD", "redis-cli", "--pass", "${REDIS_PASSWORD}", "ping"]
+      test: [ "CMD", "redis-cli", "--pass", "${REDIS_PASSWORD}", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -118,11 +109,7 @@ services:
       - .env
     environment:
       - TZ=Asia/Kuala_Lumpur
-    command: sh -c "
-      apk add --no-cache tzdata wget &&
-      ln -sf /usr/share/zoneinfo/$$TZ /etc/localtime &&
-      echo \"0 3 * * * wget -qO- http://firefly-iii:8080/api/v1/cron/$$STATIC_CRON_TOKEN >/dev/null 2>&1\" | crontab - &&
-      crond -f -L /dev/stdout"
+    command: sh -c " apk add --no-cache tzdata wget && ln -sf /usr/share/zoneinfo/$$TZ /etc/localtime && echo \"0 3 * * * wget -qO- http://firefly-iii:8080/api/v1/cron/$$STATIC_CRON_TOKEN >/dev/null 2>&1\" | crontab - && crond -f -L /dev/stdout"
     networks:
       - firefly_internal
     depends_on:

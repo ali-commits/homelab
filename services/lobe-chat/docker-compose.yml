@@ -32,6 +32,9 @@ services:
     volumes:
       - /storage/data/lobe-chat/data:/app/data
       - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - lobe_chat_internal

@@ -30,6 +30,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /storage/data/letsencrypt:/letsencrypt
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
     labels:

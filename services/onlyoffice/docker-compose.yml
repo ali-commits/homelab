@@ -30,6 +30,9 @@ services:
       - /storage/data/onlyoffice/logs:/var/log/onlyoffice
       - /storage/data/onlyoffice/lib:/var/lib/onlyoffice
       - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - onlyoffice_internal

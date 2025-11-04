@@ -18,6 +18,9 @@ services:
       - /etc/localtime:/etc/localtime:ro
     ports:
       - "6060:6060"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - booklore_internal

@@ -15,6 +15,9 @@ services:
       - 8088:8080 # WebUI
       - 6881:6881
       - 6881:6881/udp
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
     labels:

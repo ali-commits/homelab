@@ -3,6 +3,9 @@ services:
     image: adguard/adguardhome:latest
     container_name: adguard
     restart: unless-stopped
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
     volumes:

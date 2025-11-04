@@ -8,6 +8,9 @@ services:
       - ./glance.d:/app/config/glance.d:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
     labels:
@@ -17,7 +20,7 @@ services:
       - "traefik.docker.network=proxy"
       - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080"]
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080" ]
       interval: 30s
       timeout: 10s
       retries: 3

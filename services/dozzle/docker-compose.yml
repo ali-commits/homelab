@@ -10,6 +10,9 @@ services:
       - TZ=America/New_York
       - DOZZLE_ENABLE_ACTIONS=true
       - DOZZLE_HOSTNAME=logs.alimunee.com
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
     security_opt:

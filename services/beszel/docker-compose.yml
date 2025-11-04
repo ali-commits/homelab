@@ -10,6 +10,9 @@ services:
       - /storage/data/beszel/socket:/beszel_socket
     environment:
       - TZ=America/New_York
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
     security_opt:

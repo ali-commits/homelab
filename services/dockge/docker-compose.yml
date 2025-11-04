@@ -12,6 +12,9 @@ services:
     environment:
       - DOCKGE_STACKS_DIR=/opt/stacks
       - DOCKGE_ENABLE_CONSOLE=true
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
     labels:

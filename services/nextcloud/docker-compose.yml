@@ -26,6 +26,9 @@ services:
       - /storage/data/nextcloud/html:/var/www/html
       - /storage/nextcloud:/var/www/html/data
       - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - nextcloud_internal
@@ -70,19 +73,9 @@ services:
       - nextcloud_internal
       - db_network
     command: >
-      postgres
-      -c shared_preload_libraries=pg_stat_statements
-      -c max_connections=200
-      -c shared_buffers=256MB
-      -c effective_cache_size=1GB
-      -c maintenance_work_mem=64MB
-      -c checkpoint_completion_target=0.9
-      -c wal_buffers=16MB
-      -c default_statistics_target=100
-      -c random_page_cost=1.1
-      -c effective_io_concurrency=200
+      postgres -c shared_preload_libraries=pg_stat_statements -c max_connections=200 -c shared_buffers=256MB -c effective_cache_size=1GB -c maintenance_work_mem=64MB -c checkpoint_completion_target=0.9 -c wal_buffers=16MB -c default_statistics_target=100 -c random_page_cost=1.1 -c effective_io_concurrency=200
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB -U $POSTGRES_USER"]
+      test: [ "CMD-SHELL", "pg_isready -d $POSTGRES_DB -U $POSTGRES_USER" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -95,20 +88,14 @@ services:
     env_file:
       - .env
     command: >
-      redis-server
-      --requirepass ${REDIS_HOST_PASSWORD}
-      --maxmemory 512mb
-      --maxmemory-policy allkeys-lru
-      --save 900 1
-      --save 300 10
-      --save 60 10000
+      redis-server --requirepass ${REDIS_HOST_PASSWORD} --maxmemory 512mb --maxmemory-policy allkeys-lru --save 900 1 --save 300 10 --save 60 10000
     volumes:
       - /storage/data/nextcloud/redis:/data
       - /etc/localtime:/etc/localtime:ro
     networks:
       - nextcloud_internal
     healthcheck:
-      test: ["CMD", "redis-cli", "--pass", "${REDIS_HOST_PASSWORD}", "ping"]
+      test: [ "CMD", "redis-cli", "--pass", "${REDIS_HOST_PASSWORD}", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5

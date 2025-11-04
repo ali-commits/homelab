@@ -26,6 +26,9 @@ services:
     volumes:
       - /storage/data/vaultwarden:/data
       - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - mail_network
@@ -50,7 +53,7 @@ services:
       # Watchtower labels
       - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost/ || exit 1"]
+      test: [ "CMD-SHELL", "curl -f http://localhost/ || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -62,4 +65,3 @@ networks:
   mail_network:
     external: true
     name: mail_network
-

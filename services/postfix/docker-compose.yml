@@ -20,6 +20,9 @@ services:
       - /storage/data/postfix/spool:/var/spool/postfix
       - /storage/data/postfix/logs:/var/log
       - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     networks:
       - proxy
       - mail_network
