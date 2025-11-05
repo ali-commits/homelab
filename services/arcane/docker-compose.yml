@@ -7,7 +7,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - /storage/data/arcane:/app/data
-      - /HOMELAB/services:/app/stacks:ro
+      - /HOMELAB/services:/app/data/projects
     environment:
       - APP_ENV=production
       - PUBLIC_SESSION_SECRET=${SESSION_SECRET}
