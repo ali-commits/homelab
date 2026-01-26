@@ -1,0 +1,110 @@
+services:
+  outline:
+    image: docker.getoutline.com/outlinewiki/outline:latest
+    container_name: outline
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - PGSSLMODE=disable
+      - DATABASE_URL=postgres://outline:${DB_PASSWORD}@outline-db:5432/outline
+      - DATABASE_CONNECTION_POOL_MIN=
+      - DATABASE_CONNECTION_POOL_MAX=
+      - REDIS_URL=redis://outline-redis:6379
+      - URL=https://note.alimunee.com
+      - PORT=3000
+      - SECRET_KEY=${SECRET_KEY}
+      - UTILS_SECRET=${UTILS_SECRET}
+      - FILE_STORAGE=local
+      - FILE_STORAGE_LOCAL_ROOT_DIR=/var/lib/outline/data
+      - FILE_STORAGE_UPLOAD_MAX_SIZE=26214400
+      - FORCE_HTTPS=false
+      - ENABLE_UPDATES=true
+      - DEFAULT_LANGUAGE=en_US
+      - COLLABORATION_URL=
+      # SMTP Configuration
+      - SMTP_HOST=postfix
+      - SMTP_PORT=25
+      - SMTP_FROM_EMAIL=outline@alimunee.com
+      - SMTP_REPLY_EMAIL=outline@alimunee.com
+      - SMTP_SECURE=false
+    volumes:
+      - /storage/data/outline/data:/var/lib/outline/data
+      - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    networks:
+      - proxy
+      - outline_internal
+      - mail_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.outline.rule=Host(`note.alimunee.com`)"
+      - "traefik.http.services.outline.loadbalancer.server.port=3000"
+      - "traefik.docker.network=proxy"
+      - "com.centurylinklabs.watchtower.enable=true"
+    depends_on:
+      outline-db:
+        condition: service_healthy
+      outline-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  outline-db:
+    image: postgres:16-alpine
+    container_name: outline-db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=outline
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=outline
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - /storage/data/outline/db:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - outline_internal
+      - db_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d outline -U outline"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  outline-redis:
+    image: redis:7-alpine
+    container_name: outline-redis
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - /storage/data/outline/redis:/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - outline_internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  proxy:
+    external: true
+  outline_internal:
+    name: outline_internal
+    driver: bridge
+  db_network:
+    external: true
+    name: db_network
+  mail_network:
+    external: true
+    name: mail_network
