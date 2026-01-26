@@ -221,3 +221,33 @@ docker network inspect [network] | jq '.[0].Containers'
 ---
 
 *For detailed network configuration, refer to individual service documentation in `/services/[service-name]/documentation.md`*
+
+## Docker Firewall Configuration
+
+### iptables Integration Disabled
+Docker's iptables/firewalld integration is disabled to prevent conflicts with firewalld policies:
+
+**Configuration**: `/etc/docker/daemon.json`
+```json
+{
+    "default-runtime": "nvidia",
+    "runtimes": {
+        "nvidia": {
+            "args": [],
+            "path": "nvidia-container-runtime"
+        }
+    },
+    "iptables": false
+}
+```
+
+### Why Disabled
+- Prevents `NAME_CONFLICT: docker-forwarding` errors in firewalld
+- Avoids duplicate firewall rules between Docker and firewalld
+- Container networking still works via bridge mode
+
+### Implications
+- Docker will not automatically manage iptables rules
+- Port publishing (`-p`) still works
+- Inter-container networking on bridge networks works normally
+- No impact on overlay networks or Traefik routing

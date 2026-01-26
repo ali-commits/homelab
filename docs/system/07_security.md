@@ -157,3 +157,31 @@ Security events are monitored by the system monitoring infrastructure:
 - **Config**: `/etc/default/notification-settings`
 - **Notifications**: Configured for ntfy alerts
 - **Integration**: Fail2ban and monitoring scripts coordinate alerting
+
+## SELinux Custom Policies
+
+### snapperd Policy
+A custom SELinux policy module was created to allow snapperd to manage snapshots on storage volumes:
+
+```bash
+# Generate policy from audit logs
+sudo ausearch -c 'snapperd' --raw | audit2allow -M snapperd-local
+
+# Install the policy module
+sudo semodule -i snapperd-local.pp
+```
+
+**Policy file location**: `~/snapperd-local.pp` (generated)
+
+### Managing Custom Policies
+```bash
+# List installed modules
+sudo semodule -l | grep local
+
+# Remove a custom policy
+sudo semodule -r snapperd-local
+
+# Regenerate if new denials appear
+sudo ausearch -c 'snapperd' --raw | audit2allow -M snapperd-local
+sudo semodule -i snapperd-local.pp
+```

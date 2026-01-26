@@ -80,3 +80,38 @@ sudo snapper -c nextcloud cleanup timeline
 - ✅ ACL synchronization enabled
 - ✅ Number-based cleanup (10 snapshot limit)
 - ✅ Empty pre/post snapshot scripts
+
+## GRUB Boot Menu Integration
+
+### grub-btrfs
+The system uses [grub-btrfs](https://github.com/Antynea/grub-btrfs) to add btrfs snapshots to the GRUB boot menu, allowing boot into previous system states.
+
+### Installation (Fedora-specific)
+grub-btrfs was installed from source with Fedora-specific path adjustments:
+```bash
+# Clone and install
+git clone https://github.com/Antynea/grub-btrfs.git /tmp/grub-btrfs
+sudo make -C /tmp/grub-btrfs install
+
+# Fedora path fixes applied:
+# - /etc/default/grub-btrfs/config: GRUB_BTRFS_GRUB_DIRNAME="/boot/grub2"
+# - /etc/grub.d/41_snapshots-btrfs: s|/boot/grub/|/boot/grub2/|g
+# - Symlink: /usr/bin/grub-script-check → /usr/bin/grub2-script-check
+```
+
+### Configuration
+- **Config file**: `/etc/default/grub-btrfs/config`
+- **GRUB script**: `/etc/grub.d/41_snapshots-btrfs`
+- **Auto-update service**: `grub-btrfsd.service` (enabled)
+
+### Usage
+After any snapshot changes, the GRUB menu is automatically updated. Manual regeneration:
+```bash
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+```
+
+### Booting from Snapshot
+1. Reboot the system
+2. In GRUB menu, select "Fedora Linux snapshots"
+3. Choose the desired snapshot date/time
+4. System boots in read-only mode from that snapshot

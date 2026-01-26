@@ -213,3 +213,31 @@ nvidia-smi dmon -s u -d 1  # Monitor utilization every second
 # Check video encoding capabilities
 ffmpeg -hwaccels  # List hardware accelerators
 ```
+
+## BIOS/UEFI Configuration
+
+### Current BIOS Version
+| Component | Value |
+|-----------|-------|
+| **Motherboard** | ASUS ROG STRIX X399-E GAMING |
+| **BIOS Version** | 1602 (Latest) |
+| **BIOS Date** | 2024/03/08 |
+| **Vendor** | American Megatrends Inc. |
+
+### Known Firmware Issues
+| Issue | Status | Mitigation |
+|-------|--------|------------|
+| **AMD-Vi IOAPIC not in IVRS** | BIOS bug, won't be fixed | IOMMU disabled via kernel parameter |
+| **TPM ACPI region mismatch** | BIOS bug | TPM disabled in BIOS |
+
+### Kernel Parameters
+The following kernel parameters are configured in `/etc/default/grub`:
+- `iommu=off` - Disables IOMMU (not needed without VMs/passthrough)
+- `processor.max_cstate=1` - CPU power state optimization
+- `modprobe.blacklist=nouveau,nova_core` - Use NVIDIA proprietary drivers
+
+### Disabled Hardware
+Hardware disabled for server optimization:
+- **WiFi (rtw88_8822be)** - Blacklisted in `/etc/modprobe.d/disable-wifi-bt.conf`
+- **Bluetooth** - Blacklisted and service masked
+- **TPM** - Device units masked due to firmware bug
