@@ -241,3 +241,22 @@ Hardware disabled for server optimization:
 - **WiFi (rtw88_8822be)** - Blacklisted in `/etc/modprobe.d/disable-wifi-bt.conf`
 - **Bluetooth** - Blacklisted and service masked
 - **TPM** - Device units masked due to firmware bug
+
+### Disabled Services
+Services disabled for server optimization (headless homelab):
+
+| Service | Description | Reason |
+|---------|-------------|--------|
+| **udisks2** | Desktop disk manager | Not needed - server managed via SSH/Cockpit |
+| **packagekit** | Desktop software update GUI | Not needed - updates via dnf CLI |
+| **abrtd, abrt-oops, abrt-journal-core** | Automatic Bug Reporting Tool | Unnecessary overhead on homelab server |
+| **pmcd, pmie, pmlogger, pmproxy** | Performance Co-Pilot monitoring | Not needed - using Uptime Kuma instead |
+| **pmie_farm, pmlogger_farm** | PCP farm services | Part of PCP stack (disabled) |
+| **systemd-homed** | Portable home directories | Not using portable home dirs |
+| **systemd-homed-activate** | Home activation service | Masked - not using systemd-homed |
+| **iscsi-onboot, iscsi-starter** | iSCSI initiator services | No SAN/iSCSI storage in use |
+| **multipathd** | Multipath I/O daemon | No SAN multipath storage |
+
+### Boot Target
+- **Default target**: `multi-user.target` (no GUI)
+- **Reason**: Headless server - all management via SSH, Cockpit, or Tailscale
