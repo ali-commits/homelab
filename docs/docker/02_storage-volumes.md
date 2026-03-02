@@ -2,7 +2,7 @@
 
 ## Overview
 
-Cove storage architecture using Btrfs filesystem with Docker volumes for persistent data management across all homelab services.
+Core storage architecture using Btrfs filesystem with Docker volumes for persistent data management across all homelab services.
 
 ## Storage Architecture
 
@@ -12,7 +12,7 @@ Cove storage architecture using Btrfs filesystem with Docker volumes for persist
 ├── data/               → System & service data (NVMe SSD)
 │   ├── jellyfin/      → Jellyfin config & metadata
 │   ├── immich/        → Immich ML models & cache
-│   ├── dockge/        → Container management data
+│   ├── arcane/        → Arcane management data
 │   ├── booklore/      → BookLore config & database
 │   ├── karakeep/      → Karakeep data & search index
 │   ├── paperless-ngx/ → Paperless config & database
@@ -72,11 +72,9 @@ Cove storage architecture using Btrfs filesystem with Docker volumes for persist
 | **Infisical**     | PostgreSQL            | `/storage/data/infisical/db`       |
 | **OnlyOffice**    | PostgreSQL            | `/storage/data/onlyoffice/db`      |
 | **N8N**           | PostgreSQL            | `/storage/data/n8n/db`             |
-| **Cloudreve**     | PostgreSQL            | `/storage/data/cloudreve/database` |
 | **AFFiNE**        | PostgreSQL            | `/storage/data/affine/db`          |
 | **Linkwarden**    | PostgreSQL            | `/storage/data/linkwarden/db`      |
 | **BookLore**      | MariaDB               | `/storage/data/booklore/db`        |
-| **Komodo**        | MongoDB               | `/storage/data/komodo/mongo`       |
 
 ### Database Volume Configuration
 ```yaml
@@ -87,10 +85,6 @@ volumes:
 # MariaDB example
 volumes:
   - /storage/data/booklore/db:/var/lib/mysql
-
-# MongoDB example
-volumes:
-  - /storage/data/komodo/mongo:/data/db
 ```
 
 ## Service-Specific Storage
@@ -174,8 +168,8 @@ sudo chown -R 1000:1000 /storage/data/[service]/
 sudo chown -R 1000:1000 /storage/media/
 
 # Specific service permissions
-sudo chown -R 999:999 /storage/data/[service]/db/  # PostgreSQL
-sudo chown -R 1001:1001 /storage/data/komodo/mongo/  # MongoDB
+# PostgreSQL/Database permissions
+sudo chown -R 999:999 /storage/data/[service]/db/
 ```
 
 ## Backup Strategy

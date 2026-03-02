@@ -16,7 +16,6 @@ Services for system monitoring, container management, infrastructure oversight, 
 
 ### Management Platforms
 - **Arcane** - Modern Docker management UI ([📖](../../services/arcane/documentation.md))
-- **Dozzle** - Real-time Docker log viewer ([📖](../../services/dozzle/documentation.md))
 
 ## Secrets Management
 
@@ -45,13 +44,6 @@ Services for system monitoring, container management, infrastructure oversight, 
 - **Stack Management**: Create, edit, and deploy Docker Compose stacks
 - **Resource Control**: Lifecycle management for containers, images, and volumes
 - **File Access**: Directly edit service configurations from the UI
-
-### Log Management with Dozzle
-- **Real-time Streaming**: Live log viewing from all containers
-- **Search & Filter**: Fuzzy search and regex filtering
-- **Container Actions**: Start, stop, restart containers from UI
-- **Multi-user Auth**: Simple file-based authentication
-- **Container Grouping**: Organize containers with custom labels
 
 ### Advanced Monitoring with Checkmate
 - **Infrastructure Monitoring**: Server hardware and performance metrics

@@ -8,7 +8,6 @@ Work-focused services for productivity, document management, collaboration, and 
 
 ### Core Services
 - **Nextcloud** - Personal cloud & file sharing ([📖](../../services/nextcloud/documentation.md))
-- **Cloudreve** - Multi-backend cloud storage ([📖](../../services/cloudreve/documentation.md))
 - **Syncthing** - Decentralized file synchronization ([📖](../../services/syncthing/documentation.md))
 
 ## Document Management

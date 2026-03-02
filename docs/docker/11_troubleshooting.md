@@ -1,4 +1,4 @@
-# Troubloting Guide
+# Troubleshooting Guide
 
 ## Common Issues
 

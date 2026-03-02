@@ -9,7 +9,6 @@ Services requiring persistent data storage with databases.
 ### Database Types
 - **PostgreSQL 16**: Primary database for most services
 - **MariaDB 11.4**: BookLore book collection management
-- **MongoDB**: Komodo infrastructure management
 - **Redis**: Caching and session storage
 
 ### Database Storage Locations
@@ -25,11 +24,9 @@ Services requiring persistent data storage with databases.
 | **Infisical** | PostgreSQL | `/storage/data/infisical/db` |
 | **OnlyOffice** | PostgreSQL | `/storage/data/onlyoffice/db` |
 | **N8N** | PostgreSQL | `/storage/n8n/db` |
-| **Cloudreve** | PostgreSQL | `/storage/data/cloudreve/db` |
 | **AFFiNE** | PostgreSQL | `/storage/data/affine/db` |
 | **Linkwarden** | PostgreSQL | `/storage/data/linkwarden/db` |
 | **BookLore** | MariaDB | `/storage/data/booklore/db` |
-| **Komodo** | MongoDB | `/storage/data/komodo/mongo` |
 
 ## Services by Database Type
 
@@ -51,13 +48,12 @@ Services requiring persistent data storage with databases.
 - **Infisical** - Secrets management ([📖](../../services/infisical/documentation.md))
 - **OnlyOffice** -ument editing ([📖](../../services/onlyoffice/documentation.md))
 - **N8N** - Workflow automation ([📖](../../services/n8n/documentation.md))
-- **Cloudreve** - Cloud storage platform ([📖](../../services/cloudreve/documentation.md))
 
 ### MariaDB Services
 - **BookLore** - Book collection manager ([📖](../../services/booklore/documentation.md))
 
-### MongoDB Services
-- **Komodo** - Infrastructure management ([📖](../../services/komodo/documentation.md))
+### Redis & Caching
+- **Redis** used by multiple services for caching and task queues.
 
 ## Database Network Configuration
 
@@ -89,11 +85,8 @@ docker exec [service]-db pg_dump -U [user] [database] > backup-$(date +%Y%m%d).s
 docker exec booklore-db mariadb-dump -u booklore -p booklore > booklore-backup-$(date +%Y%m%d).sql
 ```
 
-### MongoDB Backups
-```bash
-# Komodo
-docker exec komodo-mongo mongodump --db komodo --out /backup/
-```
+### Other Backups
+- **Redis** snapshots and configuration backups.
 
 ---
 
