@@ -25,14 +25,12 @@ Internet → Cloudflare → Cloudflared → Traefik → Services
 
 | Network                 | Purpose                        | Services                                                 |
 | ----------------------- | ------------------------------ | -------------------------------------------------------- |
-| **cloudreve_internal**  | Cloudreve services isolation   | Cloudreve app + database + redis                         |
 | **firefly_internal**    | Firefly III services isolation | Firefly III + database + redis + cron                    |
 | **immich_internal**     | Immich services isolation      | Immich app + database + redis + ML                       |
 | **infisical_internal**  | Infisical services isolation   | Infisical + database + redis                             |
 | **nextcloud_internal**  | Nextcloud services isolation   | Nextcloud + database + redis + cron                      |
 | **onlyoffice_internal** | OnlyOffice services isolation  | OnlyOffice + database + redis + rabbitmq                 |
 | **n8n_internal**        | N8N services isolation         | N8N + database                                           |
-| **komodo_internal**     | Komodo services isolation      | Komodo core + periphery + mongo                          |
 | **zitadel_internal**    | Zitadel services isolation     | Zitadel + login + database                               |
 | **linkwarden_internal** | Linkwarden services isolation  | Linkwarden + database                                    |
 | **booklore_internal**   | BookLore services isolation    | BookLore + MariaDB database                              |
@@ -175,7 +173,6 @@ docker network inspect [network] | jq '.[0].Containers'
 - **Traefik**: proxy
 - **Cloudflared**: proxy
 - **AdGuard**: proxy (plus host network for DNS)
-- **Watchtower**: proxy
 
 ### Authentication & Communication
 - **Zitadel**: proxy, zitadel_internal
@@ -185,8 +182,6 @@ docker network inspect [network] | jq '.[0].Containers'
 - **Uptime Kuma**: proxy
 - **ntfy**: proxy
 - **Glance**: proxy
-- **Dockge**: proxy
-- **Komodo**: proxy, komodo_internal
 - **Infisical**: proxy, infisical_internal, mail_network
 
 ### Media Services
@@ -207,7 +202,6 @@ docker network inspect [network] | jq '.[0].Containers'
 - **Immich**: proxy, immich_internal
 - **AFFiNE**: proxy
 - **OnlyOffice**: proxy, onlyoffice_internal
-- **Cloudreve**: proxy, cloudreve_internal
 - **N8N**: proxy, n8n_internal
 - **Linkwarden**: proxy, linkwarden_internal
 - **Karakeep**: proxy, karakeep_internal, db_network

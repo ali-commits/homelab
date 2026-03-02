@@ -23,11 +23,6 @@ Foundation services providing routing, networking, DNS, and system-level functio
 - **Domain**: adguard.alimunee.com
 - **Documentation**: [📖](../../services/adguard/documentation.md)
 
-### Watchtower - Automated Container Updates
-- **Purpose**: Automatically updates Docker containers
-- **Network**: proxy
-- **Documentation**: [📖](../../services/watchtower/documentation.md)
-
 ## Network Architecture
 
 ### Docker Networks

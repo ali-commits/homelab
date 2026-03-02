@@ -1,8 +1,8 @@
 # Docker Infrastructure Overview
 
 ## Quick Status Dashboard
-- **Total Services**: 47 deployed and running
-- **Last Updated**: November 4, 2025
+- **Total Services**: 42 deployed and running
+- **Last Updated**: March 3, 2026
 - **Infrastructure Health**: ✅ All systems operational
 
 ## Service Categories & Quick Access
@@ -11,14 +11,14 @@
 | -------------------------------- | ----- | ------------------------------------------------------------------------ | ------------------------------------- |
 | **Docker Networks**              | -     | Network topology & configuration                                         | [📖](01_docker-networks.md)            |
 | **Storage & Volumes**            | -     | Filesystem, volumes, database storage                                    | [📖](02_storage-volumes.md)            |
-| **Core Infrastructure**          | 4     | Traefik, Cloudflared, AdGuard, Watchtower                                | [📖](03_core-infrastructure.md)        |
+| **Core Infrastructure**          | 3     | Traefik, Cloudflared, AdGuard                                            | [📖](03_core-infrastructure.md)        |
 | **Authentication**               | 1     | Zitadel                                                                  | [📖](04_authentication.md)             |
 | **AI/ML Services**               | 4     | Lobe Chat, Karakeep, Paperless-GPT, Immich ML                            | [📖](05_ai-ml-services.md)             |
 | **Notifications & SMTP**         | 2     | ntfy, Postfix                                                            | [📖](06_notifications-smtp.md)         |
 | **Data Services**                | 15    | Nextcloud, Immich, Firefly III, Karakeep                                 | [📖](07_data-services.md)              |
 | **Media & Entertainment**        | 10    | Jellyfin, *arr stack, Kavita, BookLore                                   | [📖](08_media-entertainment.md)        |
 | **Productivity & Collaboration** | 12    | AFFiNE, OnlyOffice, N8N, Syncthing, Vert.sh, Excalidraw, ChartDB, DrawDB | [📖](09_productivity-collaboration.md) |
-| **Monitoring & Management**      | 9     | Uptime Kuma, Beszel, Dockge, Komodo, Infisical, Dozzle, Checkmate, Arcane | [📖](10_monitoring-management.md)      |
+| **Monitoring & Management**      | 6     | Uptime Kuma, Beszel, Infisical, Dozzle, Checkmate, Arcane                | [📖](10_monitoring-management.md)      |
 
 ## Complete Service Reference
 
@@ -31,9 +31,7 @@
 | [**booklore**](../services/booklore/docker-compose.yml)           | [📖](../services/booklore/documentation.md)      | 6060             | proxy, booklore_internal, mail_network              | books.alimunee.com        | Personal book collection manager          |
 | [**checkmate**](../services/checkmate/docker-compose.yml)         | [📖](../services/checkmate/documentation.md)     | 52345            | proxy, checkmate_internal, db_network, mail_network | checkmate.alimunee.com    | Uptime & infrastructure monitoring        |
 | [**cloudflared**](../services/cloudflared/docker-compose.yml)     | [📖](../services/cloudflared/documentation.md)   | -                | proxy                                               | -                         | Cloudflare Tunnel service                 |
-| [**cloudreve**](../services/cloudreve/docker-compose.yml)         | [📖](../services/cloudreve/documentation.md)     | 5212             | proxy, cloudreve_internal                           | files.alimunee.com        | Cloud storage platform                    |
 | [**Vert.sh**](../services/vert/docker-compose.yml)                | [📖](../services/vert/documentation.md)          | 80               | proxy                                               | convert.alimunee.com      | WebAssembly file converter (250+ formats) |
-| [**dockge**](../services/dockge/docker-compose.yml)               | [📖](../services/dockge/documentation.md)        | 5001             | proxy                                               | dockge.alimunee.com       | Docker container management               |
 | [**excalidraw**](../services/excalidraw/docker-compose.yml)       | [📖](../services/excalidraw/documentation.md)    | 80               | proxy                                               | draw.alimunee.com         | Virtual whiteboard & diagramming tool     |
 | [**chartdb**](../services/chartdb/docker-compose.yml)             | [📖](../services/chartdb/documentation.md)       | 80               | proxy                                               | chartdb.alimunee.com      | Database schema design & visualization    |
 | [**drawdb**](../services/drawdb/docker-compose.yml)               | [📖](../services/drawdb/documentation.md)        | 80               | proxy                                               | drawdb.alimunee.com       | Database diagram editor & SQL generator   |
@@ -50,7 +48,6 @@
 | [**jellyseerr**](../services/jellyseerr/docker-compose.yml)       | [📖](../services/jellyseerr/documentation.md)    | 5055             | proxy                                               | request.alimunee.com      | Media request management                  |
 | [**karakeep**](../services/karakeep/docker-compose.yml)           | [📖](../services/karakeep/documentation.md)      | 3000             | proxy, karakeep_internal, db_network                | keep.alimunee.com         | AI-powered bookmark manager               |
 | [**kavita**](../services/kavita/docker-compose.yml)               | [📖](../services/kavita/documentation.md)        | 5000             | proxy                                               | comics.alimunee.com       | Digital library for comics & manga        |
-| [**komodo**](../services/komodo/docker-compose.yml)               | [📖](../services/komodo/documentation.md)        | 9120             | proxy, komodo_internal                              | komodo.alimunee.com       | Infrastructure management platform        |
 | [**kuma**](../services/kuma/docker-compose.yml)                   | [📖](../services/kuma/documentation.md)          | 3001             | proxy                                               | uptime.alimunee.com       | Uptime monitoring & status page           |
 | [**linkwarden**](../services/linkwarden/docker-compose.yml)       | [📖](../services/linkwarden/documentation.md)    | 3000             | proxy, linkwarden_internal                          | links.alimunee.com        | Bookmark & link manager                   |
 | [**lobe-chat**](../services/lobe-chat/docker-compose.yml)         | [📖](../services/lobe-chat/documentation.md)     | 3210             | proxy, lobe_chat_internal, db_network               | chat.alimunee.com         | AI chat interface with multi-LLM support  |
@@ -68,7 +65,6 @@
 | [**stirling-pdf**](../services/stirling-pdf/docker-compose.yml)   | [📖](../services/stirling-pdf/documentation.md)  | 8080             | proxy                                               | pdf.alimunee.com          | PDF manipulation & processing tools       |
 | [**syncthing**](../services/syncthing/docker-compose.yml)         | [📖](../services/syncthing/documentation.md)     | 8384,22000,21027 | proxy                                               | sync.alimunee.com         | Decentralized file synchronization        |
 | [**traefik**](../services/traefik/docker-compose.yml)             | [📖](../services/traefik/documentation.md)       | 80,443,8080      | proxy                                               | traefik.alimunee.com      | Reverse proxy & load balancer             |
-| [**watchtower**](../services/watchtower/docker-compose.yml)       | [📖](../services/watchtower/documentation.md)    | -                | proxy                                               | -                         | Automated container updates               |
 | [**zitadel**](../services/zitadel/docker-compose.yml)             | [📖](../services/zitadel/documentation.md)       | 8081,3001        | proxy, zitadel_internal                             | zitadel.alimunee.com      | Modern SSO & identity management          |
 
 ## Architecture Overview

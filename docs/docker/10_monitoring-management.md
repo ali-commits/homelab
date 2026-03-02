@@ -15,10 +15,8 @@ Services for system monitoring, container management, infrastructure oversight, 
 ## Container Management
 
 ### Management Platforms
-- **Dockge** - Docker container management ([📖](../../services/dockge/documentation.md))
+- **Arcane** - Modern Docker management UI ([📖](../../services/arcane/documentation.md))
 - **Dozzle** - Real-time Docker log viewer ([📖](../../services/dozzle/documentation.md))
-- **Komodo** - Infrastructure management platform ([📖](../../services/komodo/documentation.md))
-- **Watchtower** - Automated container updates ([📖](../../services/watchtower/documentation.md))
 
 ## Secrets Management
 
@@ -42,38 +40,11 @@ Services for system monitoring, container management, infrastructure oversight, 
 
 ## Management Workflows
 
-### Container Updates with Watchtower
-
-#### Update Strategy
-```yaml
-# Watchtower configuration
-environment:
-  - WATCHTOWER_SCHEDULE=0 0 4 * * *  # Daily at 4 AM
-  - WATCHTOWER_NOTIFICATIONS=shoutrrr
-  - WATCHTOWER_NOTIFICATION_URL=http://ntfy:8888/watchtower
-  - WATCHTOWER_CLEANUP=true
-```
-
-#### Update Process
-1. **Scheduled Check**: Daily scan for image updates
-2. **Image Pull**: Download new container images
-3. **Service Stop**: Gracefully stop running containers
-4. **Container Update**: Deploy new container versions
-5. **Health Check**: Verify service functionality
-6. **Notification**: Send update status via ntfy
-7. **Cleanup**: Remove old container images
-
-### Infrastructure Management with Komodo
-- **Multi-Server Management**: Manage multiple Docker hosts
-- **Resource Monitoring**: CPU, memory, disk across servers
-- **Service Deployment**: Deploy services across infrastructure
-- **Log Aggregation**: Centralized logging from all servers
-
-### Container Management with Dockge
-- **Visual Interface**: Web-based stack management
-- **Compose Editor**: Built-in Docker Compose editor
-- **Log Viewing**: Real-time container log viewing
-- **Resource Monitoring**: Container resource usage
+### Docker Management with Arcane
+- **Unified Interface**: Single dashboard for all Docker resources
+- **Stack Management**: Create, edit, and deploy Docker Compose stacks
+- **Resource Control**: Lifecycle management for containers, images, and volumes
+- **File Access**: Directly edit service configurations from the UI
 
 ### Log Management with Dozzle
 - **Real-time Streaming**: Live log viewing from all containers

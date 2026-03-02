@@ -6,7 +6,7 @@
 
 ## 🏆 Infrastructure Highlights
 
-**RedRipper** is a comprehensive homelab infrastructure running **45 containerized services** on Fedora 42 Server, delivering enterprise-grade capabilities for media streaming, cloud storage, AI/ML workloads, and system monitoring. Built with security, performance, and automation at its core.
+**RedRipper** is a comprehensive homelab infrastructure running **42 containerized services** on Fedora 42 Server, delivering enterprise-grade capabilities for media streaming, cloud storage, AI/ML workloads, and system monitoring. Built with security, performance, and automation at its core.
 
 ### ⚡ Performance Powerhouse
 - **AMD Threadripper 2920X**: 12-core/24-thread @ 3.5GHz for heavy workloads
@@ -38,11 +38,11 @@
 | **☁️ Data & Productivity**      | 15        | Nextcloud, Immich, Firefly III, AFFiNE    | Cloud storage, photo AI, finance, knowledge base    |
 | **🤖 AI/ML Services**           | 4         | Lobe Chat, Karakeep, Paperless-GPT        | Multi-LLM chat, AI bookmarks, document processing   |
 | **🔧 Productivity Tools**       | 12        | OnlyOffice, N8N, Syncthing, IT-Tools      | Collaboration, automation, file sync, dev utilities |
-| **📊 Monitoring & Management**  | 8         | Uptime Kuma, Beszel, Dockge, Komodo       | Infrastructure monitoring & container management    |
+| **📊 Monitoring & Management**  | 6         | Uptime Kuma, Beszel, Arcane, Checkmate    | Infrastructure monitoring & container management    |
 | **🛡️ Core Infrastructure**      | 4         | Traefik, Cloudflared, AdGuard, Watchtower | Routing, tunneling, DNS filtering, auto-updates     |
 | **🔐 Security & Communication** | 3         | Zitadel, ntfy, Postfix                    | SSO, notifications, SMTP relay                      |
 
-**Total: 45+ Production Services** | [📖 Complete Service Reference](docs/docker/00_README.md)
+**Total: 42 Production Services** | [📖 Complete Service Reference](docs/docker/00_README.md)
 
 ---
 
@@ -97,10 +97,10 @@
 │• Nextcloud    │ │• Redis             • Service Databases    │ │• AdGuard DNS  │    │
 │• Immich       │ │• MongoDB           • Cache Systems        │ │• Postfix SMTP ─────┘
 │• Uptime Kuma  │ │• Search Engines    • Message Queues       │ │• ntfy Notify  │
-│• Lobe Chat    │ │• File Systems      • Background Jobs      │ │• Watchtower   │
-│• 40+ Services │ │• Volume Mounts     • Health Checks        │ │• Dockage      │
+│• Lobe Chat    │ │• File Systems      • Background Jobs      │ │• Arcane       │
+│• 40+ Services │ │• Volume Mounts     • Health Checks        │ │• Dozzle       │
 └───────────────┘ └───────────────────────────────────────────┘ └───────┬───────┘
-        │                                                               │
+                                                                        │
         └───────────────────────────────┬───────────────────────────────┘
                                         │
        ┌────────────────────────────────▼─────────────────────────────────┐
@@ -160,7 +160,7 @@
 
 ---
 
-## �  Backup & Remote Access
+##   Backup & Remote Access
 
 ### 3-2-1 Backup Strategy
 - **3 Copies**: Original data + Snapper snapshots + S3 Glacier backups
@@ -210,7 +210,7 @@
 
 ## 🏆 Infrastructure Achievements
 
-✅ **45+ Production Services** running reliably 24/7
+✅ **42 Production Services** running reliably 24/7
 ✅ **GPU Acceleration** delivering 4-6x transcoding performance
 ✅ **3-2-1 Backup Strategy** with Snapper snapshots + Kopia S3 Glacier backups
 ✅ **Zero Downtime** with automated health monitoring and recovery
