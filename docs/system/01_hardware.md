@@ -7,7 +7,7 @@
 | **CPU**    | AMD Ryzen Threadripper 2920X (12-core/24-thread @ 3.5GHz) | High-performance workstation processor     |
 | **Memory** | 32GB DDR4                                                 | Excellent for containerized workloads      |
 | **GPU**    | NVIDIA GeForce GTX 1070 (8GB VRAM)                        | Hardware transcoding & ML acceleration     |
-| **OS**     | Fedora Linux 42 (Server Edition)                          | Modern server platform with latest drivers |
+| **OS**     | Fedora Linux 43 (Server Edition)                          | Modern server platform with latest drivers |
 | **Uptime** | Typically high                                            | Stable 24/7 operation                      |
 
 ## 💾 Storage Hardware
@@ -232,9 +232,10 @@ ffmpeg -hwaccels  # List hardware accelerators
 
 ### Kernel Parameters
 The following kernel parameters are configured in `/etc/default/grub`:
-- `iommu=off` - Disables IOMMU (not needed without VMs/passthrough)
-- `processor.max_cstate=1` - CPU power state optimization
+- `iommu=off` - Disables IOMMU due to AMD-Vi IOAPIC BIOS bug (see Known Firmware Issues)
 - `modprobe.blacklist=nouveau,nova_core` - Use NVIDIA proprietary drivers
+
+> **Note**: `processor.max_cstate=1` and `intel_idle.max_cstate=0` were previously set here but removed in March 2026 — they were unnecessarily locking the CPU to shallow idle states and causing high idle power draw.
 
 ### Disabled Hardware
 Hardware disabled for server optimization:
@@ -260,3 +261,82 @@ Services disabled for server optimization (headless homelab):
 ### Boot Target
 - **Default target**: `multi-user.target` (no GUI)
 - **Reason**: Headless server - all management via SSH, Cockpit, or Tailscale
+
+---
+
+## ⚡ Power Management
+
+Configured in March 2026 to reduce idle power consumption and fan noise on the Threadripper 2920X.
+
+### Power Profile Summary
+| Setting | Value | Method |
+|---|---|---|
+| **CPU Governor** | `schedutil` | Default (kernel managed) |
+| **Tuned Profile** | `balanced` | tuned service |
+| **CPU Boost** | Disabled | systemd service `cpu-boost-disable` |
+| **C-states available** | POLL, C1, C2 | Max for this platform (C6 not supported on X399/Zen+) |
+| **NVMe Power Control** | `auto` (APST enabled) | powertop auto-tune |
+
+### Before vs After Results
+| Metric | Before | After |
+|---|---|---|
+| **CPU Tdie (idle)** | ~50°C | ~41°C (-9°C) |
+| **CPU Core Voltage** | 1.44V | 0.83–0.98V |
+| **CPU Fan** | ~1670 RPM | ~1100 RPM (-33%) |
+| **CPU OPT Fan** | ~1440 RPM | ~970 RPM (-33%) |
+| **VRM Output Current** | 17–21A | 3–11A |
+| **Max idle frequency** | 4141 MHz (boosting) | 3500 MHz (capped) |
+
+### Installed Tools
+| Package | Purpose |
+|---|---|
+| `tuned` + `tuned-adm` | System-wide power profile management |
+| `powertop` | Power audit and auto-tune (USB autosuspend, PCIe ASPM) |
+| `kernel-tools` | Provides `cpupower` and `turbostat` |
+
+### Persistent Configuration
+| Component | Location | Description |
+|---|---|---|
+| **Boost disable service** | `/etc/systemd/system/cpu-boost-disable.service` | Runs after tuned, writes `0` to `/sys/devices/system/cpu/cpufreq/boost` |
+| **Tuned service** | `systemctl enable tuned` | Active on boot, profile: `balanced` |
+| **PowerTOP auto-tune** | Applied at install time | USB autosuspend, PCIe ASPM, misc savings |
+
+### BIOS Power Settings (ASUS ROG STRIX X399-E, BIOS 1602)
+Path: **Advanced → AMD CBS → Zen Common Options**
+
+| Setting | Value | Notes |
+|---|---|---|
+| **Global C-State Control** | Enabled | Unlocks C2 idle state |
+| **Power Supply Idle Control** | Typical Current Idle | Required for C-states to engage; `Low Current Idle` causes instability on Linux |
+
+> **Fan curves** configured in BIOS Q-Fan Control: ~30% duty cycle at ≤45°C, ramps above that.
+> **Negative voltage offset** applied in Extreme Tweaker to reduce heat under load.
+
+### Platform Limitations
+- **C6 not available**: Threadripper 2920X (Zen+) on X399 does not expose C6 package sleep state at the firmware level. C2 is the deepest achievable idle state regardless of OS or BIOS configuration. Confirmed via `turbostat`: `Counter 'Core%c6' can not be added`.
+- **EPP not available**: Energy Performance Preference requires Zen 2+ — not supported on this CPU.
+- **No OS fan control**: `asus_wmi_sensors` exposes temperatures but not PWM registers for this board. Fan curves must be managed via BIOS Q-Fan only.
+
+### Power Management Commands
+```bash
+# Check active tuned profile
+tuned-adm active
+
+# Check C-state availability
+cat /sys/devices/system/cpu/cpu0/cpuidle/state*/name
+
+# Check boost state (0=disabled, 1=enabled)
+cat /sys/devices/system/cpu/cpufreq/boost
+
+# Check boost disable service
+systemctl status cpu-boost-disable
+
+# Live power/C-state breakdown (5s sample)
+sudo turbostat --interval 5 --show Pkg%pc6,Core%c6,CPU%c1,PkgWatt,CoreTmp
+
+# Check CPU frequencies across all cores
+grep MHz /proc/cpuinfo | awk -F: '{print $2}' | sort -n | uniq -c
+
+# Full sensor readings
+sensors
+```

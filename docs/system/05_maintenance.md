@@ -129,6 +129,27 @@ ps aux --sort=-%cpu | head -10
 ps aux --sort=-%mem | head -10
 ```
 
+### Power Management Checks
+```bash
+# Check tuned profile is active
+tuned-adm active
+
+# Verify boost is disabled
+cat /sys/devices/system/cpu/cpufreq/boost  # should be 0
+
+# Check boost-disable service is running
+systemctl status cpu-boost-disable
+
+# Check available C-states (should show POLL, C1, C2)
+cat /sys/devices/system/cpu/cpu0/cpuidle/state*/name
+
+# Live power draw and C-state residency (5s sample)
+sudo turbostat --interval 5 --show Pkg%pc6,Core%c6,CPU%c1,PkgWatt,CoreTmp
+
+# Quick temp + fan check
+sensors | grep -E "Tdie|CPU Temp|CPU Fan|CPU OPT"
+```
+
 ## Troubleshooting Common Issues
 
 ### Storage Issues
