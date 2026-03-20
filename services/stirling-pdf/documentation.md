@@ -1,15 +1,30 @@
 # Stirling PDF
 
 ## Purpose
-Stirling PDF is a robust, locally hosted web-based PDF manipulation tool that provides comprehensive PDF processing capabilities. It offers over 50 features including splitting, merging, converting, reorganizing, compressing, OCR, digital signing, and more, all while maintaining privacy and security.
+Stirling PDF is a robust, locally hosted web-based PDF manipulation tool providing 50+ PDF processing features including splitting, merging, converting, reorganizing, compressing, OCR, digital signing, and more — all processed locally with no external API calls.
+
+**Current version**: v2.7.3 (Spring Boot 4, Java 25)
 
 ## Configuration
 
-| Variable         | Description                          | Default | Required |
-| ---------------- | ------------------------------------ | ------- | -------- |
-| SECURITY_ENABLED | Enable login and security features   | false   | No       |
-| ADMIN_USERNAME   | Admin username (if security enabled) | admin   | No       |
-| ADMIN_PASSWORD   | Admin password (if security enabled) | -       | No       |
+| Variable                        | Description                                       | Required |
+| ------------------------------- | ------------------------------------------------- | -------- |
+| `ADMIN_USERNAME`                | Initial admin username (used only on first start) | Yes      |
+| `ADMIN_PASSWORD`                | Initial admin password (forced change on login)   | Yes      |
+| `SECURITY_ENABLELOGIN`          | Enable user authentication (always `true`)        | Yes      |
+| `SECURITY_INITIALLOGIN_USERNAME`| Maps to `ADMIN_USERNAME` from .env                | Yes      |
+| `SECURITY_INITIALLOGIN_PASSWORD`| Maps to `ADMIN_PASSWORD` from .env                | Yes      |
+| `INSTALL_BOOK_AND_ADVANCED_HTML_OPS` | Enable advanced HTML/book operations        | No       |
+| `SYSTEM_MAXFILESIZE`            | Max upload size in MB (default: 100)              | No       |
+| `MAIL_ENABLED`                  | Enable email (for user invites)                   | No       |
+| `MAIL_HOST`                     | SMTP host (postfix)                               | No       |
+| `MAIL_PORT`                     | SMTP port (25 for internal Postfix)               | No       |
+| `MAIL_FROM`                     | Sender address for invites                        | No       |
+| `MAIL_ENABLEINVITES`            | Allow admin to send email invitations             | No       |
+
+> **Note**: `ADMIN_USERNAME`/`ADMIN_PASSWORD` are only used if no user database exists. After first login, manage users via the in-app admin panel.
+
+> **SSO**: OAuth2 SSO requires a paid license — `autoCreateUser` via OAuth2 is blocked on the free tier (`requiresPaid=true`). SAML2 is also Enterprise-only. Local username/password login only on free tier.
 
 ### Ports
 - **8080**: Web interface (HTTPS via Traefik)
@@ -19,250 +34,135 @@ Stirling PDF is a robust, locally hosted web-based PDF manipulation tool that pr
 - **Internal**: http://stirling-pdf:8080
 
 ## Dependencies
-- **Networks**: proxy (for Traefik routing)
-- **Storage**: /storage/data/stirling-pdf/ (configuration, logs, tessdata, custom files)
+- **Networks**: `proxy` (Traefik routing), `mail_network` (Postfix email)
+- **Storage**: `/storage/data/stirling-pdf/` — config, logs, tessdata, pipeline, customFiles
+- **Database**: H2 embedded (stored in `/configs`) — no external DB needed
+
+## Volumes
+
+| Host Path                              | Container Path         | Purpose                     |
+| -------------------------------------- | ---------------------- | --------------------------- |
+| `/storage/data/stirling-pdf/tessdata`  | `/usr/share/tessdata`  | OCR language packs          |
+| `/storage/data/stirling-pdf/config`    | `/configs`             | Settings, user DB, JWT keys |
+| `/storage/data/stirling-pdf/logs`      | `/logs`                | Application logs            |
+| `/storage/data/stirling-pdf/pipeline`  | `/pipeline`            | Automation pipeline configs |
+| `/storage/data/stirling-pdf/customFiles` | `/customFiles`       | Custom branding/static files|
 
 ## Setup
 
 1. **Deploy the service**:
    ```bash
-   cd services/stirling-pdf
+   cd /HOMELAB/services/stirling-pdf
    docker compose up -d
    ```
 
-2. **Initial configuration**:
+2. **First login**:
    - Access https://pdf.alimunee.com
-   - No authentication required by default
-   - All PDF tools are immediately available
+   - Login with credentials from `.env`
+   - You will be forced to change your password immediately
 
-3. **Optional: Enable Security**:
-   ```bash
-   # Edit .env file
-   SECURITY_ENABLED=true
-   ADMIN_USERNAME=admin
-   ADMIN_PASSWORD=SecurePassword123!
-
-   # Restart service
-   docker compose down && docker compose up -d
-   ```
+3. **Add more users**:
+   - Account Settings → Admin Settings → User Management
 
 4. **Configure OCR Languages** (optional):
-   - Download additional Tesseract language packs
-   - Place in `/storage/data/stirling-pdf/tessdata/`
-   - Restart container to recognize new languages
+   ```bash
+   cd /storage/data/stirling-pdf/tessdata/
+   wget https://github.com/tesseract-ocr/tessdata/raw/main/ara.traineddata  # Arabic
+   wget https://github.com/tesseract-ocr/tessdata/raw/main/fra.traineddata  # French
+   docker compose restart stirling-pdf
+   ```
 
 ## Usage
 
 ### Web Interface
 - **URL**: https://pdf.alimunee.com
-- **Features**: 50+ PDF manipulation tools organized by category
+- **API**: https://pdf.alimunee.com/api/
+- **Swagger**: https://pdf.alimunee.com/swagger-ui.html
 
 ### Core Features
 
 #### **Convert & Transform**
 - PDF to/from images (PNG, JPG, TIFF)
 - PDF to/from Office formats (Word, Excel, PowerPoint)
-- HTML to PDF conversion
-- Markdown to PDF
+- HTML to PDF, Markdown to PDF
 
 #### **Organize & Edit**
-- Split PDFs by page ranges or bookmarks
-- Merge multiple PDFs
-- Rotate, rearrange, and remove pages
-- Extract pages or images
+- Split/merge, rotate, rearrange, extract pages
+- Remove or reorder pages
 
 #### **Security & Privacy**
 - Add/remove passwords and permissions
 - Digital signing with certificates
-- Redact sensitive information
-- Watermark addition
+- Redact sensitive information, watermarks
 
 #### **OCR & Text**
 - OCR processing for scanned documents
-- Text extraction and search
-- Language detection and processing
-- Font and text manipulation
+- Text extraction, font and text manipulation
 
 #### **Optimize & Compress**
-- File size reduction and compression
-- Image quality optimization
-- Remove metadata and annotations
-- Clean up and repair corrupted PDFs
+- File size reduction, image quality optimization
+- Remove metadata, repair corrupted PDFs
 
-### API Access
-- **REST API**: Available at https://pdf.alimunee.com/api/
-- **Swagger Documentation**: https://pdf.alimunee.com/swagger-ui.html
-- **Batch Processing**: Programmatic PDF manipulation
-
-## Integration
-
-### OCR Configuration
-```bash
-# Download additional language packs
-cd /storage/data/stirling-pdf/tessdata/
-wget https://github.com/tesseract-ocr/tessdata/raw/main/fra.traineddata  # French
-wget https://github.com/tesseract-ocr/tessdata/raw/main/deu.traineddata  # German
-wget https://github.com/tesseract-ocr/tessdata/raw/main/spa.traineddata  # Spanish
-
-# Restart container
-docker compose restart stirling-pdf
+### API Authentication
+When `SECURITY_ENABLELOGIN=true`, API calls require an API key:
 ```
-
-### Custom Branding
-- **Logo**: Place custom logo in `/storage/data/stirling-pdf/customFiles/static/`
-- **CSS**: Custom styling in `/storage/data/stirling-pdf/customFiles/static/`
-- **Favicon**: Custom favicon in customFiles directory
-
-### Monitoring
-- **Health Check**: Built-in API status endpoint
-- **Uptime Kuma**: Monitor https://pdf.alimunee.com
-- **ntfy Topic**: `homelab-alerts` for service issues
-
-### Workflow Integration
-- **API Integration**: Use REST API for automated PDF processing
-- **Batch Processing**: Process multiple files programmatically
-- **Webhook Support**: Trigger processing from other services
+X-API-KEY: your-api-key-here
+```
+Find your API key in: Account Settings → API Key
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Memory Issues with Large Files**:
-   ```bash
-   # Check memory usage
-   docker stats stirling-pdf
-
-   # Increase memory limit in docker-compose.yml
-   deploy:
-     resources:
-       limits:
-         memory: 4G
-   ```
+1. **Startup fails with JWT binding error**:
+   - Do not set `SECURITY_JWT_*` env vars — these are managed via `settings.yml` in `/configs`
 
 2. **OCR Not Working**:
    ```bash
-   # Check tessdata directory
-   ls -la /storage/data/stirling-pdf/tessdata/
-
-   # Verify language files
-   docker exec stirling-pdf ls -la /usr/share/tessdata/
-
-   # Test OCR functionality
    docker exec stirling-pdf tesseract --list-langs
+   ls -la /storage/data/stirling-pdf/tessdata/
    ```
 
-3. **File Upload Issues**:
+3. **Memory Issues with Large Files**:
    ```bash
-   # Check file size limits
-   docker logs stirling-pdf | grep -i "file size"
+   docker stats stirling-pdf
+   # Increase limit in docker-compose.yml deploy.resources.limits.memory
+   ```
 
+4. **File Upload Issues**:
+   ```bash
    # Verify volume permissions
    sudo chown -R 1000:1000 /storage/data/stirling-pdf/
    ```
 
-4. **Performance Problems**:
-   ```bash
-   # Monitor resource usage
-   docker stats stirling-pdf
-
-   # Check processing logs
-   docker compose logs -f stirling-pdf
-
-   # Clear temporary files
-   docker exec stirling-pdf find /tmp -name "*.pdf" -delete
-   ```
-
 ### Debug Commands
 ```bash
-# View application logs
+# View logs
 docker compose logs -f stirling-pdf
 
-# Check service status
+# Check status
 curl -f http://localhost:8080/api/v1/info/status
-
-# Test API endpoints
-curl -X GET "https://pdf.alimunee.com/api/v1/info/status"
-
-# Monitor file processing
-docker exec stirling-pdf tail -f /logs/stirling-pdf.log
 
 # Check available features
 curl -X GET "https://pdf.alimunee.com/api/v1/info/endpoints"
-```
 
-### Performance Optimization
-```bash
-# Adjust JVM memory settings (if needed)
-# Add to environment in docker-compose.yml:
-# - JAVA_OPTS=-Xmx2g -Xms512m
-
-# Monitor heap usage
-docker exec stirling-pdf jstat -gc 1
-
-# Clear cache and temporary files
-docker exec stirling-pdf find /tmp -type f -name "*.tmp" -delete
+# Monitor log file
+docker exec stirling-pdf tail -f /logs/stirling-pdf.log
 ```
 
 ## Backup
 
-### Configuration Backup
-```bash
-# Backup Stirling PDF configuration and data
-sudo tar -czf stirling-pdf-$(date +%Y%m%d).tar.gz -C /storage/data stirling-pdf/
+The only data worth backing up is `/storage/data/stirling-pdf/config/` (settings, user DB, JWT keys). All other directories (tessdata, customFiles) are either stateless or can be re-downloaded.
 
-# Backup specific components
+```bash
+# Backup config (user accounts, settings)
 sudo tar -czf stirling-config-$(date +%Y%m%d).tar.gz -C /storage/data/stirling-pdf config/
-sudo tar -czf stirling-tessdata-$(date +%Y%m%d).tar.gz -C /storage/data/stirling-pdf tessdata/
 ```
 
-### Restore Configuration
-```bash
-# Restore full backup
-sudo tar -xzf stirling-pdf-YYYYMMDD.tar.gz -C /storage/data/
+## Security
 
-# Fix permissions
-sudo chown -R 1000:1000 /storage/data/stirling-pdf/
-
-# Restart service
-docker compose restart stirling-pdf
-```
-
-### Custom Files Backup
-```bash
-# Backup custom branding and files
-sudo tar -czf stirling-custom-$(date +%Y%m%d).tar.gz -C /storage/data/stirling-pdf customFiles/
-
-# Restore custom files
-sudo tar -xzf stirling-custom-YYYYMMDD.tar.gz -C /storage/data/stirling-pdf/
-```
-
-## Security Considerations
-
-### Authentication Setup
-```bash
-# Enable security in .env
-SECURITY_ENABLED=true
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=SecurePassword123!
-
-# Restart with security enabled
-docker compose down && docker compose up -d
-```
-
-### Network Security
-- Service runs behind Traefik reverse proxy with HTTPS
-- No direct external port exposure
-- Internal network isolation
-- File processing happens locally (no external API calls)
-
-### Data Privacy
-- All PDF processing happens locally
-- No data sent to external services
-- Temporary files are automatically cleaned
-- No persistent storage of processed files unless explicitly saved
-
-### File Security
-- Input validation for uploaded files
-- Sandboxed processing environment
-- Resource limits to prevent DoS
-- Automatic cleanup of temporary files
+- Login enabled with local user accounts (role-based, up to 5 users free)
+- All PDF processing is fully local — no external API calls
+- Running behind Traefik with HTTPS, no direct port exposure
+- Temporary files auto-cleaned after processing
+- API key authentication for programmatic access

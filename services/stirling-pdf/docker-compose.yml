@@ -1,31 +1,31 @@
 services:
   stirling-pdf:
-    image: frooodle/s-pdf:latest
+    image: stirlingtools/stirling-pdf:latest
     container_name: stirling-pdf
     restart: unless-stopped
     env_file:
       - .env
     environment:
-      - DOCKER_ENABLE_SECURITY=${SECURITY_ENABLED:-false}
-      - SECURITY_ENABLELOGIN=${SECURITY_ENABLED:-false}
+      - SECURITY_ENABLELOGIN=true
+      - SECURITY_INITIALLOGIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - SECURITY_INITIALLOGIN_PASSWORD=${ADMIN_PASSWORD}
       - INSTALL_BOOK_AND_ADVANCED_HTML_OPS=true
       - LANGS=en_US
       - SYSTEM_DEFAULTLOCALE=en-US
-      - UI_APPNAME=Stirling PDF
-      - UI_HOMEDESCRIPTION=Your locally hosted one-stop-shop for all your PDF needs
-      - UI_APPNAMENAVBAR=Stirling PDF
       - SYSTEM_MAXFILESIZE=100
       - METRICS_ENABLED=true
       - SYSTEM_GOOGLEVISIBILITY=false
-      - SHOW_SURVEY=false
       - SYSTEM_CUSTOMSTATICFILEPATH=/customFiles/static/
-      - PUID=1000
-      - PGID=1000
-      - UMASK=022
+      - MAIL_ENABLED=true
+      - MAIL_FROM=stirling-pdf@alimunee.com
+      - MAIL_ENABLEINVITES=true
+      - MAIL_HOST=postfix
+      - MAIL_PORT=25
     volumes:
       - /storage/data/stirling-pdf/tessdata:/usr/share/tessdata:rw
       - /storage/data/stirling-pdf/config:/configs:rw
       - /storage/data/stirling-pdf/logs:/logs:rw
+      - /storage/data/stirling-pdf/pipeline:/pipeline:rw
       - /storage/data/stirling-pdf/customFiles:/customFiles:rw
       - /etc/localtime:/etc/localtime:ro
     dns:
@@ -33,6 +33,7 @@ services:
       - 1.1.1.1
     networks:
       - proxy
+      - mail_network
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.stirling-pdf.rule=Host(`pdf.alimunee.com`)"
@@ -55,4 +56,6 @@ services:
 
 networks:
   proxy:
+    external: true
+  mail_network:
     external: true
