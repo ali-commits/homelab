@@ -13,7 +13,6 @@ Core storage architecture using Btrfs filesystem with Docker volumes for persist
 │   ├── jellyfin/      → Jellyfin config & metadata
 │   ├── immich/        → Immich ML models & cache
 │   ├── arcane/        → Arcane management data
-│   ├── booklore/      → BookLore config & database
 │   ├── karakeep/      → Karakeep data & search index
 │   ├── paperless-ngx/ → Paperless config & database
 │   ├── stirling-pdf/  → PDF processing config
@@ -23,7 +22,7 @@ Core storage architecture using Btrfs filesystem with Docker volumes for persist
 │   ├── movies/        → Movie collection
 │   ├── tv/            → TV show collection
 │   ├── anime/         → Anime collection
-│   ├── books/         → Book collection (BookLore, Kavita)
+│   ├── books/         → Book collection (Kavita)
 │   ├── comics/        → Comic collection (Kavita)
 │   ├── manga/         → Manga collection (Kavita)
 │   └── downloads/     → qBittorrent downloads
@@ -68,13 +67,11 @@ Core storage architecture using Btrfs filesystem with Docker volumes for persist
 | **Paperless-ngx** | PostgreSQL            | `/storage/data/paperless-ngx/db`   |
 | **Zitadel**       | PostgreSQL            | `/storage/data/zitadel/zitadel-db` |
 | **Karakeep**      | PostgreSQL            | `/storage/data/karakeep/db`        |
-| **Firefly III**   | PostgreSQL            | `/storage/data/firefly-iii/db`     |
 | **Infisical**     | PostgreSQL            | `/storage/data/infisical/db`       |
 | **OnlyOffice**    | PostgreSQL            | `/storage/data/onlyoffice/db`      |
 | **N8N**           | PostgreSQL            | `/storage/data/n8n/db`             |
 | **AFFiNE**        | PostgreSQL            | `/storage/data/affine/db`          |
 | **Linkwarden**    | PostgreSQL            | `/storage/data/linkwarden/db`      |
-| **BookLore**      | MariaDB               | `/storage/data/booklore/db`        |
 
 ### Database Volume Configuration
 ```yaml
@@ -82,9 +79,6 @@ Core storage architecture using Btrfs filesystem with Docker volumes for persist
 volumes:
   - /storage/data/[service]/db:/var/lib/postgresql/data
 
-# MariaDB example
-volumes:
-  - /storage/data/booklore/db:/var/lib/mysql
 ```
 
 ## Service-Specific Storage

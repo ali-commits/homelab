@@ -1,8 +1,8 @@
 # Docker Infrastructure Overview
 
 ## Quick Status Dashboard
-- **Total Services**: 43 deployed and running
-- **Last Updated**: March 3, 2026
+- **Total Services**: 41 deployed and running
+- **Last Updated**: March 20, 2026
 - **Infrastructure Health**: ✅ All systems operational
 
 ## Service Categories & Quick Access
@@ -15,8 +15,8 @@
 | **Authentication**               | 1     | Zitadel                                                                  | [📖](04_authentication.md)             |
 | **AI/ML Services**               | 4     | Lobe Chat, Karakeep, Paperless-GPT, Immich ML                            | [📖](05_ai-ml-services.md)             |
 | **Notifications & SMTP**         | 2     | ntfy, Postfix                                                            | [📖](06_notifications-smtp.md)         |
-| **Data Services**                | 15    | Nextcloud, Immich, Firefly III, Karakeep                                 | [📖](07_data-services.md)              |
-| **Media & Entertainment**        | 10    | Jellyfin, *arr stack, Kavita, BookLore                                   | [📖](08_media-entertainment.md)        |
+| **Data Services**                | 13    | Nextcloud, Immich, Karakeep, AFFiNE                                      | [📖](07_data-services.md)              |
+| **Media & Entertainment**        | 9     | Jellyfin, *arr stack, Kavita                                             | [📖](08_media-entertainment.md)        |
 | **Productivity & Collaboration** | 12    | AFFiNE, OnlyOffice, N8N, Syncthing, Vert.sh, Excalidraw, ChartDB, DrawDB | [📖](09_productivity-collaboration.md) |
 | **Monitoring & Management**      | 6     | Uptime Kuma, Beszel, Infisical, Checkmate, Arcane, Glance                | [📖](10_monitoring-management.md)      |
 
@@ -28,7 +28,6 @@
 | [**affine**](../services/affine/docker-compose.yml)               | [📖](../services/affine/documentation.md)        | 3010             | proxy                                               | notes.alimunee.com        | Knowledge base (Notion alternative)       |
 | [**bazarr**](../services/bazarr/docker-compose.yml)               | [📖](../services/bazarr/documentation.md)        | 6767             | proxy                                               | bazarr.alimunee.com       | Subtitle management for media             |
 | [**beszel**](../services/beszel/docker-compose.yml)               | [📖](../services/beszel/documentation.md)        | 8090             | proxy                                               | monitoring.alimunee.com   | Lightweight system & Docker monitoring    |
-| [**booklore**](../services/booklore/docker-compose.yml)           | [📖](../services/booklore/documentation.md)      | 6060             | proxy, booklore_internal, mail_network              | books.alimunee.com        | Personal book collection manager          |
 | [**checkmate**](../services/checkmate/docker-compose.yml)         | [📖](../services/checkmate/documentation.md)     | 52345            | proxy, checkmate_internal, db_network, mail_network | checkmate.alimunee.com    | Uptime & infrastructure monitoring        |
 | [**cloudflared**](../services/cloudflared/docker-compose.yml)     | [📖](../services/cloudflared/documentation.md)   | -                | proxy                                               | -                         | Cloudflare Tunnel service                 |
 | [**Vert.sh**](../services/vert/docker-compose.yml)                | [📖](../services/vert/documentation.md)          | 80               | proxy                                               | convert.alimunee.com      | WebAssembly file converter (250+ formats) |
@@ -36,7 +35,6 @@
 | [**chartdb**](../services/chartdb/docker-compose.yml)             | [📖](../services/chartdb/documentation.md)       | 80               | proxy                                               | chartdb.alimunee.com      | Database schema design & visualization    |
 | [**drawdb**](../services/drawdb/docker-compose.yml)               | [📖](../services/drawdb/documentation.md)        | 80               | proxy                                               | drawdb.alimunee.com       | Database diagram editor & SQL generator   |
 | [**arcane**](../services/arcane/docker-compose.yml)               | [📖](../services/arcane/documentation.md)        | 3552             | proxy                                               | manage.alimunee.com       | Modern Docker management UI               |
-| [**firefly-iii**](../services/firefly-iii/docker-compose.yml)     | [📖](../services/firefly-iii/documentation.md)   | 8080             | proxy, firefly_internal                             | budget.alimunee.com       | Personal finance & budget management      |
 | [**flaresolverr**](../services/flaresolverr/docker-compose.yml)   | [📖](../services/flaresolverr/documentation.md)  | 8191             | proxy                                               | flaresolverr.alimunee.com | Cloudflare bypass service                 |
 | [**flood**](../services/flood/docker-compose.yml)                 | [📖](../services/flood/documentation.md)         | 3000             | proxy                                               | flood.alimunee.com        | Modern qBittorrent web UI                 |
 | [**glance**](../services/glance/docker-compose.yml)               | [📖](../services/glance/documentation.md)        | 8080             | proxy                                               | glance.alimunee.com       | System dashboard & monitoring             |

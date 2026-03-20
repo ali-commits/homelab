@@ -41,13 +41,6 @@ Complete media automation, streaming, and library management stack with GPU acce
 - **Formats**: CBZ, CBR, PDF, EPUB
 - **Documentation**: [📖](../../services/kavita/documentation.md)
 
-### BookLore - Book Collection Manager
-- **Purpose**: Personal book collection management with AI features
-- **Domain**: books.alimunee.com
-- **Database**: MariaDB
-- **Features**: AI metadata, email delivery, auto-import
-- **Documentation**: [📖](../../services/booklore/documentation.md)
-
 ## Media Storage Structure
 
 ```
@@ -55,7 +48,7 @@ Complete media automation, streaming, and library management stack with GPU acce
 ├── movies/                 → Movie collection (Radarr → Jellyfin)
 ├── tv/                     → TV show collection (Sonarr → Jellyfin)
 ├── anime/                  → Anime collection (Sonarr → Jellyfin)
-├── books/                  → Book collection (BookLore, Kavita)
+├── books/                  → Book collection (Kavita)
 ├── comics/                 → Comic collection (Kavita)
 ├── manga/                  → Manga collection (Kavita)
 └── downloads/              → qBittorrent download directory

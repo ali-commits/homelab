@@ -46,5 +46,4 @@ networks:
   proxy:
     external: true
   mail_network:
-    name: mail_network
-    driver: bridge
+    external: true

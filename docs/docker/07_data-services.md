@@ -8,7 +8,6 @@ Services requiring persistent data storage with databases.
 
 ### Database Types
 - **PostgreSQL 16**: Primary database for most services
-- **MariaDB 11.4**: BookLore book collection management
 - **Redis**: Caching and session storage
 
 ### Database Storage Locations
@@ -17,16 +16,14 @@ Services requiring persistent data storage with databases.
 |---------|----------|------------------|
 | **Immich** | PostgreSQL (pgvector) | `/storage/data/immich/database` |
 | **Nextcloud** | PostgreSQL | `/storage/nextcloud/db` |
-| **Paperless-ngx**stgreSQL | `/storage/data/paperless-ngx/db` |
-| **Zitadel** | PostgreSQL |storage/data/zitadel/zitadel-db` |
+| **Paperless-ngx** | PostgreSQL | `/storage/data/paperless-ngx/db` |
+| **Zitadel** | PostgreSQL | `/storage/data/zitadel/zitadel-db` |
 | **Karakeep** | PostgreSQL | `/storage/data/karakeep/db` |
-| **Firefly III** | PostgreSQL | `/storage/data/firefly-iii/db` |
 | **Infisical** | PostgreSQL | `/storage/data/infisical/db` |
 | **OnlyOffice** | PostgreSQL | `/storage/data/onlyoffice/db` |
-| **N8N** | PostgreSQL | `/storage/n8n/db` |
+| **N8N** | PostgreSQL | `/storage/data/n8n/db` |
 | **AFFiNE** | PostgreSQL | `/storage/data/affine/db` |
 | **Linkwarden** | PostgreSQL | `/storage/data/linkwarden/db` |
-| **BookLore** | MariaDB | `/storage/data/booklore/db` |
 
 ## Services by Database Type
 
@@ -43,14 +40,10 @@ Services requiring persistent data storage with databases.
 - **AFFiNE** - Knowledge base ([📖](../../services/affine/documentation.md))
 - **Linkwarden** - Bookmark & link manager ([📖](../../services/linkwarden/documentation.md))
 
-#### Productivity & Finance
-- III** - Personal finance management ([📖](../../services/firefly-iii/documentation.md))
+#### Productivity
 - **Infisical** - Secrets management ([📖](../../services/infisical/documentation.md))
-- **OnlyOffice** -ument editing ([📖](../../services/onlyoffice/documentation.md))
+- **OnlyOffice** - Document editing ([📖](../../services/onlyoffice/documentation.md))
 - **N8N** - Workflow automation ([📖](../../services/n8n/documentation.md))
-
-### MariaDB Services
-- **BookLore** - Book collection manager ([📖](../../services/booklore/documentation.md))
 
 ### Redis & Caching
 - **Redis** used by multiple services for caching and task queues.
@@ -69,7 +62,7 @@ networks:
 
 ### Internal Networks
 Each multi-container service uses its own internal network:
-- **immich_internal**, **nextcloud_internal**, **firefly_internal**, etc.
+- **immich_internal**, **nextcloud_internal**, **onlyoffice_internal**, etc.
 
 ## Backup Strategies
 
@@ -77,12 +70,6 @@ Each multi-container service uses its own internal network:
 ```bash
 # Individual service backup
 docker exec [service]-db pg_dump -U [user] [database] > backup-$(date +%Y%m%d).sql
-```
-
-### MariaDB Backups
-```bash
-# BookLore backup
-docker exec booklore-db mariadb-dump -u booklore -p booklore > booklore-backup-$(date +%Y%m%d).sql
 ```
 
 ### Other Backups

@@ -25,7 +25,6 @@ Internet → Cloudflare → Cloudflared → Traefik → Services
 
 | Network                 | Purpose                        | Services                                                 |
 | ----------------------- | ------------------------------ | -------------------------------------------------------- |
-| **firefly_internal**    | Firefly III services isolation | Firefly III + database + redis + cron                    |
 | **immich_internal**     | Immich services isolation      | Immich app + database + redis + ML                       |
 | **infisical_internal**  | Infisical services isolation   | Infisical + database + redis                             |
 | **nextcloud_internal**  | Nextcloud services isolation   | Nextcloud + database + redis + cron                      |
@@ -33,7 +32,6 @@ Internet → Cloudflare → Cloudflared → Traefik → Services
 | **n8n_internal**        | N8N services isolation         | N8N + database                                           |
 | **zitadel_internal**    | Zitadel services isolation     | Zitadel + login + database                               |
 | **linkwarden_internal** | Linkwarden services isolation  | Linkwarden + database                                    |
-| **booklore_internal**   | BookLore services isolation    | BookLore + MariaDB database                              |
 | **karakeep_internal**   | Karakeep services isolation    | Karakeep + database + Meilisearch                        |
 | **paperless_internal**  | Paperless services isolation   | Paperless-ngx + Paperless-GPT + Tika + Gotenberg + Redis |
 
@@ -195,8 +193,6 @@ docker network inspect [network] | jq '.[0].Containers'
 - **Flood**: proxy
 - **Flaresolverr**: proxy
 - **Kavita**: proxy
-- **BookLore**: proxy, booklore_internal, mail_network
-
 ### Productivity Services
 - **Nextcloud**: proxy, nextcloud_internal
 - **Immich**: proxy, immich_internal
@@ -210,16 +206,12 @@ docker network inspect [network] | jq '.[0].Containers'
 - **Stirling PDF**: proxy
 - **Paperless-ngx**: proxy, paperless_internal, db_network, mail_network
 - **Paperless-GPT**: proxy, paperless_internal
-- **Firefly III**: proxy, firefly_internal
 
 ---
 
 *For detailed network configuration, refer to individual service documentation in `/services/[service-name]/documentation.md`*
 
-## Docker Firewall Configuration
-
-### iptables Integration Disabled
-Docker's iptables/firewalld integration is disabled to prevent conflicts with firewalld policies:
+## Docker Daemon Configuration
 
 **Configuration**: `/etc/docker/daemon.json`
 ```json
@@ -231,17 +223,18 @@ Docker's iptables/firewalld integration is disabled to prevent conflicts with fi
             "path": "nvidia-container-runtime"
         }
     },
-    "iptables": false
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "50m",
+        "max-file": "3"
+    }
 }
 ```
 
-### Why Disabled
-- Prevents `NAME_CONFLICT: docker-forwarding` errors in firewalld
-- Avoids duplicate firewall rules between Docker and firewalld
-- Container networking still works via bridge mode
+### Log Rotation
+All containers use JSON file logging with limits to prevent unbounded log growth:
+- **max-size**: 50MB per log file
+- **max-file**: 3 rotated files maximum (~150MB total per container)
 
-### Implications
-- Docker will not automatically manage iptables rules
-- Port publishing (`-p`) still works
-- Inter-container networking on bridge networks works normally
-- No impact on overlay networks or Traefik routing
+### Note on iptables
+`iptables: false` was previously tested but caused networking issues and was removed. Docker manages iptables rules directly alongside firewalld without conflicts on this system.

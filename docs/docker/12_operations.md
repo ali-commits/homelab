@@ -92,16 +92,12 @@ BACKUP_DIR="/storage/backups/databases/$(date +%Y%m%d)"
 mkdir -p "$BACKUP_DIR"
 
 # PostgreSQL services
-POSTGRES_SERVICES="immich nextcloud paperless-ngx zitadel karakeep firefly-iii infisical onlyoffice n8n cloudreve affine linkwarden"
+POSTGRES_SERVICES="immich nextcloud paperless-ngx zitadel karakeep infisical onlyoffice n8n affine linkwarden"
 
 for service in $POSTGRES_SERVICES; do
-    docker exec ${service}-db pg_dumpvice} ${service} > "$BACKUP_DIR/${service}-$(date +%Y%m%d).sql"
+    docker exec ${service}-db pg_dump -U ${service} -d ${service} > "$BACKUP_DIR/${service}-$(date +%Y%m%d).sql"
     gzip "$BACKUP_DIR/${service}-$(date +%Y%m%d).sql"
 done
-
-# MariaDB services
-docker exec booklore-db mariadb-dump -u bookloreklore > "$BACKUP_DIR/booklore-$(date +%Y%m%d).sql"
-gzip "$BACKUP_DIR/booklore-$(date +%Y%m%d).sql"
 
 # MongoDB services
 docker exec komodo-mongo mongodump --db komodo --out "$BACKUP_DIR/"
@@ -119,7 +115,7 @@ mkdir -p "$BACKUP_DIR"
 tar -czf "$BACKUP_DIR/service-configs-$(date +%Y%m%d).tar.gz" -C /HOMELAB services/
 
 # Backup system configurations
-tar -czf "$BACKUP_DIR/system-configs-$(date +%Y%m%d).tar.gz" -C /HOMELABigs/
+tar -czf "$BACKUP_DIR/system-configs-$(date +%Y%m%d).tar.gz" -C /HOMELAB configs/
 
 # Backup application data
 tar -czf "$BACKUP_DIR/app-data-$(date +%Y%m%d).tar.gz" -C /storage/data .
@@ -226,7 +222,7 @@ curl -f https://${SERVICE}.alimunee.com/
 ### Service Recovery
 ```bash
 # Emergency service restart
-SERVICE="traefik"  #tical service
+SERVICE="traefik"  # Critical service
 
 docker compose -f /HOMELAB/services/$SERVICE/docker-compose.yml down
 docker compose -f /HOMELAB/services/$SERVICE/docker-compose.yml up -d
@@ -250,7 +246,7 @@ docker compose -f traefik/docker-compose.yml up -d
 docker compose -f zitadel/docker-compose.yml up -d
 docker compose -f postfix/docker-compose.yml up -d
 
-echo "Waiting forvices..."
+echo "Waiting for services..."
 sleep 60
 
 echo "Starting all other services..."

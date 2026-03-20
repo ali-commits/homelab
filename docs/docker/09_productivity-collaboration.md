@@ -47,11 +47,6 @@ Work-focused services for productivity, document management, collaboration, and 
 - **ChartDB** - Database schema design & visualization with AI features ([📖](../../services/chartdb/documentation.md))
 - **DrawDB** - Database diagram editor & SQL generator ([📖](../../services/drawdb/documentation.md))
 
-## Financial Management
-
-### Personal Finance
-- **Firefly III** - Personal finance & budget management ([📖](../../services/firefly-iii/documentation.md))
-
 ## Storage Architecture
 
 ### Data Storage Locations
@@ -71,13 +66,11 @@ Services with Zitadel SSO support:
 - **Nextcloud**: OIDC app integration
 - **Paperless-ngx**: OIDC configuration available
 - **N8N**: Built-in OIDC support
-- **Firefly III**: OAuth integration
 
 ### Email Integration
 Services using SMTP relay:
 - **Nextcloud**: Sharing notifications, user management
 - **Paperless-ngx**: Document processing notifications
-- **Firefly III**: Budget alerts, transaction notifications
 - **N8N**: Workflow notifications and alerts
 
 ### Cross-Service Integration
@@ -93,7 +86,6 @@ Services using SMTP relay:
 #### N8N Workflow Integrations
 - **Nextcloud**: File monitoring and processing workflows
 - **Paperless-ngx**: Document processing automation
-- **Firefly III**: Financial data import and processing
 
 ---
 
