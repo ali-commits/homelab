@@ -81,7 +81,7 @@ services:
 
 #### PAT Files Status
 - **admin.pat**: Not present/needed for current setup
-- **login-client.pat**: Created manually, contains valid PAT, proper permissions (1000:1000, 640)
+- **login-client.pat**: Created manually, contains valid PAT. **Must be `root:root 644`** — the container runs as UID 1000 and cannot read a `640` file owned by root. Was discovered causing the `zitadel-login` healthcheck to fail continuously (March 24, 2026). Fix: `sudo chmod 644 /storage/data/zitadel/config/login-client.pat`
 
 ### Error Logs (Last Attempt)
 ```

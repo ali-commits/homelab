@@ -3,7 +3,7 @@
 | Field      | Detail                                                                                              |
 | ---------- | --------------------------------------------------------------------------------------------------- |
 | **Date**   | March 20, 2026                                                                                      |
-| **Status** | Mitigated — root cause under investigation                                                          |
+| **Status** | Resolved — root cause identified and fixed (March 24, 2026)                                         |
 | **Impact** | NVMe dropped from ~172GB free to ~100GB free overnight. Risk of full disk causing service failures. |
 
 ---
@@ -20,6 +20,8 @@
 | Mar 23 re-investigation | Deleted remaining snapshots → 192GB → 273GB free (81GB from snapshots)                        |
 | Mar 23 test             | Stopped all running containers → 273GB → **885GB free instantly (612GB freed)**               |
 | Mar 23                  | All services restarted — currently 884GB free, monitoring in place                            |
+| Mar 24 investigation    | Beszel confirmed growth started **Mar 16** — correlated with power management reboot          |
+| Mar 24                  | Identified two containers with broken healthchecks hammering btrfs every 30s — both fixed     |
 
 ---
 
@@ -40,6 +42,18 @@ Each hourly/daily snapshot of `@` and `@data` freezes all btrfs extents that exi
 
 **2. Running container overlay2 layers**
 Even without snapshots, running containers accumulate btrfs CoW history in their overlay2 upper directories. This was demonstrated conclusively on March 23: stopping all containers freed **612GB instantly** — space that `du` and `docker system df` could not account for.
+
+**3. Broken container healthchecks (confirmed root trigger — March 24)**
+Beszel showed storage growth began exactly on **March 16** — the day of the power management reboot. That reboot restarted all 71+ containers, resetting their overlay2 state and beginning a fresh accumulation curve.
+
+Additionally, two containers had broken healthchecks firing every 30 seconds, each generating OCI exec processes that write to btrfs overlay2 upper directories:
+
+| Container        | Problem                                                                                                                     | Fix                                                   |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `paperless-tika` | `apache/tika` image has no `curl`; healthcheck used `curl -f http://localhost:9998/tika`                                    | Changed to `bash -c 'echo > /dev/tcp/localhost/9998'` |
+| `zitadel-login`  | PAT file was `root:root 640`; container runs as UID 1000 → `Permission denied` on startup; healthcheck failing indefinitely | Fixed file permissions: `chmod 644 login-client.pat`  |
+
+Both containers had been unhealthy since March 16 (85+ failing streak at time of discovery). Combined ~5,760 failed exec attempts per day, each writing to btrfs overlay2.
 
 ### The Numbers
 
@@ -107,7 +121,8 @@ The log captures:
 
 ## Known Gaps / Next Steps
 
-- [ ] **Identify the specific container(s)** causing the 612GB accumulation — monitor logs over the next 24–48 hours to see which overlay2 directory grows fastest
+- [x] **Identify the specific container(s)** causing growth — `paperless-tika` and `zitadel-login` confirmed and fixed (March 24)
+- [ ] **Monitor overlay2 growth rate** over the next 48 hours now that both broken healthchecks are fixed — check `/storage/data/logs/storage-monitor/` to confirm accumulation has slowed
 - [ ] **Long-term fix**: Move Docker's `@docker` subvolume to a separate **ext4 or xfs** partition — this eliminates btrfs CoW accumulation entirely for container layers
 - [ ] **Consider disabling Snapper for `@` (root)** or reducing frequency — root snapshots have little recovery value compared to the space cost on a btrfs+Docker system
 - [ ] **Investigate onlyoffice** — 5.1GB overlay2 at a clean start is already the largest; likely writes a lot to its container layer

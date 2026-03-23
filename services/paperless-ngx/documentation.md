@@ -102,51 +102,6 @@ Configure OIDC/SAML in Paperless settings:
 - **Export**: Regular exports to /storage/paperless-ngx/export/
 
 ## Troubleshooting
-
-### Common Issues
-
-1. **OCR Problems**:
-   ```bash
-   # Check Tika service
-   docker compose logs paperless-tika
-
-   # Test OCR processing
-   docker exec paperless-ngx python manage.py document_retagger --tags --overwrite
-
-   # Check available OCR languages
-   docker exec paperless-ngx tesseract --list-langs
-
-   # Test specific language OCR
-   docker exec paperless-ngx python manage.py document_consumer --override-lang ara
-   ```
-
-2. **Database Connection Issues**:
-   ```bash
-   # Check database connectivity
-   docker exec paperless-ngx python manage.py check --database default
-
-   # View database logs
-   docker compose logs paperless-db
-   ```
-
-3. **Document Processing Stuck**:
-   ```bash
-   # Check consumer logs
-   docker compose logs -f paperless-ngx | grep consumer
-
-   # Restart document processing
-   docker exec paperless-ngx python manage.py document_consumer
-   ```
-
-4. **Permission Issues**:
-   ```bash
-   # Fix consume directory permissions
-   sudo chown -R 1000:1000 /storage/paperless-ngx/consume/
-
-   # Check container user
-   docker exec paperless-ngx id
-   ```
-
 ### Debug Commands
 ```bash
 # View application logs
