@@ -12,18 +12,18 @@ Services requiring persistent data storage with databases.
 
 ### Database Storage Locations
 
-| Service | Database | Storage Location |
-|---------|----------|------------------|
-| **Immich** | PostgreSQL (pgvector) | `/storage/data/immich/database` |
-| **Nextcloud** | PostgreSQL | `/storage/nextcloud/db` |
-| **Paperless-ngx** | PostgreSQL | `/storage/data/paperless-ngx/db` |
-| **Zitadel** | PostgreSQL | `/storage/data/zitadel/zitadel-db` |
-| **Karakeep** | PostgreSQL | `/storage/data/karakeep/db` |
-| **Infisical** | PostgreSQL | `/storage/data/infisical/db` |
-| **OnlyOffice** | PostgreSQL | `/storage/data/onlyoffice/db` |
-| **N8N** | PostgreSQL | `/storage/data/n8n/db` |
-| **AFFiNE** | PostgreSQL | `/storage/data/affine/db` |
-| **Linkwarden** | PostgreSQL | `/storage/data/linkwarden/db` |
+| Service           | Database              | Storage Location                   |
+| ----------------- | --------------------- | ---------------------------------- |
+| **Immich**        | PostgreSQL (pgvector) | `/storage/data/immich/database`    |
+| **Nextcloud**     | PostgreSQL            | `/storage/nextcloud/db`            |
+| **Paperless-ngx** | PostgreSQL            | `/storage/data/paperless-ngx/db`   |
+| **Zitadel**       | PostgreSQL            | `/storage/data/zitadel/zitadel-db` |
+| **Karakeep**      | PostgreSQL            | `/storage/data/karakeep/db`        |
+| **Infisical**     | PostgreSQL            | `/storage/data/infisical/db`       |
+| **OnlyOffice**    | PostgreSQL            | `/storage/data/onlyoffice/db`      |
+| **N8N**           | PostgreSQL            | `/storage/data/n8n/db`             |
+| **AFFiNE**        | PostgreSQL            | `/storage/data/affine/db`          |
+| **Linkwarden**    | PostgreSQL            | `/storage/data/linkwarden/db`      |
 
 ## Services by Database Type
 
