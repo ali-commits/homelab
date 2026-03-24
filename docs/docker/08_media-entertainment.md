@@ -11,7 +11,7 @@ Complete media automation, streaming, and library management stack with GPU acce
 - **Radarr** - Movie collection manager ([📖](../../services/radarr/documentation.md))
 - **Sonarr** - TV show collection manager ([📖](../../services/sonarr/documentation.md))
 - **Bazarr** - Subtitle management ([📖](../../services/bazarr/documentation.md))
-- **Jellyseerr** - Media request management ([📖](../../services/jellyseerr/documentation.md))
+- **Seerr** - Media request management ([📖](../../services/seerr/documentation.md))
 
 ### Download & Processing
 - **qBittorrent** - Download client ([📖](../../services/qbit/documentation.md))
@@ -58,7 +58,7 @@ Complete media automation, streaming, and library management stack with GPU acce
 
 ### Complete Media Acquisition Flow
 ```
-1. User Request → Jellyseerr
+1. User Request → Seerr
 2. Request Approval → Radarr/Sonarr
 3. Indexer Search → Prowlarr
 4. Download → qBittorrent

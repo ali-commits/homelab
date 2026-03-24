@@ -275,7 +275,7 @@ Configured in March 2026 to reduce idle power consumption and fan noise on the T
 | **Tuned Profile** | `balanced` | tuned service |
 | **CPU Boost** | Disabled | systemd service `cpu-boost-disable` |
 | **C-states available** | POLL, C1, C2 | Max for this platform (C6 not supported on X399/Zen+) |
-| **NVMe Power Control** | `auto` (APST enabled) | powertop auto-tune |
+| **NVMe Power Control** | `on` (APST **disabled**) | udev rule `/etc/udev/rules.d/99-nvme-apst-disable.rules` |
 
 ### Before vs After Results
 | Metric | Before | After |
@@ -299,7 +299,7 @@ Configured in March 2026 to reduce idle power consumption and fan noise on the T
 |---|---|---|
 | **Boost disable service** | `/etc/systemd/system/cpu-boost-disable.service` | Runs after tuned, writes `0` to `/sys/devices/system/cpu/cpufreq/boost` |
 | **Tuned service** | `systemctl enable tuned` | Active on boot, profile: `balanced` |
-| **PowerTOP auto-tune** | Applied at install time | USB autosuspend, PCIe ASPM, misc savings |
+| **PowerTOP auto-tune** | Applied at install time | USB autosuspend, PCIe ASPM, misc savings — **NVMe excluded** (see below) |
 
 ### BIOS Power Settings (ASUS ROG STRIX X399-E, BIOS 1602)
 Path: **Advanced → AMD CBS → Zen Common Options**
@@ -311,6 +311,17 @@ Path: **Advanced → AMD CBS → Zen Common Options**
 
 > **Fan curves** configured in BIOS Q-Fan Control: ~30% duty cycle at ≤45°C, ramps above that.
 > **Negative voltage offset** applied in Extreme Tweaker to reduce heat under load.
+
+### NVMe APST — Disabled Intentionally
+
+NVMe APST (Autonomous Power State Transition) was enabled by `powertop --auto-tune` on March 16, 2026. This caused the NVMe to buffer writes and flush them in large bursts, which compounded btrfs CoW accumulation: each hourly snapper snapshot captured a much larger CoW state than before, causing ~8GB/hour storage growth that exhausted the disk within days.
+
+**APST is permanently disabled** via `/etc/udev/rules.d/99-nvme-apst-disable.rules`. Do not re-enable it. On a 24/7 server with btrfs + snapper, the power savings (~0.5W) are not worth the storage impact.
+
+```bash
+# Verify APST is disabled (should return "on")
+cat /sys/class/nvme/nvme0/power/control
+```
 
 ### Platform Limitations
 - **C6 not available**: Threadripper 2920X (Zen+) on X399 does not expose C6 package sleep state at the firmware level. C2 is the deepest achievable idle state regardless of OS or BIOS configuration. Confirmed via `turbostat`: `Counter 'Core%c6' can not be added`.

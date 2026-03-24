@@ -7,7 +7,7 @@
 - `security` - Security-related notifications
 - `maintenance` - Maintenance notifications
 - `watchtower` - Container update notifications
-- `media` - Media stack alerts (Prowlarr, Radarr, Sonarr, Jellyseerr)ub-sub notification service
+- `media` - Media stack alerts (Prowlarr, Radarr, Sonarr, Seerr)
 
 📖 **For comprehensive documentation, see [System Notifications Guide](/HOMELAB/docs/system/notifications.md)**
 

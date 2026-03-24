@@ -29,7 +29,7 @@ Centralized notification and email delivery services providing push notification
 | **security**       | Security-related notifications | Fail2ban, security services          |
 | **maintenance**    | Maintenance notifications      | System maintenance                   |
 | **watchtower**     | Container update notifications | Watchtower                           |
-| **media**          | Media stack alerts             | Prowlarr, Radarr, Sonarr, Jellyseerr |
+| **media**          | Media stack alerts             | Prowlarr, Radarr, Sonarr, Seerr      |
 
 ## SMTP Integration
 

@@ -8,7 +8,7 @@ TIMELINE_CLEANUP="yes"
 TIMELINE_MIN_AGE="1800"
 
 # Maximum number of hourly snapshots to keep
-TIMELINE_LIMIT_HOURLY="0"
+TIMELINE_LIMIT_HOURLY="4"
 
 # Maximum number of daily snapshots to keep
 TIMELINE_LIMIT_DAILY="7"

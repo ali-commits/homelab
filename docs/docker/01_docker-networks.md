@@ -189,7 +189,7 @@ docker network inspect [network] | jq '.[0].Containers'
 - **Prowlarr**: proxy
 - **Bazarr**: proxy
 - **qBittorrent**: proxy
-- **Jellyseerr**: proxy
+- **Seerr**: proxy
 - **Flood**: proxy
 - **Flaresolverr**: proxy
 - **Kavita**: proxy

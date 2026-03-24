@@ -1,10 +1,9 @@
 services:
-  jellyseerr:
-    image: fallenbagel/jellyseerr:latest
-    container_name: jellyseerr
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    container_name: seerr
+    init: true
     environment:
-      - PUID=1000
-      - PGID=1000
       - TZ=Asia/Kuala_Lumpur
     volumes:
       - /storage/data/jellyseerr:/app/config
@@ -15,8 +14,8 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jellyseerr.rule=Host(`request.alimunee.com`)"
-      - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
+      - "traefik.http.routers.seerr.rule=Host(`request.alimunee.com`)"
+      - "traefik.http.services.seerr.loadbalancer.server.port=5055"
       - "traefik.docker.network=proxy"
     restart: unless-stopped
 

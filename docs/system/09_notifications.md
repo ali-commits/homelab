@@ -27,7 +27,7 @@ The homelab uses [ntfy](https://ntfy.sh/) as a self-hosted notification service 
 | `system-alerts` | System-wide alerts and notifications | Backup scripts, monitoring           | 2-5      | Critical system events                  |
 | `system-status` | General homelab notifications        | Various services                     | 1-5      | General operational notifications       |
 | `watchtower`    | Container update notifications       | Watchtower service                   | 2-4      | Docker image updates and failures       |
-| `media`         | Media stack notifications            | Prowlarr, Radarr, Sonarr, Jellyseerr | 1-3      | Download status, new releases, requests |
+| `media`         | Media stack notifications            | Prowlarr, Radarr, Sonarr, Seerr      | 1-3      | Download status, new releases, requests |
 | `Kuma`          | Uptime Kuma notifications            | Uptime Kuma                          | 5        | services and website status             |
 
 ## Client Access
@@ -305,7 +305,7 @@ send_notification "System Update" "System updated successfully" "maintenance" 2
 
 ### Media Stack Notifications
 **Topic**: `media`
-**Services**: Prowlarr, Radarr, Sonarr, Jellyseerr
+**Services**: Prowlarr, Radarr, Sonarr, Seerr
 **Frequency**: Real-time for downloads and requests
 
 #### Notification Types by Service
@@ -327,7 +327,7 @@ send_notification "System Update" "System updated successfully" "maintenance" 2
 - Missing episode alerts (Priority 3)
 - Series monitoring started (Priority 1)
 
-**Jellyseerr (Requests)**:
+**Seerr (Requests)**:
 - New media request (Priority 2)
 - Request approved/denied (Priority 2)
 - Request completed (Priority 1)

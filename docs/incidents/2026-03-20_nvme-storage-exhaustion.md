@@ -43,17 +43,26 @@ Each hourly/daily snapshot of `@` and `@data` freezes all btrfs extents that exi
 **2. Running container overlay2 layers**
 Even without snapshots, running containers accumulate btrfs CoW history in their overlay2 upper directories. This was demonstrated conclusively on March 23: stopping all containers freed **612GB instantly** — space that `du` and `docker system df` could not account for.
 
-**3. Broken container healthchecks (confirmed root trigger — March 24)**
-Beszel showed storage growth began exactly on **March 16** — the day of the power management reboot. That reboot restarted all 71+ containers, resetting their overlay2 state and beginning a fresh accumulation curve.
+**3. NVMe APST — confirmed root cause (March 24)**
+Beszel confirmed storage growth began on **March 16** — exactly when power management changes were made. Investigation traced it to `powertop --auto-tune` enabling **NVMe APST (Autonomous Power State Transition)**.
 
-Additionally, two containers had broken healthchecks firing every 30 seconds, each generating OCI exec processes that write to btrfs overlay2 upper directories:
+APST allows the NVMe to enter low-power sleep states when idle. On a server running btrfs + snapper, this has a compounding effect:
+- With APST: NVMe buffers writes and flushes them in large bursts → btrfs creates large CoW extents in one transaction
+- Each hourly snapper snapshot captures that large CoW state → holds far more unique extents than before
+- Snapper cleanup deletes old snapshots but can't keep pace with the larger-per-snapshot accumulation
+- Net result: ~8GB/hour persistent growth, invisible to `du` and `docker system df`
+
+Before March 16, the NVMe was always active (no APST), writes were small and frequent, and each snapshot held a manageable amount of data — stable for 6 months with the same snapper config.
+
+**Fix**: APST permanently disabled via udev rule `/etc/udev/rules.d/99-nvme-apst-disable.rules`. On a 24/7 server the power saving (~0.5W) is not worth the storage impact.
+
+**4. Broken container healthchecks (contributing factor — March 24)**
+Two containers had broken healthchecks firing every 30 seconds, generating additional btrfs writes:
 
 | Container        | Problem                                                                                                                     | Fix                                                   |
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
 | `paperless-tika` | `apache/tika` image has no `curl`; healthcheck used `curl -f http://localhost:9998/tika`                                    | Changed to `bash -c 'echo > /dev/tcp/localhost/9998'` |
 | `zitadel-login`  | PAT file was `root:root 640`; container runs as UID 1000 → `Permission denied` on startup; healthcheck failing indefinitely | Fixed file permissions: `chmod 644 login-client.pat`  |
-
-Both containers had been unhealthy since March 16 (85+ failing streak at time of discovery). Combined ~5,760 failed exec attempts per day, each writing to btrfs overlay2.
 
 ### The Numbers
 
@@ -121,16 +130,16 @@ The log captures:
 
 ## Known Gaps / Next Steps
 
-- [x] **Identify the specific container(s)** causing growth — `paperless-tika` and `zitadel-login` confirmed and fixed (March 24)
-- [ ] **Monitor overlay2 growth rate** over the next 48 hours now that both broken healthchecks are fixed — check `/storage/data/logs/storage-monitor/` to confirm accumulation has slowed
-- [ ] **Long-term fix**: Move Docker's `@docker` subvolume to a separate **ext4 or xfs** partition — this eliminates btrfs CoW accumulation entirely for container layers
-- [ ] **Consider disabling Snapper for `@` (root)** or reducing frequency — root snapshots have little recovery value compared to the space cost on a btrfs+Docker system
-- [ ] **Investigate onlyoffice** — 5.1GB overlay2 at a clean start is already the largest; likely writes a lot to its container layer
+- [x] **Identify root cause** — NVMe APST confirmed and disabled (March 24)
+- [x] **Identify broken healthchecks** — `paperless-tika` and `zitadel-login` fixed (March 24)
+- [x] **Reduce snapper frequency** — root changed to daily-only, data changed to hourly keep-4 (March 24)
+- [ ] **Monitor storage after reboot** to confirm the APST fix holds and growth rate returns to near-zero
 
 ---
 
 ## Prevention
 
-1. **Docker log rotation** is now configured (50MB max, 3 files) — prevents unbounded log growth
-2. **Hourly storage monitor** will catch growth early before disk fills
-3. **Do not run Snapper snapshots frequently** on a btrfs volume that hosts Docker — CoW history compounds rapidly
+1. **NVMe APST disabled** via udev rule — the primary cause; do not re-enable via `powertop --auto-tune`
+2. **Snapper limits tightened** — root: daily×7 only; data: hourly×4 only; no monthly snapshots
+3. **Docker log rotation** configured (50MB max, 3 files) — prevents unbounded log growth
+4. **Hourly storage monitor** at `/storage/data/logs/storage-monitor/` catches growth early

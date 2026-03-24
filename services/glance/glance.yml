@@ -118,9 +118,9 @@ pages:
             title: 🎬 Arr Stack
             cache: 1m
             sites:
-              - title: Jellyseerr
+              - title: Seerr
                 url: https://request.alimunee.com
-                icon: sh:jellyseerr
+                icon: sh:seerr
               - title: Radarr (Movies)
                 url: https://radarr.alimunee.com
                 icon: sh:radarr

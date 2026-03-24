@@ -17,7 +17,7 @@ TIMELINE_LIMIT_DAILY="7"
 TIMELINE_LIMIT_WEEKLY="0"
 
 # Maximum number of monthly snapshots to keep
-TIMELINE_LIMIT_MONTHLY="4"
+TIMELINE_LIMIT_MONTHLY="2"
 
 # Maximum number of yearly snapshots to keep (disabled)
 TIMELINE_LIMIT_YEARLY="0"
