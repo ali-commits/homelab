@@ -2,9 +2,27 @@
 # start-all.sh
 # Starts all homelab services. Traefik and infrastructure go first,
 # everything else follows in alphabetical order.
+#
+# Usage: start-all.sh [-e service1,service2,...]
+#   -e   Comma-separated list of services to exclude
 
 SERVICES_DIR="/HOMELAB/services"
 FAILED=()
+EXCLUDE=()
+
+while getopts "e:" opt; do
+    case $opt in
+        e) IFS=',' read -ra EXCLUDE <<< "$OPTARG" ;;
+    esac
+done
+
+is_excluded() {
+    local name="$1"
+    for ex in "${EXCLUDE[@]}"; do
+        [[ "$name" == "$ex" ]] && return 0
+    done
+    return 1
+}
 
 start() {
     local name="$1"
@@ -40,6 +58,7 @@ for dir in "$SERVICES_DIR"/*/; do
     case "$name" in
         traefik|postfix|cloudflared|adguard) continue ;;
     esac
+    is_excluded "$name" && { echo "  ⊘ $name (excluded)"; continue; }
     start "$name"
 done
 
