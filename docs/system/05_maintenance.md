@@ -6,12 +6,13 @@
 
 ## Automated Maintenance Schedule
 
-| Task                    | Frequency | Purpose           | Implementation              |
-| ----------------------- | --------- | ----------------- | --------------------------- |
-| **SMART/Btrfs Monitor** | Hourly    | Health monitoring | `btrfs-smart-monitor.timer` |
-| **Btrfs Scrub**         | Weekly    | Data integrity    | `btrfs-scrub.timer`         |
-| **Snapshot Cleanup**    | Automatic | Space management  | Snapper timeline cleanup    |
-| **Security Updates**    | Daily     | System security   | Unattended upgrades         |
+| Task                    | Frequency | Purpose              | Implementation                                                                                                     |
+| ----------------------- | --------- | -------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **SMART/Btrfs Monitor** | Hourly    | Health monitoring    | `btrfs-smart-monitor.timer`                                                                                        |
+| **Storage Monitor**     | On demand | CoW growth detection | `/HOMELAB/scripts/storage-monitor.sh` — logs to `/storage/data/logs/storage-monitor/` (cron removed post-incident) |
+| **Btrfs Scrub**         | Weekly    | Data integrity       | `btrfs-scrub.timer`                                                                                                |
+| **Snapshot Cleanup**    | Automatic | Space management     | Snapper timeline cleanup                                                                                           |
+| **Security Updates**    | Daily     | System security      | Unattended upgrades                                                                                                |
 
 ## Manual Maintenance Tasks
 
@@ -101,7 +102,7 @@ docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Health}}"
 # Check resource usage
 docker stats --no-stream
 
-# Update containers (Watchtower handles this automatically)
+# Update containers (Arcane handles this automatically)
 # Manual update if needed:
 # cd /HOMELAB/services && find . -name "docker-compose.yml" -execdir docker-compose pull \;
 ```
@@ -155,7 +156,7 @@ sensors | grep -E "Tdie|CPU Temp|CPU Fan|CPU OPT"
 ### Storage Issues
 | Problem             | Diagnosis                | Solution                              |
 | ------------------- | ------------------------ | ------------------------------------- |
-| **High disk usage** | `dust -sh /*`              | Clean logs, Docker cleanup            |
+| **High disk usage** | `dust -sh /*`            | Clean logs, Docker cleanup            |
 | **Btrfs errors**    | `sudo btrfs dev stats /` | Run scrub, check hardware             |
 | **Slow I/O**        | `sudo iotop`             | Check disk health, balance filesystem |
 

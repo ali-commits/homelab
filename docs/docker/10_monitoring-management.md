@@ -9,7 +9,7 @@ Services for system monitoring, container management, infrastructure oversight, 
 ### Monitoring Services
 - **Uptime Kuma** - Uptime monitoring & status page ([📖](../../services/kuma/documentation.md))
 - **Beszel** - Lightweight system & Docker monitoring ([📖](../../services/beszel/documentation.md))
-- **Checkmate** - Uptime & infrastructure monitoring ([📖](../../services/checkmate/documentation.md))
+- **Checkmate** - Uptime & infrastructure monitoring ([📖](../../services/checkmate/documentation.md)) — ⚠️ **Currently removed.** MongoDB 8.2.5 (tcmalloc-google) SIGSEGV crash loop on kernel 6.19. Pending upstream fix (MongoDB JIRA filed). See [incident report](../incidents/2026-03-20_nvme-storage-exhaustion.md).
 - **Glance** - System dashboard & monitoring ([📖](../../services/glance/documentation.md))
 
 ## Container Management
@@ -46,6 +46,7 @@ Services for system monitoring, container management, infrastructure oversight, 
 - **File Access**: Directly edit service configurations from the UI
 
 ### Advanced Monitoring with Checkmate
+> ⚠️ Checkmate is currently offline. See note above.
 - **Infrastructure Monitoring**: Server hardware and performance metrics
 - **Multi-protocol Support**: HTTP/HTTPS, TCP, ICMP, DNS monitoring
 - **Incident Management**: Automated alerting and escalation

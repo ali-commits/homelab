@@ -18,11 +18,13 @@ The homelab uses Snapper for local snapshot management:
 
 | Subvolume            | Hourly | Daily | Weekly | Monthly | Space Limit | Free Limit |
 | -------------------- | ------ | ----- | ------ | ------- | ----------- | ---------- |
-| `/` (root)           | 5      | 7     | 4      | 2       | 20%         | 20%        |
-| `/storage/data`      | 5      | 7     | 4      | 2       | 25%         | 20%        |
+| `/` (root)           | 0      | 7     | 0      | 2       | 20%         | 20%        |
+| `/storage/data`      | 4      | 7     | 0      | 4       | 20%         | 20%        |
 | `/storage/nextcloud` | 5      | 7     | 4      | 2       | 25%         | 20%        |
 | `/storage/Immich`    | 5      | 7     | 4      | 2       | 25%         | 20%        |
 | `/storage/shared`    | 5      | 7     | 4      | 2       | 25%         | 20%        |
+
+> **Note:** Root and data retention tightened in March 2026 after the NVMe storage exhaustion incident. Weekly snapshots removed; root hourly disabled entirely. Other subvolumes (nextcloud, immich, shared) retain original schedule.
 
 ## Configuration Details
 

@@ -2,19 +2,19 @@
 
 ## Common Issues
 
-| Issue                    | Diagnosis                      | Solution                                                |
-| ------------------------ | ------------------------------ | ------------------------------------------------------- |
-| **Service won't start**  | `docker logs <service>`        | Check logs for errors, verify configuration             |
-| **Network connectivity** | `docker network inspect proxy` | Verify network configuration and service assignment     |
-| **Database connection**  | Check database logs            | Restart database container, verify credentials          |
-| **SSL/TLS issues**       | Check Traefik logs             | Verify domain/certificate config, restart Traefik       |
-| **Permission issues**    | Check volume mounts            | Fix ownership: `chown -R user:group /path`              |
-| **AI API failures**      | Check Gemini API quota         | Verify API keys and billing in Google Cloud             |
-| **OCR not working**      | Check Tesseract languages      | Install required language packs                         |
-| **Sync conflicts**       | Check Syncthing web UI         | Resolve conflicts manually                              |
-| **Out of disk space**    | `df -h /storage/`              | Clean up old data, expand storage                       |
-| **Memory issues**        | `docker stats`                 | Increase container memory limits                        |
-| **DNS resolution fails** | Test with `nslookup`/`dig`     | Verify DNS config (8.8.8.8, 1.1.1.1), restart container |
+| Issue                    | Diagnosis                                     | Solution                                                                                      |
+| ------------------------ | --------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| **Service won't start**  | `docker logs <service>`                       | Check logs for errors, verify configuration                                                   |
+| **Network connectivity** | `docker network inspect proxy`                | Verify network configuration and service assignment                                           |
+| **Database connection**  | Check database logs                           | Restart database container, verify credentials                                                |
+| **SSL/TLS issues**       | Check Traefik logs                            | Verify domain/certificate config, restart Traefik                                             |
+| **Permission issues**    | Check volume mounts                           | Fix ownership: `chown -R user:group /path`                                                    |
+| **AI API failures**      | Check Gemini API quota                        | Verify API keys and billing in Google Cloud                                                   |
+| **OCR not working**      | Check Tesseract languages                     | Install required language packs                                                               |
+| **Sync conflicts**       | Check Syncthing web UI                        | Resolve conflicts manually                                                                    |
+| **Out of disk space**    | `df -h /` and `sudo btrfs filesystem usage /` | `df` may show normal usage while btrfs `Used` is inflated — see btrfs CoW ghost storage below |
+| **Memory issues**        | `docker stats`                                | Increase container memory limits                                                              |
+| **DNS resolution fails** | Test with `nslookup`/`dig`                    | Verify DNS config (8.8.8.8, 1.1.1.1), restart container                                       |
 
 ## Diagnostic Commands
 
@@ -70,6 +70,47 @@ For detailed troubleshooting of individual services, refer to their documentatio
 - **Media Services**: [08_media-entertainment.md](08_media-entertainment.md)
 - **Productivity**: [09_productivity-collaboration.md](09_productivity-collaboration.md)
 - **Monitoring**: [10_monitoring-management.md](10_monitoring-management.md)
+
+## btrfs CoW Ghost Storage
+
+btrfs `Used` can grow far beyond actual file sizes when containers crash-loop, due to CoW extent accumulation. This is invisible to `df` / `du` but visible in `btrfs filesystem usage /`.
+
+**Symptoms:**
+- `sudo btrfs filesystem usage /` shows `Used` much higher than `du -sh /*`
+- Storage growing continuously (run `/HOMELAB/scripts/storage-monitor.sh` to sample, or check past logs at `/storage/data/logs/storage-monitor/`)
+- A container with a database is crash-looping (each unclean shutdown triggers journal recovery = new CoW extents)
+
+**Diagnosis:**
+```bash
+# Check real btrfs usage vs apparent usage
+sudo btrfs filesystem usage /
+
+# Find crash-looping containers
+docker events --filter event=die --since 1h
+docker inspect <container> | jq '.[0].State.ExitCode'  # 139 = SIGSEGV
+
+# Count coredumps
+coredumpctl list | grep <process>
+```
+
+**Recovery:**
+```bash
+# 1. Stop the offending container
+# 2. Delete all snapper snapshots (they hold old extents alive)
+sudo snapper -c root list
+sudo snapper -c data delete <id>
+
+# 3. Run btrfs balance to reclaim freed extents
+sudo btrfs balance start -dusage=50 /
+sudo btrfs balance start -musage=50 /
+
+# 4. Remove Docker images if needed (reflinks freed = large reclaim)
+docker image prune -a
+```
+
+> **Known issue:** MongoDB 8.2.5 (tcmalloc-google) SIGSEGV crash loop on kernel 6.19. See [incident report](../incidents/2026-03-20_nvme-storage-exhaustion.md).
+
+---
 
 ## Emergency Procedures
 
