@@ -1,0 +1,14 @@
+services:
+  sablier:
+    image: sablierapp/sablier:latest
+    container_name: sablier
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: start --provider.name=docker
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

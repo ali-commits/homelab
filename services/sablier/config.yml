@@ -1,0 +1,56 @@
+groups:
+  - name: onlyoffice-stack
+    containers:
+      - onlyoffice
+      - onlyoffice-db
+      - onlyoffice-redis
+      - onlyoffice-rabbitmq
+  - name: affine-stack
+    containers:
+      - affine_server
+      - affine_migration_job
+      - affine_redis
+      - affine_postgres
+  - name: chartdb-stack
+    containers:
+      - chartdb
+  - name: drawdb-stack
+    containers:
+      - drawdb
+  - name: excalidraw-stack
+    containers:
+      - excalidraw
+  - name: glance-stack
+    containers:
+      - glance
+  - name: it-tools-stack
+    containers:
+      - it-tools
+  - name: linkwarden-stack
+    containers:
+      - linkwarden
+      - linkwarden-db
+      - linkwarden-meilisearch
+  - name: stirling-pdf-stack
+    containers:
+      - stirling-pdf
+  - name: lobe-chat-stack
+    containers:
+      - lobe_chat
+      - lobe_chat_db
+      - lobe_chat_minio
+  - name: outline-stack
+    containers:
+      - outline
+      - outline-db
+      - outline-redis
+  - name: paperless-ngx-stack
+    containers:
+      - paperless-ngx
+      - paperless-db
+      - paperless-redis
+      - paperless-tika
+      - paperless-gotenberg
+  - name: paperless-gpt-stack
+    containers:
+      - paperless-gpt

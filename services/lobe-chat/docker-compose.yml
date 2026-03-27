@@ -2,115 +2,124 @@ services:
   lobe-chat:
     image: lobehub/lobe-chat-database:latest
     container_name: lobe_chat
-    restart: unless-stopped
+    restart: 'no'
     env_file:
-      - .env
+    - .env
     environment:
-      - TZ=America/New_York
-      # Service Configuration
-      - NEXT_PUBLIC_SERVICE_MODE=server
-      - APP_URL=https://chat.alimunee.com
-      - DATABASE_DRIVER=node
-      - DATABASE_URL=${DATABASE_URL}
-      # Authentication Configuration
-      - KEY_VAULTS_SECRET=${KEY_VAULTS_SECRET}
-      - NEXT_AUTH_SECRET=${NEXT_AUTH_SECRET}
-      - NEXT_PUBLIC_ENABLE_NEXT_AUTH=1
-      - NEXT_AUTH_SSO_PROVIDERS=zitadel
-      - NEXTAUTH_URL=https://chat.alimunee.com/api/auth
-      # Zitadel SSO Configuration
-      - AUTH_ZITADEL_ID=${AUTH_ZITADEL_ID}
-      - AUTH_ZITADEL_SECRET=${AUTH_ZITADEL_SECRET}
-      - AUTH_ZITADEL_ISSUER=${AUTH_ZITADEL_ISSUER}
-      # S3 Storage Configuration (using MinIO)
-      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
-      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
-      - S3_ENDPOINT=${S3_ENDPOINT}
-      - S3_BUCKET=${S3_BUCKET}
-      - S3_PUBLIC_DOMAIN=${S3_PUBLIC_DOMAIN}
-      - S3_ENABLE_PATH_STYLE=1
+    - TZ=America/New_York
+    - NEXT_PUBLIC_SERVICE_MODE=server
+    - APP_URL=https://chat.alimunee.com
+    - DATABASE_DRIVER=node
+    - DATABASE_URL=${DATABASE_URL}
+    - KEY_VAULTS_SECRET=${KEY_VAULTS_SECRET}
+    - NEXT_AUTH_SECRET=${NEXT_AUTH_SECRET}
+    - NEXT_PUBLIC_ENABLE_NEXT_AUTH=1
+    - NEXT_AUTH_SSO_PROVIDERS=zitadel
+    - NEXTAUTH_URL=https://chat.alimunee.com/api/auth
+    - AUTH_ZITADEL_ID=${AUTH_ZITADEL_ID}
+    - AUTH_ZITADEL_SECRET=${AUTH_ZITADEL_SECRET}
+    - AUTH_ZITADEL_ISSUER=${AUTH_ZITADEL_ISSUER}
+    - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
+    - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
+    - S3_ENDPOINT=${S3_ENDPOINT}
+    - S3_BUCKET=${S3_BUCKET}
+    - S3_PUBLIC_DOMAIN=${S3_PUBLIC_DOMAIN}
+    - S3_ENABLE_PATH_STYLE=1
     volumes:
-      - /storage/data/lobe-chat/data:/app/data
-      - /etc/localtime:/etc/localtime:ro
+    - /storage/data/lobe-chat/data:/app/data
+    - /etc/localtime:/etc/localtime:ro
     dns:
-      - 8.8.8.8
-      - 1.1.1.1
+    - 8.8.8.8
+    - 1.1.1.1
     networks:
-      - proxy
-      - lobe_chat_internal
-      - db_network
+    - proxy
+    - lobe_chat_internal
+    - db_network
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.lobe-chat.rule=Host(`chat.alimunee.com`)"
-      - "traefik.http.services.lobe-chat.loadbalancer.server.port=3210"
-      - "traefik.docker.network=proxy"
-      # Watchtower labels
-      - "com.centurylinklabs.watchtower.enable=true"
+    - traefik.enable=true
+    - traefik.http.routers.lobe-chat.rule=Host(`chat.alimunee.com`)
+    - traefik.http.services.lobe-chat.loadbalancer.server.port=3210
+    - traefik.docker.network=proxy
+    - traefik.http.middlewares.lobe-chat-sablier.plugin.sablier.sablierUrl=http://sablier:10000
+    - traefik.http.middlewares.lobe-chat-sablier.plugin.sablier.sessionDuration=5m
+    - traefik.http.middlewares.lobe-chat-sablier.plugin.sablier.group=lobe-chat-stack
+    - traefik.http.middlewares.lobe-chat-sablier.plugin.sablier.dynamic.theme=hacker-terminal
+    - traefik.docker.allownonrunning=true
+    - traefik.http.routers.lobe-chat.middlewares=lobe-chat-sablier
+    - com.centurylinklabs.watchtower.enable=true
+    - sablier.enable=true
+    - sablier.group=lobe-chat-stack
     depends_on:
-      - lobe-chat-db
-      - lobe-chat-minio
-
+    - lobe-chat-db
+    - lobe-chat-minio
   lobe-chat-db:
     image: pgvector/pgvector:pg16
     container_name: lobe_chat_db
-    restart: unless-stopped
+    restart: 'no'
     env_file:
-      - .env
+    - .env
     environment:
-      - POSTGRES_DB=lobe_chat
-      - POSTGRES_USER=lobe_chat
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - PGDATA=/var/lib/postgresql/data/pgdata
+    - POSTGRES_DB=lobe_chat
+    - POSTGRES_USER=lobe_chat
+    - POSTGRES_PASSWORD=${DB_PASSWORD}
+    - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - /storage/data/lobe-chat/db:/var/lib/postgresql/data
-      - /etc/localtime:/etc/localtime:ro
+    - /storage/data/lobe-chat/db:/var/lib/postgresql/data
+    - /etc/localtime:/etc/localtime:ro
     networks:
-      - lobe_chat_internal
-      - db_network
+    - lobe_chat_internal
+    - db_network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d lobe_chat -U lobe_chat" ]
+      test:
+      - CMD-SHELL
+      - pg_isready -d lobe_chat -U lobe_chat
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
-
+    labels:
+    - sablier.enable=true
+    - sablier.group=lobe-chat-stack
   lobe-chat-minio:
     image: minio/minio:latest
     container_name: lobe_chat_minio
-    restart: unless-stopped
+    restart: 'no'
     env_file:
-      - .env
+    - .env
     environment:
-      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
-      - MINIO_BROWSER_REDIRECT_URL=https://minio-lobe.alimunee.com
+    - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+    - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+    - MINIO_BROWSER_REDIRECT_URL=https://minio-lobe.alimunee.com
     command: server /data --console-address ":9001"
     volumes:
-      - /storage/data/lobe-chat/minio:/data
-      - /etc/localtime:/etc/localtime:ro
+    - /storage/data/lobe-chat/minio:/data
+    - /etc/localtime:/etc/localtime:ro
     networks:
-      - lobe_chat_internal
-      - proxy
+    - lobe_chat_internal
+    - proxy
     labels:
-      - "traefik.enable=true"
-      # MinIO API
-      - "traefik.http.routers.lobe-minio-api.rule=Host(`minio-lobe.alimunee.com`) && PathPrefix(`/`)"
-      - "traefik.http.routers.lobe-minio-api.service=lobe-minio-api"
-      - "traefik.http.services.lobe-minio-api.loadbalancer.server.port=9000"
-      # MinIO Console
-      - "traefik.http.routers.lobe-minio-console.rule=Host(`minio-console-lobe.alimunee.com`)"
-      - "traefik.http.routers.lobe-minio-console.service=lobe-minio-console"
-      - "traefik.http.services.lobe-minio-console.loadbalancer.server.port=9001"
-      - "traefik.docker.network=proxy"
-      # Watchtower labels
-      - "com.centurylinklabs.watchtower.enable=true"
+    - traefik.enable=true
+    - traefik.http.routers.lobe-minio-api.rule=Host(`minio-lobe.alimunee.com`) &&
+      PathPrefix(`/`)
+    - traefik.http.routers.lobe-minio-api.service=lobe-minio-api
+    - traefik.http.services.lobe-minio-api.loadbalancer.server.port=9000
+    - traefik.http.routers.lobe-minio-console.rule=Host(`minio-console-lobe.alimunee.com`)
+    - traefik.http.routers.lobe-minio-console.service=lobe-minio-console
+    - traefik.http.services.lobe-minio-console.loadbalancer.server.port=9001
+    - traefik.docker.network=proxy
+    - com.centurylinklabs.watchtower.enable=true
+    - sablier.enable=true
+    - sablier.group=lobe-chat-stack
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:9000/minio/health/live
       interval: 30s
       timeout: 20s
       retries: 3
       start_period: 60s
-
 networks:
   proxy:
     external: true

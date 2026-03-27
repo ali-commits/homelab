@@ -2,30 +2,43 @@ services:
   glance:
     container_name: glance
     image: glanceapp/glance:latest
-    restart: unless-stopped
+    restart: 'no'
     volumes:
-      - ./glance.yml:/app/config/glance.yml:ro
-      - ./glance.d:/app/config/glance.d:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /etc/localtime:/etc/localtime:ro
+    - ./glance.yml:/app/config/glance.yml:ro
+    - ./glance.d:/app/config/glance.d:ro
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    - /etc/localtime:/etc/localtime:ro
     dns:
-      - 8.8.8.8
-      - 1.1.1.1
+    - 8.8.8.8
+    - 1.1.1.1
     networks:
-      - proxy
+    - proxy
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.glance.rule=Host(`glance.alimunee.com`)"
-      - "traefik.http.services.glance.loadbalancer.server.port=8080"
-      - "traefik.docker.network=proxy"
-      - "com.centurylinklabs.watchtower.enable=true"
+    - traefik.enable=true
+    - traefik.http.routers.glance.rule=Host(`glance.alimunee.com`)
+    - traefik.http.services.glance.loadbalancer.server.port=8080
+    - traefik.docker.network=proxy
+    - traefik.http.middlewares.glance-sablier.plugin.sablier.sablierUrl=http://sablier:10000
+    - traefik.http.middlewares.glance-sablier.plugin.sablier.sessionDuration=5m
+    - traefik.http.middlewares.glance-sablier.plugin.sablier.group=glance-stack
+    - traefik.http.middlewares.glance-sablier.plugin.sablier.dynamic.theme=hacker-terminal
+    - traefik.docker.allownonrunning=true
+    - traefik.http.routers.glance.middlewares=glance-sablier
+    - com.centurylinklabs.watchtower.enable=true
+    - sablier.enable=true
+    - sablier.group=glance-stack
     healthcheck:
-      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080" ]
+      test:
+      - CMD
+      - wget
+      - --no-verbose
+      - --tries=1
+      - --spider
+      - http://localhost:8080
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
-
 networks:
   proxy:
     external: true

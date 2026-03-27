@@ -2,29 +2,37 @@ services:
   chartdb:
     image: ghcr.io/chartdb/chartdb:latest
     container_name: chartdb
-    restart: unless-stopped
+    restart: 'no'
     environment:
-      - TZ=America/New_York
-      # Optional: Add OpenAI API key for AI features
-      # - OPENAI_API_KEY=${OPENAI_API_KEY}
-      # Optional: Disable analytics
-      - DISABLE_ANALYTICS=true
+    - TZ=America/New_York
+    - DISABLE_ANALYTICS=true
     volumes:
-      - /etc/localtime:/etc/localtime:ro
+    - /etc/localtime:/etc/localtime:ro
     dns:
-      - 8.8.8.8
-      - 1.1.1.1
+    - 8.8.8.8
+    - 1.1.1.1
     networks:
-      - proxy
+    - proxy
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.chartdb.rule=Host(`chartdb.alimunee.com`)"
-      - "traefik.http.services.chartdb.loadbalancer.server.port=80"
-      - "traefik.docker.network=proxy"
-      # Watchtower labels
-      - "com.centurylinklabs.watchtower.enable=true"
+    - traefik.enable=true
+    - traefik.http.routers.chartdb.rule=Host(`chartdb.alimunee.com`)
+    - traefik.http.services.chartdb.loadbalancer.server.port=80
+    - traefik.docker.network=proxy
+    - traefik.http.middlewares.chartdb-sablier.plugin.sablier.sablierUrl=http://sablier:10000
+    - traefik.http.middlewares.chartdb-sablier.plugin.sablier.sessionDuration=5m
+    - traefik.http.middlewares.chartdb-sablier.plugin.sablier.group=chartdb-stack
+    - traefik.http.middlewares.chartdb-sablier.plugin.sablier.dynamic.theme=hacker-terminal
+    - traefik.docker.allownonrunning=true
+    - traefik.http.routers.chartdb.middlewares=chartdb-sablier
+    - com.centurylinklabs.watchtower.enable=true
+    - sablier.enable=true
+    - sablier.group=chartdb-stack
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:80" ]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:80
       interval: 30s
       timeout: 10s
       retries: 3
@@ -35,7 +43,6 @@ services:
           memory: 512M
         reservations:
           memory: 128M
-
 networks:
   proxy:
     external: true

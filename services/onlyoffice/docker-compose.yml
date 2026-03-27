@@ -2,123 +2,149 @@ services:
   onlyoffice:
     image: onlyoffice/documentserver:latest
     container_name: onlyoffice
-    restart: unless-stopped
+    restart: 'no'
     environment:
-      - TZ=Asia/Kuala_Lumpur
-      - JWT_ENABLED=true
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_HEADER=Authorization
-      - JWT_IN_BODY=false
-      - WOPI_ENABLED=true
-      - USE_UNAUTHORIZED_STORAGE=true
-      - ALLOW_ANONYMOUS_EDITING=true
-      - DB_TYPE=postgres
-      - DB_HOST=onlyoffice-db
-      - DB_PORT=5432
-      - DB_NAME=onlyoffice
-      - DB_USER=onlyoffice
-      - DB_PWD=${POSTGRES_PASSWORD}
-      - AMQP_URI=amqp://guest:guest@onlyoffice-rabbitmq
-      - REDIS_SERVER_HOST=onlyoffice-redis
-      - REDIS_SERVER_PORT=6379
-      - REDIS_SERVER_PASS=${REDIS_PASSWORD}
-      - NGINX_WORKER_PROCESSES=auto
-      - NGINX_WORKER_CONNECTIONS=4096
-      - GENERATE_FONTS=true
+    - TZ=Asia/Kuala_Lumpur
+    - JWT_ENABLED=true
+    - JWT_SECRET=${JWT_SECRET}
+    - JWT_HEADER=Authorization
+    - JWT_IN_BODY=false
+    - WOPI_ENABLED=true
+    - USE_UNAUTHORIZED_STORAGE=true
+    - ALLOW_ANONYMOUS_EDITING=true
+    - DB_TYPE=postgres
+    - DB_HOST=onlyoffice-db
+    - DB_PORT=5432
+    - DB_NAME=onlyoffice
+    - DB_USER=onlyoffice
+    - DB_PWD=${POSTGRES_PASSWORD}
+    - AMQP_URI=amqp://guest:guest@onlyoffice-rabbitmq
+    - REDIS_SERVER_HOST=onlyoffice-redis
+    - REDIS_SERVER_PORT=6379
+    - REDIS_SERVER_PASS=${REDIS_PASSWORD}
+    - NGINX_WORKER_PROCESSES=auto
+    - NGINX_WORKER_CONNECTIONS=4096
+    - GENERATE_FONTS=true
     volumes:
-      - /storage/data/onlyoffice/data:/var/www/onlyoffice/Data
-      - /storage/data/onlyoffice/logs:/var/log/onlyoffice
-      - /storage/data/onlyoffice/lib:/var/lib/onlyoffice
-      - /etc/localtime:/etc/localtime:ro
+    - /storage/data/onlyoffice/data:/var/www/onlyoffice/Data
+    - /storage/data/onlyoffice/logs:/var/log/onlyoffice
+    - /storage/data/onlyoffice/lib:/var/lib/onlyoffice
+    - /etc/localtime:/etc/localtime:ro
     dns:
-      - 8.8.8.8
-      - 1.1.1.1
+    - 8.8.8.8
+    - 1.1.1.1
     networks:
-      - proxy
-      - onlyoffice_internal
-      - nextcloud_internal
+    - proxy
+    - onlyoffice_internal
+    - nextcloud_internal
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.onlyoffice.rule=Host(`office.alimunee.com`)"
-      - "traefik.http.services.onlyoffice.loadbalancer.server.port=80"
-      - "traefik.docker.network=proxy"
-      - "traefik.http.middlewares.onlyoffice-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.middlewares.onlyoffice-headers.headers.customrequestheaders.X-Forwarded-Host=office.alimunee.com"
-      - "traefik.http.middlewares.onlyoffice-secure.headers.stsSeconds=15552000"
-      - "traefik.http.middlewares.onlyoffice-secure.headers.stsIncludeSubdomains=true"
-      - "traefik.http.middlewares.onlyoffice-secure.headers.stsPreload=true"
-      - "traefik.http.middlewares.onlyoffice-secure.headers.contentTypeNosniff=true"
-      - "traefik.http.middlewares.onlyoffice-secure.headers.browserXssFilter=true"
-      - "traefik.http.middlewares.onlyoffice-secure.headers.customFrameOptionsValue=SAMEORIGIN"
-      - "traefik.http.routers.onlyoffice.middlewares=onlyoffice-secure,onlyoffice-headers"
-      - "watchtower.enable=true"
+    - traefik.enable=true
+    - traefik.http.routers.onlyoffice.rule=Host(`office.alimunee.com`)
+    - traefik.http.services.onlyoffice.loadbalancer.server.port=80
+    - traefik.docker.network=proxy
+    - traefik.http.middlewares.onlyoffice-headers.headers.customrequestheaders.X-Forwarded-Proto=https
+    - traefik.http.middlewares.onlyoffice-headers.headers.customrequestheaders.X-Forwarded-Host=office.alimunee.com
+    - traefik.http.middlewares.onlyoffice-secure.headers.stsSeconds=15552000
+    - traefik.http.middlewares.onlyoffice-secure.headers.stsIncludeSubdomains=true
+    - traefik.http.middlewares.onlyoffice-secure.headers.stsPreload=true
+    - traefik.http.middlewares.onlyoffice-secure.headers.contentTypeNosniff=true
+    - traefik.http.middlewares.onlyoffice-secure.headers.browserXssFilter=true
+    - traefik.http.middlewares.onlyoffice-secure.headers.customFrameOptionsValue=SAMEORIGIN
+    - traefik.http.middlewares.onlyoffice-sablier.plugin.sablier.sablierUrl=http://sablier:10000
+    - traefik.http.middlewares.onlyoffice-sablier.plugin.sablier.sessionDuration=5m
+    - traefik.http.middlewares.onlyoffice-sablier.plugin.sablier.group=onlyoffice-stack
+    - traefik.http.middlewares.onlyoffice-sablier.plugin.sablier.dynamic.theme=hacker-terminal
+    - traefik.docker.allownonrunning=true
+    - traefik.http.routers.onlyoffice.middlewares=onlyoffice-secure,onlyoffice-headers,onlyoffice-sablier
+    - watchtower.enable=true
+    - sablier.enable=true
+    - sablier.group=onlyoffice-stack
     depends_on:
-      - onlyoffice-db
-      - onlyoffice-redis
-      - onlyoffice-rabbitmq
+    - onlyoffice-db
+    - onlyoffice-redis
+    - onlyoffice-rabbitmq
     deploy:
       resources:
         limits:
           memory: 4G
         reservations:
           memory: 1G
-
   onlyoffice-db:
     image: postgres:17-alpine
     container_name: onlyoffice-db
-    restart: unless-stopped
+    restart: 'no'
     environment:
-      - POSTGRES_DB=onlyoffice
-      - POSTGRES_USER=onlyoffice
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - PGDATA=/var/lib/postgresql/data/pgdata
+    - POSTGRES_DB=onlyoffice
+    - POSTGRES_USER=onlyoffice
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - /storage/data/onlyoffice/db:/var/lib/postgresql/data
-      - /etc/localtime:/etc/localtime:ro
+    - /storage/data/onlyoffice/db:/var/lib/postgresql/data
+    - /etc/localtime:/etc/localtime:ro
     networks:
-      - onlyoffice_internal
-      - db_network
-    command: >
-      postgres -c shared_preload_libraries=pg_stat_statements -c max_connections=200 -c shared_buffers=256MB -c effective_cache_size=1GB -c maintenance_work_mem=64MB -c checkpoint_completion_target=0.9 -c wal_buffers=16MB -c default_statistics_target=100 -c random_page_cost=1.1 -c effective_io_concurrency=200
+    - onlyoffice_internal
+    - db_network
+    command: 'postgres -c shared_preload_libraries=pg_stat_statements -c max_connections=200
+      -c shared_buffers=256MB -c effective_cache_size=1GB -c maintenance_work_mem=64MB
+      -c checkpoint_completion_target=0.9 -c wal_buffers=16MB -c default_statistics_target=100
+      -c random_page_cost=1.1 -c effective_io_concurrency=200
+
+      '
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d onlyoffice -U onlyoffice" ]
+      test:
+      - CMD-SHELL
+      - pg_isready -d onlyoffice -U onlyoffice
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
-
+    labels:
+    - sablier.enable=true
+    - sablier.group=onlyoffice-stack
   onlyoffice-redis:
     image: redis:alpine
     container_name: onlyoffice-redis
-    restart: unless-stopped
-    command: >
-      redis-server --requirepass ${REDIS_PASSWORD} --maxmemory 512mb --maxmemory-policy allkeys-lru --save 900 1 --save 300 10 --save 60 10000
+    restart: 'no'
+    command: 'redis-server --requirepass ${REDIS_PASSWORD} --maxmemory 512mb --maxmemory-policy
+      allkeys-lru --save 900 1 --save 300 10 --save 60 10000
+
+      '
     volumes:
-      - /storage/data/onlyoffice/redis:/data
-      - /etc/localtime:/etc/localtime:ro
+    - /storage/data/onlyoffice/redis:/data
+    - /etc/localtime:/etc/localtime:ro
     networks:
-      - onlyoffice_internal
+    - onlyoffice_internal
     healthcheck:
-      test: [ "CMD", "redis-cli", "--pass", "${REDIS_PASSWORD}", "ping" ]
+      test:
+      - CMD
+      - redis-cli
+      - --pass
+      - ${REDIS_PASSWORD}
+      - ping
       interval: 10s
       timeout: 5s
       retries: 5
-
+    labels:
+    - sablier.enable=true
+    - sablier.group=onlyoffice-stack
   onlyoffice-rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: onlyoffice-rabbitmq
-    restart: unless-stopped
+    restart: 'no'
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=+S 2:2
+    - RABBITMQ_DEFAULT_USER=guest
+    - RABBITMQ_DEFAULT_PASS=guest
+    - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=+S 2:2
     volumes:
-      - /storage/data/onlyoffice/rabbitmq:/var/lib/rabbitmq
-      - /etc/localtime:/etc/localtime:ro
+    - /storage/data/onlyoffice/rabbitmq:/var/lib/rabbitmq
+    - /etc/localtime:/etc/localtime:ro
     networks:
-      - onlyoffice_internal
+    - onlyoffice_internal
     healthcheck:
-      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
+      test:
+      - CMD
+      - rabbitmq-diagnostics
+      - ping
       interval: 10s
       timeout: 5s
       retries: 5
@@ -129,7 +155,9 @@ services:
           memory: 256M
         reservations:
           memory: 128M
-
+    labels:
+    - sablier.enable=true
+    - sablier.group=onlyoffice-stack
 networks:
   proxy:
     external: true

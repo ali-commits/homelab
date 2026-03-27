@@ -3,7 +3,7 @@ services:
     image: ghcr.io/toeverything/affine:${AFFINE_REVISION:-stable}
     container_name: affine_server
     ports:
-      - '${PORT:-3010}:3010'
+    - ${PORT:-3010}:3010
     depends_on:
       redis:
         condition: service_healthy
@@ -12,97 +12,122 @@ services:
       affine_migration:
         condition: service_completed_successfully
     volumes:
-      # custom configurations
-      - ${UPLOAD_LOCATION}:/root/.affine/storage
-      - ${CONFIG_LOCATION}:/root/.affine/config
+    - ${UPLOAD_LOCATION}:/root/.affine/storage
+    - ${CONFIG_LOCATION}:/root/.affine/config
     env_file:
-      - .env
+    - .env
     environment:
-      - REDIS_SERVER_HOST=redis
-      - DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@postgres:5432/${DB_DATABASE:-affine}
-      - AFFINE_INDEXER_ENABLED=false
-    restart: unless-stopped
+    - REDIS_SERVER_HOST=redis
+    - DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@postgres:5432/${DB_DATABASE:-affine}
+    - AFFINE_INDEXER_ENABLED=false
+    restart: 'no'
     dns:
-      - 8.8.8.8
-      - 1.1.1.1
+    - 8.8.8.8
+    - 1.1.1.1
     networks:
-      - proxy
-      - mail_network
+    - proxy
+    - mail_network
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.affine.rule=Host(`notes.alimunee.com`)
-      - traefik.http.services.affine.loadbalancer.server.port=3010
-      - traefik.docker.network=proxy
+    - traefik.enable=true
+    - traefik.http.routers.affine.rule=Host(`notes.alimunee.com`)
+    - traefik.http.services.affine.loadbalancer.server.port=3010
+    - traefik.docker.network=proxy
+    - traefik.http.middlewares.affine-sablier.plugin.sablier.sablierUrl=http://sablier:10000
+    - traefik.http.middlewares.affine-sablier.plugin.sablier.sessionDuration=5m
+    - traefik.http.middlewares.affine-sablier.plugin.sablier.group=affine-stack
+    - traefik.http.middlewares.affine-sablier.plugin.sablier.dynamic.theme=hacker-terminal
+    - traefik.docker.allownonrunning=true
+    - traefik.http.routers.affine.middlewares=affine-sablier
+    - sablier.enable=true
+    - sablier.group=affine-stack
     deploy:
       resources:
         limits:
           memory: 4G
         reservations:
           memory: 512M
-
   affine_migration:
     image: ghcr.io/toeverything/affine:${AFFINE_REVISION:-stable}
     container_name: affine_migration_job
     volumes:
-      # custom configurations
-      - ${UPLOAD_LOCATION}:/root/.affine/storage
-      - ${CONFIG_LOCATION}:/root/.affine/config
-    command: [ 'sh', '-c', 'node ./scripts/self-host-predeploy.js' ]
+    - ${UPLOAD_LOCATION}:/root/.affine/storage
+    - ${CONFIG_LOCATION}:/root/.affine/config
+    command:
+    - sh
+    - -c
+    - node ./scripts/self-host-predeploy.js
     env_file:
-      - .env
+    - .env
     environment:
-      - REDIS_SERVER_HOST=redis
-      - DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@postgres:5432/${DB_DATABASE:-affine}
-      - AFFINE_INDEXER_ENABLED=false
+    - REDIS_SERVER_HOST=redis
+    - DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@postgres:5432/${DB_DATABASE:-affine}
+    - AFFINE_INDEXER_ENABLED=false
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
     dns:
-      - 8.8.8.8
-      - 1.1.1.1
+    - 8.8.8.8
+    - 1.1.1.1
     networks:
-      - proxy
-
+    - proxy
+    labels:
+    - sablier.enable=true
+    - sablier.group=affine-stack
   redis:
     image: redis
     container_name: affine_redis
     healthcheck:
-      test: [ 'CMD', 'redis-cli', '--raw', 'incr', 'ping' ]
+      test:
+      - CMD
+      - redis-cli
+      - --raw
+      - incr
+      - ping
       interval: 10s
       timeout: 5s
       retries: 5
-    restart: unless-stopped
+    restart: 'no'
     dns:
-      - 8.8.8.8
-      - 1.1.1.1
+    - 8.8.8.8
+    - 1.1.1.1
     networks:
-      - proxy
-
+    - proxy
+    labels:
+    - sablier.enable=true
+    - sablier.group=affine-stack
   postgres:
     image: pgvector/pgvector:pg16
     container_name: affine_postgres
     volumes:
-      - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
+    - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE:-affine}
-      POSTGRES_INITDB_ARGS: '--data-checksums'
+      POSTGRES_INITDB_ARGS: --data-checksums
       POSTGRES_HOST_AUTH_METHOD: trust
     healthcheck:
-      test: [ 'CMD', 'pg_isready', '-U', "${DB_USERNAME}", '-d', "${DB_DATABASE:-affine}" ]
+      test:
+      - CMD
+      - pg_isready
+      - -U
+      - ${DB_USERNAME}
+      - -d
+      - ${DB_DATABASE:-affine}
       interval: 10s
       timeout: 5s
       retries: 5
-    restart: unless-stopped
+    restart: 'no'
     dns:
-      - 8.8.8.8
-      - 1.1.1.1
+    - 8.8.8.8
+    - 1.1.1.1
     networks:
-      - proxy
-
+    - proxy
+    labels:
+    - sablier.enable=true
+    - sablier.group=affine-stack
 networks:
   proxy:
     external: true

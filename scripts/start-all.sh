@@ -63,6 +63,22 @@ for dir in "$SERVICES_DIR"/*/; do
 done
 
 echo ""
+echo "--- Scaling to Zero (Sablier managed) ---"
+echo ""
+SABLIER_SERVICES=(affine chartdb drawdb excalidraw glance it-tools linkwarden lobe-chat onlyoffice outline paperless-gpt paperless-ngx stirling-pdf)
+for svc in "${SABLIER_SERVICES[@]}"; do
+    is_excluded "$svc" && continue
+    if [ -d "$SERVICES_DIR/$svc" ]; then
+        echo "▶ Stopping $svc for Sablier wake-on-demand..."
+        if cd "$SERVICES_DIR/$svc" && docker compose stop >/dev/null 2>&1; then
+            echo "  ✓ $svc (stopped)"
+        else
+            echo "  ✗ $svc (failed to stop)"
+        fi
+    fi
+done
+
+echo ""
 echo "========================================"
 if [ ${#FAILED[@]} -eq 0 ]; then
     echo "  All services started successfully"
