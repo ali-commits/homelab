@@ -234,29 +234,19 @@ curl -f https://${SERVICE}.alimunee.com/
 
 ### Complete Infrastructure Recovery
 ```bash
-#!/bin/bash
-# Nuclear option: restart everything
+# Nuclear option: restart everything using start-all.sh
+# Traefik, Postfix, Cloudflared, AdGuard start first automatically,
+# then all other services, then Sablier-managed services are stopped for wake-on-demand.
+/HOMELAB/scripts/start-all.sh
 
-echo "Stopping all services..."
-cd /HOMELAB/services
-find . -name "docker-compose.yml" -execdir docker-compose down \;
-
-echo "Starting core services..."
-docker compose -f traefik/docker-compose.yml up -d
-docker compose -f zitadel/docker-compose.yml up -d
-docker compose -f postfix/docker-compose.yml up -d
-
-echo "Waiting for services..."
-sleep 60
-
-echo "Starting all other services..."
-find . -name "docker-compose.yml" -not -path "./traefik/*" -not -path "./zitadel/*" -not -path "./postfix/*" -execdir docker-compose up -d \;
+# To exclude specific services:
+/HOMELAB/scripts/start-all.sh -e checkmate,sablier
 ```
 
 ## Operational Best Practices
 
 ### Security Operations
-- **Regular Updates**: Automated container updates via Watchtower
+- **Regular Updates**: Automated container updates via Arcane
 - **Backup Verification**: Regular backup integrity checks
 - **Access Monitoring**: Monitor service access logs
 - **Secret Rotation**: Regular rotation of API keys and passwords

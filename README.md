@@ -27,6 +27,7 @@
 - **Remote Access**: Tailscale VPN with Magic DNS and subnet routing
 - **Email Delivery**: Postfix SMTP relay with Brevo upstream for notifications
 - **Container Orchestration**: 41 services across 7 categories with Traefik routing
+- **Wake-on-Demand**: Sablier scales 13 low-traffic services to zero, waking them instantly on request
 
 ---
 
@@ -38,7 +39,7 @@
 | **☁️ Data & Productivity**      | 13        | Nextcloud, Immich, AFFiNE, Karakeep       | Cloud storage, photo AI, knowledge base             |
 | **🤖 AI/ML Services**           | 4         | Lobe Chat, Karakeep, Paperless-GPT        | Multi-LLM chat, AI bookmarks, document processing   |
 | **🔧 Productivity Tools**       | 12        | OnlyOffice, N8N, Syncthing, IT-Tools      | Collaboration, automation, file sync, dev utilities |
-| **📊 Monitoring & Management**  | 5         | Uptime Kuma, Beszel, Arcane, Checkmate    | Infrastructure monitoring & container management    |
+| **📊 Monitoring & Management**  | 6         | Uptime Kuma, Beszel, Arcane, Sablier      | Infrastructure monitoring, container management & wake-on-demand scaling |
 | **🛡️ Core Infrastructure**      | 3         | Traefik, Cloudflared, AdGuard             | Routing, tunneling, DNS filtering, auto-updates     |
 | **🔐 Security & Communication** | 3         | Zitadel, ntfy, Postfix                    | SSO, notifications, SMTP relay                      |
 

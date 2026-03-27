@@ -1,8 +1,8 @@
 # Docker Infrastructure Overview
 
 ## Quick Status Dashboard
-- **Total Services**: 41 deployed and running
-- **Last Updated**: March 20, 2026
+- **Total Services**: 41 deployed and running (13 managed via Sablier wake-on-demand)
+- **Last Updated**: March 27, 2026
 - **Infrastructure Health**: ✅ All systems operational
 
 ## Service Categories & Quick Access
@@ -18,7 +18,7 @@
 | **Data Services**                | 13    | Nextcloud, Immich, Karakeep, AFFiNE                                      | [📖](07_data-services.md)              |
 | **Media & Entertainment**        | 9     | Jellyfin, *arr stack, Kavita                                             | [📖](08_media-entertainment.md)        |
 | **Productivity & Collaboration** | 12    | AFFiNE, OnlyOffice, N8N, Syncthing, Vert.sh, Excalidraw, ChartDB, DrawDB | [📖](09_productivity-collaboration.md) |
-| **Monitoring & Management**      | 6     | Uptime Kuma, Beszel, Infisical, Checkmate, Arcane, Glance                | [📖](10_monitoring-management.md)      |
+| **Monitoring & Management**      | 6     | Uptime Kuma, Beszel, Infisical, Arcane, Glance, Sablier                  | [📖](10_monitoring-management.md)      |
 
 ## Complete Service Reference
 
@@ -42,6 +42,7 @@
 | [**infisical**](../services/infisical/docker-compose.yml)         | [📖](../services/infisical/documentation.md)     | 8080             | proxy, infisical_internal, mail_network             | secrets.alimunee.com      | Secrets & environment management          |
 | [**it-tools**](../services/it-tools/docker-compose.yml)           | [📖](../services/it-tools/documentation.md)      | 80               | proxy                                               | tools.alimunee.com        | Developer utilities & online tools        |
 | [**jellyfin**](../services/jellyfin/docker-compose.yml)           | [📖](../services/jellyfin/documentation.md)      | 8096             | proxy                                               | tv.alimunee.com           | Media streaming server (GPU transcoding)  |
+| [**sablier**](../services/sablier/docker-compose.yml)             | -                                                | 10000            | proxy                                               | -                         | Wake-on-demand scaling for 13 services    |
 | [**seerr**](../services/seerr/docker-compose.yml)                 | [📖](../services/seerr/documentation.md)         | 5055             | proxy                                               | request.alimunee.com      | Media request management                  |
 | [**karakeep**](../services/karakeep/docker-compose.yml)           | [📖](../services/karakeep/documentation.md)      | 3000             | proxy, karakeep_internal, db_network                | keep.alimunee.com         | AI-powered bookmark manager               |
 | [**kavita**](../services/kavita/docker-compose.yml)               | [📖](../services/kavita/documentation.md)        | 5000             | proxy                                               | comics.alimunee.com       | Digital library for comics & manga        |
@@ -72,6 +73,7 @@ Modern containerized infrastructure with:
 - **Monitoring**: Uptime Kuma + ntfy notifications
 - **Storage**: Btrfs with compression and snapshots
 - **DNS**: Standardized DNS (8.8.8.8, 1.1.1.1) across all services
+- **Wake-on-demand**: Sablier scales 13 low-traffic services to zero; Traefik wakes them on first request
 
 ### Network Topology
 ```

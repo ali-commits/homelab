@@ -16,6 +16,7 @@ Services for system monitoring, container management, infrastructure oversight, 
 
 ### Management Platforms
 - **Arcane** - Modern Docker management UI ([📖](../../services/arcane/documentation.md))
+- **Sablier** - Wake-on-demand scaling for low-traffic services ([📖](../../services/sablier/docker-compose.yml))
 
 ## Secrets Management
 
@@ -38,6 +39,35 @@ Services for system monitoring, container management, infrastructure oversight, 
 - **Quick Links**: Direct access to all services
 
 ## Management Workflows
+
+### Wake-on-Demand with Sablier
+
+Sablier intercepts Traefik requests and wakes stopped containers on first access. Services are stopped when idle to reduce resource consumption.
+
+- **Config**: `/HOMELAB/services/sablier/config.yml`
+- **Port**: 10000 (internal, accessed by Traefik plugin)
+- **Default session**: 5 minutes idle before scale-to-zero
+- **Loading page theme**: `hacker-terminal` while containers wake up
+
+**Managed services (13 groups):**
+
+| Group | Containers |
+|---|---|
+| `affine-stack` | affine_server, affine_migration_job, affine_redis, affine_postgres |
+| `chartdb-stack` | chartdb |
+| `drawdb-stack` | drawdb |
+| `excalidraw-stack` | excalidraw |
+| `glance-stack` | glance |
+| `it-tools-stack` | it-tools |
+| `linkwarden-stack` | linkwarden, linkwarden-db, linkwarden-meilisearch |
+| `lobe-chat-stack` | lobe_chat, lobe_chat_db, lobe_chat_minio |
+| `onlyoffice-stack` | onlyoffice, onlyoffice-db, onlyoffice-redis, onlyoffice-rabbitmq |
+| `outline-stack` | outline, outline-db, outline-redis |
+| `paperless-ngx-stack` | paperless-ngx, paperless-db, paperless-redis, paperless-tika, paperless-gotenberg |
+| `paperless-gpt-stack` | paperless-gpt |
+| `stirling-pdf-stack` | stirling-pdf |
+
+**Note:** `start-all.sh` automatically stops Sablier-managed services after starting them, so they begin in scaled-to-zero state and wake only on demand.
 
 ### Docker Management with Arcane
 - **Unified Interface**: Single dashboard for all Docker resources
