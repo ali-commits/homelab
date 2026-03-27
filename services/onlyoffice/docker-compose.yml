@@ -111,6 +111,7 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=+S 2:2
     volumes:
       - /storage/data/onlyoffice/rabbitmq:/var/lib/rabbitmq
       - /etc/localtime:/etc/localtime:ro
@@ -124,6 +125,7 @@ services:
     deploy:
       resources:
         limits:
+          cpus: '0.5'
           memory: 256M
         reservations:
           memory: 128M
