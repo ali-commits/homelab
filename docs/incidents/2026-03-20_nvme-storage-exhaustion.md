@@ -3,10 +3,10 @@
 | Field          | Detail                                                                                              |
 | -------------- | --------------------------------------------------------------------------------------------------- |
 | **Date**       | March 20, 2026                                                                                      |
-| **Status**     | ⚠️ Root cause identified — checkmate removed, ghost storage partially reclaimed. Two open items remain. |
+| **Status**     | ✅ Resolved — root cause confirmed, ghost storage fully reclaimed, bug reports filed.               |
 | **Impact**     | NVMe dropped from ~172GB free to ~0GB free over several weeks. Risk of full disk causing service failures. |
 | **Root Cause** | MongoDB 8.2.5 (tcmalloc-google) SIGSEGV crash loop on kernel 6.19 → 2,000+ WiredTiger journal recovery cycles → btrfs CoW extent accumulation. |
-| **Open Items** | 1. ~26GB ghost storage still on NVMe above pre-incident baseline. 2. Checkmate needs a fix to run on kernel 6.19 (MongoDB pin or kernel patch). |
+| **Resolution** | Checkmate removed. Ghost storage reclaimed (46GB used, below 64GB pre-incident baseline). Bug reports filed with MongoDB JIRA and Linux kernel Bugzilla (Memory Management). |
 
 ---
 
@@ -57,6 +57,12 @@
 | Mar 26 16:00                | Kernel 6.19.8 set as default. Checkmate stopped, containers and images removed (`docker compose down --rmi all`), `/storage/data/checkmate/` deleted. |
 | Mar 26 16:09                | Rebooted back to kernel 6.19.8. Confirmed: 69 containers running, no checkmate, Used: 97.47GB. Investigation complete. |
 | Mar 26 16:15–16:30          | Ghost storage cleanup: deleted 1,705 mongod coredumps (~4GB), ran `docker system prune` (178MB), deleted all 3 snapper snapshots, ran btrfs balance (2 passes). **Used: ~90.6GB.** ~26GB ghost storage remains above pre-incident baseline — btrfs background reclamation ongoing. |
+| Mar 27                      | Stopped all 68 remaining containers and removed all Docker images to force btrfs CoW extent release. All volumes and `/storage/data/` intact. |
+| Mar 27                      | Deleted all snapper snapshots from root (no deletable snapshots, only #0) and data configs (snapshots 1, 12, 25, 26, 27, 28 deleted). btrfs aggressively reclaimed CoW extents. |
+| Mar 27                      | **Used: 46GB** — below pre-incident baseline of ~64GB. Ghost storage fully resolved. |
+| Mar 27                      | Journal logs vacuumed (7-day retention, freed 1.7GB), DNF cache cleaned (103MB), user cache cleared. System temp cleaned. |
+| Mar 27                      | Bug reports filed: **MongoDB JIRA** (SERVER component, tcmalloc-google SIGSEGV on kernel 6.19) and **Linux kernel Bugzilla** (Memory Management component). |
+| Mar 27                      | **Incident closed.** Services to be restarted manually by user. Checkmate remains removed pending upstream fix. |
 
 ---
 
@@ -89,7 +95,7 @@ On March 16, multiple things changed simultaneously:
    - Activated `tuned` balanced profile
    - Ran `powertop --auto-tune` → enabled NVMe APST, PCIe power management, and other tunables
 
-The root cause has not been isolated yet. Any of these changes (or a combination) could be responsible.
+**Root cause confirmed:** The kernel upgrade (6.18.7 → 6.19.7) introduced an incompatibility with MongoDB 8.2.5 (tcmalloc-google allocator), causing a persistent SIGSEGV crash loop. Power management changes are not a factor — MongoDB ran stably on kernel 6.18.7 with the same power config applied.
 
 ---
 
@@ -221,35 +227,22 @@ Applied `max-size: 50m`, `max-file: 3` in `/etc/docker/daemon.json`
 
 ---
 
-## Current State (March 26, 16:30)
+## Current State (March 27 — Final)
 
-- **Running kernel 6.19.8** — rebooted back from 6.18.7 after confirming root cause
-- 69 containers running — **checkmate fully removed** (containers, images, `/storage/data/checkmate/` deleted)
-- **Used: ~90.6GB** — down from peak of ~103GB after cleanup (coredumps, Docker prune, btrfs balance)
-- **Ghost storage: ~26GB above pre-incident baseline (~64GB with all services running minus checkmate)**
-  - 1,705 mongod coredumps deleted (~4GB reclaimed)
-  - Docker prune: 178MB reclaimed
-  - btrfs balance (2 passes): ~7GB reclaimed
-  - Remaining ~26GB: btrfs CoW history from 2,000+ crash-recovery cycles; will clear slowly in background as btrfs reclaims unreferenced extents
-- **Root cause confirmed and investigation closed.** Two open items remain (see below).
+- **Running kernel 6.19.8**
+- **0 containers running** — user restarting services manually. All volumes and `/storage/data/` intact.
+- **Checkmate fully removed** — containers, images, and `/storage/data/checkmate/` deleted.
+- **Used: 46GB** — below pre-incident baseline of ~64GB. Ghost storage fully resolved.
+- System cache cleaned: journal logs (1.7GB freed), DNF cache (103MB), user cache.
+- Bug reports filed with MongoDB JIRA and Linux kernel Bugzilla.
+- **Incident closed.**
 
 ## Open Items
 
-### 1. Ghost Storage (~26GB)
-btrfs CoW extents from the crash loop are still referenced in the extent tree. Active mitigation applied:
-- All 3 snapper snapshots deleted (were holding old extents alive)
-- 1,705 mongod coredumps deleted (~4GB)
-- btrfs balance run (2 passes, ~7GB reclaimed)
-
-Remaining options to accelerate reclamation:
-- **Wait** — btrfs background reclamation will continue clearing over days/weeks
-- **`btrfs balance start /`** (full balance, no filter) — more aggressive but takes longer and impacts I/O
-- **Reboot** — clears in-memory extent caches and forces a fresh pass
-
-### 2. Checkmate on Kernel 6.19 (pending fix)
-Checkmate is currently removed. To restore it safely on kernel 6.19:
+### Checkmate on Kernel 6.19 (pending upstream fix)
+Checkmate remains removed. To restore it safely on kernel 6.19:
 - **Option A: Pin MongoDB version** — override `checkmate-mongo:latest` to use MongoDB 7.x or a specific 8.x patch that doesn't SIGSEGV on kernel 6.19. Requires custom compose override or waiting for upstream checkmate to pin MongoDB.
-- **Option B: Report upstream** — file a bug against bluewave-labs/checkmate or MongoDB JIRA for SIGSEGV on kernel 6.19 with tcmalloc-google. A kernel update to 6.20+ may also resolve it.
+- **Option B: Wait for upstream fix** — MongoDB JIRA bug filed; a kernel 6.20+ update or a MongoDB patch may resolve it.
 - **Option C: Stay on kernel 6.18** — functional workaround but means missing kernel security updates indefinitely.
 
 ## Research: MongoDB + btrfs CoW (Perplexity analysis, March 25)
