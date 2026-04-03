@@ -65,7 +65,7 @@ done
 echo ""
 echo "--- Scaling to Zero (Sablier managed) ---"
 echo ""
-SABLIER_SERVICES=(affine chartdb drawdb excalidraw glance it-tools linkwarden lobe-chat onlyoffice outline paperless-gpt paperless-ngx stirling-pdf)
+SABLIER_SERVICES=(affine chartdb drawdb excalidraw glance it-tools linkwarden lobe-chat outline paperless-gpt paperless-ngx stirling-pdf)
 for svc in "${SABLIER_SERVICES[@]}"; do
     is_excluded "$svc" && continue
     if [ -d "$SERVICES_DIR/$svc" ]; then

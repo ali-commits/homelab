@@ -1,10 +1,4 @@
 groups:
-  - name: onlyoffice-stack
-    containers:
-      - onlyoffice
-      - onlyoffice-db
-      - onlyoffice-redis
-      - onlyoffice-rabbitmq
   - name: affine-stack
     containers:
       - affine_server

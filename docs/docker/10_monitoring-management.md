@@ -49,7 +49,7 @@ Sablier intercepts Traefik requests and wakes stopped containers on first access
 - **Default session**: 5 minutes idle before scale-to-zero
 - **Loading page theme**: `hacker-terminal` while containers wake up
 
-**Managed services (13 groups):**
+**Managed services (12 groups):**
 
 | Group | Containers |
 |---|---|
@@ -61,11 +61,12 @@ Sablier intercepts Traefik requests and wakes stopped containers on first access
 | `it-tools-stack` | it-tools |
 | `linkwarden-stack` | linkwarden, linkwarden-db, linkwarden-meilisearch |
 | `lobe-chat-stack` | lobe_chat, lobe_chat_db, lobe_chat_minio |
-| `onlyoffice-stack` | onlyoffice, onlyoffice-db, onlyoffice-redis, onlyoffice-rabbitmq |
 | `outline-stack` | outline, outline-db, outline-redis |
 | `paperless-ngx-stack` | paperless-ngx, paperless-db, paperless-redis, paperless-tika, paperless-gotenberg |
 | `paperless-gpt-stack` | paperless-gpt |
 | `stirling-pdf-stack` | stirling-pdf |
+
+> **Not managed**: OnlyOffice is always-on — Sablier's dynamic mode breaks Nextcloud's server-side health checks against `http://onlyoffice/`, causing document editing to fail for all users.
 
 **Note:** `start-all.sh` automatically stops Sablier-managed services after starting them, so they begin in scaled-to-zero state and wake only on demand.
 

@@ -190,14 +190,19 @@ The OnlyOffice Admin Panel provides server management and monitoring capabilitie
 - **Test Example**: https://office.alimunee.com/example/ (for testing only)
 - **Admin Panel**: https://office.alimunee.com/adminpanel/ (server management)
 
+**Lifecycle Note**:
+
+OnlyOffice runs `restart: unless-stopped` (always-on) and is **not managed by Sablier**. Wake-on-demand was attempted but is incompatible: Nextcloud performs server-side health checks against `http://onlyoffice/` (direct container DNS). When OnlyOffice is stopped, this hostname fails to resolve and Nextcloud disables document editing for all users, falling back to file downloads.
+
 **Troubleshooting**:
 
 Common issues and solutions:
 
-1. **Document won't open**: Check JWT configuration matches between OnlyOffice and client
-2. **Slow performance**: Monitor Redis and RabbitMQ health, check memory usage
-3. **Connection errors**: Verify network connectivity and Traefik routing
-4. **Database issues**: Check PostgreSQL logs and connection settings
+1. **Document won't open / files download instead**: Run `docker exec nextcloud php occ onlyoffice:documentserver --check` — if it fails, verify OnlyOffice containers are running and the internal URL `http://onlyoffice/` is reachable from the Nextcloud container
+2. **JWT error**: Check JWT secret matches between OnlyOffice `.env` and Nextcloud admin settings
+3. **Slow performance**: Monitor Redis and RabbitMQ health, check memory usage
+4. **Connection errors**: Verify network connectivity and Traefik routing
+5. **Database issues**: Check PostgreSQL logs and connection settings
 
 **Resource Requirements**:
 

@@ -2,7 +2,7 @@ services:
   onlyoffice:
     image: onlyoffice/documentserver:latest
     container_name: onlyoffice
-    restart: 'no'
+    restart: unless-stopped
     environment:
     - TZ=Asia/Kuala_Lumpur
     - JWT_ENABLED=true
@@ -50,15 +50,8 @@ services:
     - traefik.http.middlewares.onlyoffice-secure.headers.contentTypeNosniff=true
     - traefik.http.middlewares.onlyoffice-secure.headers.browserXssFilter=true
     - traefik.http.middlewares.onlyoffice-secure.headers.customFrameOptionsValue=SAMEORIGIN
-    - traefik.http.middlewares.onlyoffice-sablier.plugin.sablier.sablierUrl=http://sablier:10000
-    - traefik.http.middlewares.onlyoffice-sablier.plugin.sablier.sessionDuration=5m
-    - traefik.http.middlewares.onlyoffice-sablier.plugin.sablier.group=onlyoffice-stack
-    - traefik.http.middlewares.onlyoffice-sablier.plugin.sablier.dynamic.theme=hacker-terminal
-    - traefik.docker.allownonrunning=true
-    - traefik.http.routers.onlyoffice.middlewares=onlyoffice-secure,onlyoffice-headers,onlyoffice-sablier
+    - traefik.http.routers.onlyoffice.middlewares=onlyoffice-secure,onlyoffice-headers
     - watchtower.enable=true
-    - sablier.enable=true
-    - sablier.group=onlyoffice-stack
     depends_on:
     - onlyoffice-db
     - onlyoffice-redis
@@ -72,7 +65,7 @@ services:
   onlyoffice-db:
     image: postgres:17-alpine
     container_name: onlyoffice-db
-    restart: 'no'
+    restart: unless-stopped
     environment:
     - POSTGRES_DB=onlyoffice
     - POSTGRES_USER=onlyoffice
@@ -98,13 +91,10 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    labels:
-    - sablier.enable=true
-    - sablier.group=onlyoffice-stack
   onlyoffice-redis:
     image: redis:alpine
     container_name: onlyoffice-redis
-    restart: 'no'
+    restart: unless-stopped
     command: 'redis-server --requirepass ${REDIS_PASSWORD} --maxmemory 512mb --maxmemory-policy
       allkeys-lru --save 900 1 --save 300 10 --save 60 10000
 
@@ -124,13 +114,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    labels:
-    - sablier.enable=true
-    - sablier.group=onlyoffice-stack
   onlyoffice-rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: onlyoffice-rabbitmq
-    restart: 'no'
+    restart: unless-stopped
     environment:
     - RABBITMQ_DEFAULT_USER=guest
     - RABBITMQ_DEFAULT_PASS=guest
@@ -155,9 +142,6 @@ services:
           memory: 256M
         reservations:
           memory: 128M
-    labels:
-    - sablier.enable=true
-    - sablier.group=onlyoffice-stack
 networks:
   proxy:
     external: true

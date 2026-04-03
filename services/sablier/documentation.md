@@ -50,11 +50,12 @@ All groups are defined in `config.yml`. Session duration is set per-service via 
 | `it-tools-stack`      | it-tools                                                                          | 5m      |
 | `linkwarden-stack`    | linkwarden, linkwarden-db, linkwarden-meilisearch                                 | 5m      |
 | `lobe-chat-stack`     | lobe_chat, lobe_chat_db, lobe_chat_minio                                          | 5m      |
-| `onlyoffice-stack`    | onlyoffice, onlyoffice-db, onlyoffice-redis, onlyoffice-rabbitmq                  | 5m      |
 | `outline-stack`       | outline, outline-db, outline-redis                                                | 5m      |
 | `paperless-ngx-stack` | paperless-ngx, paperless-db, paperless-redis, paperless-tika, paperless-gotenberg | 5m      |
 | `paperless-gpt-stack` | paperless-gpt                                                                     | 5m      |
 | `stirling-pdf-stack`  | stirling-pdf                                                                      | 5m      |
+
+> **Not managed by Sablier**: OnlyOffice runs `always-on` (`restart: unless-stopped`). Sablier's dynamic (loading-page) mode is incompatible with Nextcloud's server-side health checks — when OnlyOffice is stopped, Nextcloud can't resolve the `http://onlyoffice/` internal URL and disables document editing for all users.
 
 ## Adding a Service to Sablier
 
