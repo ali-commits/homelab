@@ -1,0 +1,236 @@
+#!/bin/bash
+# flared - Manage Cloudflare Tunnel public hostnames via API.
+#
+# Loads credentials from /HOMELAB/services/cloudflared/.env
+#
+# Usage:
+#   flared list                                   List all public hostnames
+#   flared add <subdomain> [service] [type]       Add a hostname (default: http://traefik)
+#   flared delete <subdomain>                     Remove a hostname
+#
+# Examples:
+#   flared list
+#   flared add drive
+#   flared add cockpit 192.168.1.2:9090 https
+#   flared delete drive
+
+set -euo pipefail
+
+ENV_FILE="/HOMELAB/services/cloudflared/.env"
+API_BASE="https://api.cloudflare.com/client/v4"
+
+# ── Load .env and validate ──────────────────────────────────
+check_env() {
+    if [[ -f "$ENV_FILE" ]]; then
+        set -a
+        source "$ENV_FILE"
+        set +a
+    fi
+    if [[ -z "${CF_API_TOKEN:-}" ]]; then
+        echo "Error: CF_API_TOKEN not found in ${ENV_FILE}"
+        exit 1
+    fi
+    if [[ -z "${CF_ACCOUNT_ID:-}" ]]; then
+        echo "Error: CF_ACCOUNT_ID not found in ${ENV_FILE}"
+        exit 1
+    fi
+    if [[ -z "${CF_TUNNEL_ID:-}" ]]; then
+        echo "Error: CF_TUNNEL_ID not found in ${ENV_FILE}"
+        exit 1
+    fi
+    if [[ -z "${CF_DOMAIN:-}" ]]; then
+        echo "Error: CF_DOMAIN not found in ${ENV_FILE}"
+        exit 1
+    fi
+    # Resolve zone ID on first use
+    if [[ -z "${CF_ZONE_ID:-}" ]]; then
+        CF_ZONE_ID=$(curl -sf "${API_BASE}/zones?name=${CF_DOMAIN}" \
+            -H "Authorization: Bearer ${CF_API_TOKEN}" | jq -r '.result[0].id // empty')
+        if [[ -z "$CF_ZONE_ID" ]]; then
+            echo "Error: Could not resolve zone ID for ${CF_DOMAIN}"
+            echo "Ensure the API token has Zone > DNS > Edit permission"
+            exit 1
+        fi
+    fi
+}
+
+api() {
+    local method="$1" endpoint="$2"
+    shift 2
+    curl -sf -X "$method" \
+        "${API_BASE}/accounts/${CF_ACCOUNT_ID}/cfd_tunnel/${CF_TUNNEL_ID}/${endpoint}" \
+        -H "Authorization: Bearer ${CF_API_TOKEN}" \
+        -H "Content-Type: application/json" \
+        "$@"
+}
+
+# ── DNS helpers ─────────────────────────────────────────────
+dns_api() {
+    local method="$1" endpoint="$2"
+    shift 2
+    curl -sf -X "$method" \
+        "${API_BASE}/zones/${CF_ZONE_ID}/dns_records${endpoint}" \
+        -H "Authorization: Bearer ${CF_API_TOKEN}" \
+        -H "Content-Type: application/json" \
+        "$@"
+}
+
+dns_get_record_id() {
+    local hostname="$1"
+    dns_api GET "?name=${hostname}&type=CNAME" | jq -r '.result[0].id // empty'
+}
+
+dns_create() {
+    local hostname="$1"
+    local tunnel_cname="${CF_TUNNEL_ID}.cfargotunnel.com"
+
+    local existing
+    existing=$(dns_get_record_id "$hostname")
+    if [[ -n "$existing" ]]; then
+        echo "  - DNS record already exists for ${hostname}"
+        return 0
+    fi
+
+    dns_api POST "" -d "{\"type\":\"CNAME\",\"name\":\"${hostname}\",\"content\":\"${tunnel_cname}\",\"proxied\":true}" | jq -r '
+        if .success then "  ✓ DNS record created (CNAME → \(.result.content))"
+        else "  ✗ DNS failed: \(.errors[0].message)" end
+    '
+}
+
+dns_delete() {
+    local hostname="$1"
+
+    local record_id
+    record_id=$(dns_get_record_id "$hostname")
+    if [[ -z "$record_id" ]]; then
+        echo "  - No DNS record found for ${hostname}"
+        return 0
+    fi
+
+    dns_api DELETE "/${record_id}" | jq -r '
+        if .success then "  ✓ DNS record removed"
+        else "  ✗ DNS delete failed: \(.errors[0].message)" end
+    '
+}
+
+# ── Get current config ──────────────────────────────────────
+get_config() {
+    api GET configurations | jq -r '.result.config'
+}
+
+# ── List ────────────────────────────────────────────────────
+cmd_list() {
+    echo "Public hostnames for tunnel ${CF_TUNNEL_ID}:"
+    echo ""
+    printf "%-35s %-10s %s\n" "HOSTNAME" "PROTOCOL" "SERVICE"
+    printf "%-35s %-10s %s\n" "--------" "--------" "-------"
+    api GET configurations | jq -r '
+        .result.config.ingress[]
+        | if .hostname then
+            "\(.hostname)\t\(.service | split("://") | .[0])\t\(.service)"
+          else
+            "* (catch-all)\t\(.service | split("://") | .[0])\t\(.service)"
+          end
+    ' | while IFS=$'\t' read -r host proto svc; do
+        printf "%-35s %-10s %s\n" "$host" "$proto" "$svc"
+    done
+}
+
+# ── Add ─────────────────────────────────────────────────────
+cmd_add() {
+    local subdomain="$1"
+    local service="${2:-traefik}"
+    local protocol="${3:-http}"
+    local hostname="${subdomain}.${CF_DOMAIN}"
+
+    echo "Adding ${hostname} → ${protocol}://${service}"
+
+    # Get current config and inject new entry before the catch-all
+    local config
+    config=$(get_config)
+
+    # Check if hostname already exists
+    if echo "$config" | jq -e --arg h "$hostname" '.ingress[] | select(.hostname == $h)' >/dev/null 2>&1; then
+        echo "Error: ${hostname} already exists in tunnel config"
+        exit 1
+    fi
+
+    # Insert new entry before the catch-all (last entry has no hostname)
+    local new_config
+    new_config=$(echo "$config" | jq --arg h "$hostname" --arg s "${protocol}://${service}" '
+        .ingress as $ing |
+        .ingress = ($ing[:-1] + [{"hostname": $h, "service": $s}] + [$ing[-1]])
+    ')
+
+    api PUT configurations -d "{\"config\": ${new_config}}" | jq -r '
+        if .success then "  ✓ Tunnel route added (\(.result.config.ingress | length - 1) routes total)"
+        else "  ✗ Tunnel route failed: \(.errors[0].message)" end
+    '
+
+    dns_create "$hostname"
+}
+
+# ── Delete ──────────────────────────────────────────────────
+cmd_delete() {
+    local subdomain="$1"
+    local hostname="${subdomain}.${CF_DOMAIN}"
+
+    echo "Removing ${hostname}"
+
+    local config
+    config=$(get_config)
+
+    # Check if hostname exists
+    if ! echo "$config" | jq -e --arg h "$hostname" '.ingress[] | select(.hostname == $h)' >/dev/null 2>&1; then
+        echo "Error: ${hostname} not found in tunnel config"
+        exit 1
+    fi
+
+    # Remove the entry
+    local new_config
+    new_config=$(echo "$config" | jq --arg h "$hostname" '
+        .ingress = [.ingress[] | select(.hostname != $h)]
+    ')
+
+    api PUT configurations -d "{\"config\": ${new_config}}" | jq -r '
+        if .success then "  ✓ Tunnel route removed (\(.result.config.ingress | length - 1) routes remaining)"
+        else "  ✗ Tunnel route failed: \(.errors[0].message)" end
+    '
+
+    dns_delete "$hostname"
+}
+
+# ── Main ────────────────────────────────────────────────────
+usage() {
+    echo "Usage: $(basename "$0") <list|add|delete> [args...]"
+    echo ""
+    echo "  list                              List all public hostnames"
+    echo "  add <subdomain> [service] [type]  Add a hostname (default: http://traefik)"
+    echo "  delete <subdomain>                Remove a hostname"
+    echo ""
+    echo "Examples:"
+    echo "  $(basename "$0") list"
+    echo "  $(basename "$0") add drive"
+    echo "  $(basename "$0") add cockpit 192.168.1.2:9090 https"
+    echo "  $(basename "$0") delete drive"
+    exit 1
+}
+
+check_env
+
+case "${1:-}" in
+    list)
+        cmd_list
+        ;;
+    add)
+        [[ $# -lt 2 ]] && { echo "Error: add requires <subdomain>"; usage; }
+        cmd_add "$2" "${3:-traefik}" "${4:-http}"
+        ;;
+    delete)
+        [[ $# -lt 2 ]] && { echo "Error: delete requires <subdomain>"; usage; }
+        cmd_delete "$2"
+        ;;
+    *)
+        usage
+        ;;
+esac
