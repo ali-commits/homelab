@@ -53,7 +53,6 @@ services:
     - proxy
     - paperless_internal
     - db_network
-    - mail_network
     labels:
     - traefik.enable=true
     - traefik.http.routers.paperless.rule=Host(`docs.alimunee.com`)
@@ -187,6 +186,3 @@ networks:
   db_network:
     external: true
     name: db_network
-  mail_network:
-    external: true
-    name: mail_network

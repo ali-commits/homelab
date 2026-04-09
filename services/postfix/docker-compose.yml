@@ -25,7 +25,6 @@ services:
       - 1.1.1.1
     networks:
       - proxy
-      - mail_network
     labels:
       - "traefik.enable=false"
       - "watchtower.enable=true"
@@ -44,6 +43,4 @@ services:
 
 networks:
   proxy:
-    external: true
-  mail_network:
     external: true

@@ -19,7 +19,6 @@ Internet → Cloudflare → Cloudflared → Traefik → Services
 | ---------------- | -------------------------- | -------------------------------- |
 | **proxy**        | Main reverse proxy network | All web-accessible services      |
 | **db_network**   | Database connections       | PostgreSQL containers + services |
-| **mail_network** | SMTP relay network         | Postfix + services needing email |
 
 ### Internal Networks
 
@@ -69,17 +68,6 @@ networks:
   - [service]_internal # Service-specific isolation
 ```
 
-### Email-Enabled Services
-```yaml
-dns:
-  - 8.8.8.8
-  - 1.1.1.1
-networks:
-  - proxy              # Web access
-  - mail_network       # SMTP relay access
-  - [service]_internal # Internal communication
-```
-
 ### Multi-Container Stacks
 ```yaml
 dns:
@@ -89,7 +77,6 @@ networks:
   - proxy                 # External web access
   - [service]_internal    # Internal service communication
   - db_network           # Database access (if shared)
-  - mail_network         # Email access (if needed)
 ```
 
 ## DNS Configuration
@@ -123,12 +110,12 @@ docker inspect [container] | jq '.[0].HostConfig.Dns'
 - **Database containers** should be on both `db_network` and service-specific internal networks
 - **Internal service communication** uses service-specific networks
 - **No direct host network access** unless absolutely required (AdGuard DNS)
+- **SMTP access** via Postfix on the `proxy` network (no dedicated mail network needed)
 
 ### Network Isolation
 - Each multi-container service has its own internal network
 - Services only connect to networks they actually need
 - Database access is controlled via network membership
-- SMTP access is limited to services that need email functionality
 
 ## Network Management
 
@@ -137,8 +124,6 @@ docker inspect [container] | jq '.[0].HostConfig.Dns'
 # Create core networks
 docker network create proxy --driver bridge
 docker network create db_network --driver bridge
-docker network create mail_network --driver bridge
-
 # Create service-specific networks (handled by docker-compose)
 docker network create [service]_internal --driver bridge
 ```
@@ -151,8 +136,6 @@ docker network ls
 # Inspect specific networks
 docker network inspect proxy
 docker network inspect db_network
-docker network inspect mail_network
-
 # Check service network assignments
 docker inspect [container] | jq '.[0].NetworkSettings.Networks | keys'
 ```
@@ -179,15 +162,15 @@ docker network inspect [network] | jq '.[0].Containers'
 
 ### Authentication & Communication
 - **Zitadel**: proxy, zitadel_internal
-- **Postfix**: proxy, mail_network
+- **Postfix**: proxy
 
 ### Monitoring & Management
 - **Uptime Kuma**: proxy
-- **Checkmate**: proxy, checkmate_internal, mail_network
+- **Checkmate**: proxy, checkmate_internal
 - **Beszel**: proxy
 - **ntfy**: proxy
 - **Glance**: proxy
-- **Infisical**: proxy, infisical_internal, mail_network
+- **Infisical**: proxy, infisical_internal
 - **Arcane**: proxy
 
 ### Media Services
@@ -204,20 +187,20 @@ docker network inspect [network] | jq '.[0].Containers'
 
 ### Productivity Services
 - **OpenCloud**: proxy, opencloud_internal
-- **Nextcloud**: proxy, nextcloud_internal, mail_network
-- **Immich**: proxy, immich_internal, mail_network
-- **AFFiNE**: proxy, mail_network
+- **Nextcloud**: proxy, nextcloud_internal
+- **Immich**: proxy, immich_internal
+- **AFFiNE**: proxy
 - **OnlyOffice**: proxy, onlyoffice_internal, nextcloud_internal
-- **Outline**: proxy, outline_internal, mail_network, db_network
+- **Outline**: proxy, outline_internal, db_network
 - **Lobe Chat**: proxy, lobe_chat_internal, db_network
 - **N8N**: proxy, n8n_internal
 - **Linkwarden**: proxy, linkwarden_internal
 - **Karakeep**: proxy, karakeep_internal
 - **Syncthing**: proxy
 - **IT-Tools**: proxy
-- **Stirling PDF**: proxy, mail_network
-- **Vaultwarden**: proxy, mail_network
-- **Paperless-ngx**: proxy, paperless_internal, db_network, mail_network
+- **Stirling PDF**: proxy
+- **Vaultwarden**: proxy
+- **Paperless-ngx**: proxy, paperless_internal, db_network
 - **Paperless-GPT**: proxy, paperless_internal
 - **ChartDB**: proxy
 - **DrawDB**: proxy

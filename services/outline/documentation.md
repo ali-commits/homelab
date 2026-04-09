@@ -77,7 +77,6 @@ Email notifications are configured through the Postfix relay:
 - `proxy`: Traefik reverse proxy access
 - `outline_internal`: Isolated network for Outline components
 - `db_network`: Database connectivity
-- `mail_network`: SMTP relay access
 
 ## Setup Instructions
 

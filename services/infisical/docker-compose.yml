@@ -19,7 +19,6 @@ services:
     networks:
       - proxy
       - infisical_internal
-      - mail_network
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.infisical.rule=Host(`secrets.alimunee.com`)"
@@ -98,6 +97,3 @@ networks:
   db_network:
     external: true
     name: db_network
-  mail_network:
-    external: true
-    name: mail_network

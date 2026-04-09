@@ -31,7 +31,6 @@ services:
       - 1.1.1.1
     networks:
       - proxy
-      - mail_network
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.vaultwarden.rule=Host(`vaultwarden.alimunee.com`)"
@@ -62,6 +61,3 @@ services:
 networks:
   proxy:
     external: true
-  mail_network:
-    external: true
-    name: mail_network

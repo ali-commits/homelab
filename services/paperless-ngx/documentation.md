@@ -25,7 +25,7 @@ Paperless-ngx is a community-supported document management system that transform
 - **Cache**: Redis (paperless-redis)
 - **OCR**: Apache Tika (paperless-tika)
 - **PDF Processing**: Gotenberg (paperless-gotenberg)
-- **Networks**: proxy, paperless_internal, db_network, mail_network
+- **Networks**: proxy, paperless_internal, db_network
 - **Storage**: /storage/paperless-ngx/ (documents), /storage/data/paperless-ngx/ (app data)
 
 ## Setup

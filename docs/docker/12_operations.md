@@ -28,7 +28,6 @@ Day-to-day operational procedures, maintenance tasks, and emergency procedures f
    # Create required networks
    docker network create proxy
    docker network create db_network
-   docker network create mail_network
 
    # Create storage directories
    sudo mkdir -p /storage/data/[service]/

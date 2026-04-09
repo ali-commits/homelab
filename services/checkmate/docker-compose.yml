@@ -22,7 +22,6 @@ services:
     networks:
       - proxy
       - checkmate_internal
-      - mail_network
     depends_on:
       - mongodb
     security_opt:
@@ -63,8 +62,6 @@ services:
 
 networks:
   proxy:
-    external: true
-  mail_network:
     external: true
   checkmate_internal:
     driver: bridge

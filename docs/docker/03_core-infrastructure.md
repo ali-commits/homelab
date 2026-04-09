@@ -31,7 +31,6 @@ Foundation services providing routing, networking, DNS, and system-level functio
 | ---------------------- | -------------------------- | -------------------------------- |
 | **proxy**              | Main reverse proxy network | All web-accessible services      |
 | **db_network**         | Database connections       | PostgreSQL containers + services |
-| **mail_network**       | SMTP relay network         | Postfix + services needing email |
 | **[service]_internal** | Service isolation          | Multi-container service stacks   |
 
 ### Network Topology

@@ -34,7 +34,7 @@ done
 ```bash
 # Check networks
 docker network ls
-docker network inspect proxy db_network mail_network
+docker network inspect proxy db_network
 
 # Test connectivity
 docker exec [service] nc -zv [target] [port]

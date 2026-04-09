@@ -34,7 +34,7 @@ Stirling PDF is a robust, locally hosted web-based PDF manipulation tool providi
 - **Internal**: http://stirling-pdf:8080
 
 ## Dependencies
-- **Networks**: `proxy` (Traefik routing), `mail_network` (Postfix email)
+- **Networks**: `proxy` (Traefik routing, also reaches Postfix for email)
 - **Storage**: `/storage/data/stirling-pdf/` — config, logs, tessdata, pipeline, customFiles
 - **Database**: H2 embedded (stored in `/configs`) — no external DB needed
 

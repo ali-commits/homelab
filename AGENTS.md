@@ -28,7 +28,7 @@ Self-hosted homelab for personal/family use with emphasis on automation, perform
 - **OS**: Fedora 43 Server (DNF package manager)
 - **Container**: Docker with NVIDIA runtime
 - **Proxy**: Traefik v3.3 + Cloudflare tunnels
-- **Networks**: `proxy`, `db_network`, `mail_network`, `[service]_internal`
+- **Networks**: `proxy`, `db_network`, `[service]_internal`
 - **GPU**: NVIDIA GTX 1070 for transcoding and ML workloads
 
 *Architecture details: [docs/docker/01_docker-networks.md](docs/docker/01_docker-networks.md), [docs/docker/02_storage-volumes.md](docs/docker/02_storage-volumes.md)*
@@ -83,7 +83,6 @@ services:
       - proxy                   # For web-accessible services
       - [service]_internal      # For multi-container services
       - db_network              # If using shared database
-      - mail_network            # If using SMTP relay
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.[service].rule=Host(`[service].alimunee.com`)"
@@ -97,8 +96,6 @@ networks:
   proxy:
     external: true
   db_network:
-    external: true
-  mail_network:
     external: true
 ```
 
@@ -280,7 +277,7 @@ echo "base64:$(openssl rand -base64 32)"  # Laravel APP_KEY
 
 
 ### SMTP (Postfix)
-1. Add `mail_network`
+1. Ensure service is on `proxy` network (Postfix is reachable as `postfix`)
 2. Set SMTP environment variables
 3. Test email delivery
 

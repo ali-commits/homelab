@@ -27,8 +27,8 @@ Vaultwarden is a lightweight, self-hosted alternative to Bitwarden that provides
 - **Internal**: http://vaultwarden:80
 
 ## Dependencies
-- **SMTP Relay**: Postfix (mail_network)
-- **Networks**: proxy, mail_network
+- **SMTP Relay**: Postfix (via proxy network)
+- **Networks**: proxy
 - **Storage**: /storage/data/vaultwarden/ (SQLite database, attachments, icons)
 - **Database**: SQLite (embedded, no external database required)
 

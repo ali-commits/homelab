@@ -33,7 +33,6 @@ services:
     - 1.1.1.1
     networks:
     - proxy
-    - mail_network
     labels:
     - traefik.enable=true
     - traefik.http.routers.stirling-pdf.rule=Host(`pdf.alimunee.com`)
@@ -66,6 +65,4 @@ services:
       start_period: 30s
 networks:
   proxy:
-    external: true
-  mail_network:
     external: true

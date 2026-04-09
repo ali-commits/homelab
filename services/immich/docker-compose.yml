@@ -22,7 +22,6 @@ services:
     networks:
       - proxy
       - immich_internal
-      - mail_network
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.immich.rule=Host(`photos.alimunee.com`)"
@@ -111,6 +110,3 @@ networks:
     driver: bridge
   db_network:
     external: true
-  mail_network:
-    external: true
-    name: mail_network

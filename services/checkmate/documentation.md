@@ -47,7 +47,7 @@
 ### Network Configuration
 - **Internal Port**: 52345
 - **External Domain**: checkmate.alimunee.com
-- **Networks**: proxy, checkmate_internal, db_network, mail_network
+- **Networks**: proxy, checkmate_internal
 
 ## Dependencies
 

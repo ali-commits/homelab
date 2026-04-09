@@ -32,7 +32,6 @@ services:
     networks:
       - proxy
       - nextcloud_internal
-      - mail_network
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nextcloud.rule=Host(`cloud.alimunee.com`)"
@@ -127,6 +126,3 @@ networks:
   db_network:
     external: true
     name: db_network
-  mail_network:
-    external: true
-    name: mail_network

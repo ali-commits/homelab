@@ -34,7 +34,7 @@
 | Setting    | Value                   |
 | ---------- | ----------------------- |
 | SMTP Ports | `25`, `587`             |
-| Networks   | `proxy`, `mail_network` |
+| Networks   | `proxy`                 |
 | Hostname   | `mail.alimunee.com`     |
 
 ## 🔧 Initial Setup

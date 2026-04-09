@@ -15,7 +15,7 @@ Centralized notification and email delivery services providing push notification
 ### Postfix - SMTP Relay Server
 - **Purpose**: Centralized email delivery via Brevo upstream
 - **Ports**: 25, 587 (internal)
-- **Network**: mail_network
+- **Network**: proxy
 - **Upstream**: Brevo SMTP servers (smtp-relay.brevo.com:587)
 - **Documentation**: [📖](../../services/postfix/documentation.md)
 
@@ -38,7 +38,7 @@ Services connect to the SMTP relay using these settings:
 
 | Setting            | Value                    | Description                    |
 | ------------------ | ------------------------ | ------------------------------ |
-| **SMTP Host**      | `postfix`                | Container name on mail_network |
+| **SMTP Host**      | `postfix`                | Container name on proxy network|
 | **SMTP Ports**     | `25, 587`                | Standard SMTP ports (internal) |
 | **Authentication** | None                     | Relay handles upstream auth    |
 | **From Address**   | `[service]@alimunee.com` | Service-specific sender        |
@@ -59,12 +59,11 @@ Services connect to the SMTP relay using these settings:
 
 ### Network Configuration
 
-Services requiring email functionality must be connected to the `mail_network`:
+Services requiring email functionality reach Postfix via the shared `proxy` network:
 
 ```yaml
 networks:
-  - proxy              # For web access
-  - mail_network       # For SMTP relay access
+  - proxy              # For web access and SMTP relay
   - [service]_internal # For internal service communication
 ```
 
@@ -72,11 +71,10 @@ networks:
 
 ### Adding Email to a Service
 
-1. **Add to mail_network**:
+1. **Ensure service is on proxy network** (Postfix is reachable as `postfix` on `proxy`):
    ```yaml
    networks:
      - proxy
-     - mail_network  # Add this network
    ```
 
 2. **Configure SMTP Settings**:
