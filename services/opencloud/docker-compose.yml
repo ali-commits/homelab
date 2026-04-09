@@ -12,7 +12,7 @@ services:
     command: ["-c", "opencloud init || true; opencloud server"]
     environment:
       # enable services that are not started automatically
-      OC_ADD_RUN_SERVICES: "antivirus"
+      # OC_ADD_RUN_SERVICES: "antivirus"
       OC_URL: https://drive.alimunee.com
       OC_LOG_COLOR: true
       OC_LOG_PRETTY: true
@@ -41,15 +41,15 @@ services:
       SEARCH_EXTRACTOR_TYPE: tika
       SEARCH_EXTRACTOR_TIKA_TIKA_URL: http://tika:9998
       FRONTEND_FULL_TEXT_SEARCH_ENABLED: "true"
-      # antivirus
-      POSTPROCESSING_STEPS: "virusscan"
+      # antivirus (disabled — uncomment to re-enable)
+      # POSTPROCESSING_STEPS: "virusscan"
       STORAGE_USERS_DATA_GATEWAY_URL: "http://opencloud:9200/data"
-      ANTIVIRUS_MAX_SCAN_SIZE: 100MB
-      ANTIVIRUS_INFECTED_FILE_HANDLING: abort
-      ANTIVIRUS_MAX_SCAN_SIZE_MODE: partial
-      ANTIVIRUS_WORKERS: 1
-      ANTIVIRUS_CLAMAV_SOCKET: /var/run/clamav/clamd.sock
-      ANTIVIRUS_SCANNER_TYPE: clamav
+      # ANTIVIRUS_MAX_SCAN_SIZE: 100MB
+      # ANTIVIRUS_INFECTED_FILE_HANDLING: abort
+      # ANTIVIRUS_MAX_SCAN_SIZE_MODE: partial
+      # ANTIVIRUS_WORKERS: 1
+      # ANTIVIRUS_CLAMAV_SOCKET: /var/run/clamav/clamd.sock
+      # ANTIVIRUS_SCANNER_TYPE: clamav
       # office collaboration
       ONLYOFFICE_DOMAIN: onlyoffice.alimunee.com
       # expose nats and the reva gateway for the collaboration service
@@ -60,7 +60,7 @@ services:
       - ./config/opencloud/apps:/var/lib/opencloud/web/assets/apps
       - /storage/data/opencloud/config:/etc/opencloud
       - /storage/data/opencloud/data:/var/lib/opencloud
-      - clamav-socket:/var/run/clamav
+      # - clamav-socket:/var/run/clamav
     dns:
       - 8.8.8.8
       - 1.1.1.1
@@ -90,18 +90,18 @@ services:
     networks:
       - opencloud_internal
 
-  # Antivirus service
-  clamav:
-    image: clamav/clamav:latest
-    container_name: opencloud-clamav
-    restart: unless-stopped
-    environment:
-      CLAMD_CONF_StreamMaxLength: 100M
-    volumes:
-      - clamav-socket:/tmp
-      - clamav-db:/var/lib/clamav
-    networks:
-      - opencloud_internal
+  # Antivirus service (disabled — uncomment to re-enable)
+  # clamav:
+  #   image: clamav/clamav:latest
+  #   container_name: opencloud-clamav
+  #   restart: unless-stopped
+  #   environment:
+  #     CLAMD_CONF_StreamMaxLength: 100M
+  #   volumes:
+  #     - clamav-socket:/tmp
+  #     - clamav-db:/var/lib/clamav
+  #   networks:
+  #     - opencloud_internal
 
   # Office collaboration bridge (connects OpenCloud to OnlyOffice via WOPI)
   collaboration:
@@ -183,9 +183,9 @@ services:
         reservations:
           memory: 1G
 
-volumes:
-  clamav-db:
-  clamav-socket:
+# volumes:
+#   clamav-db:
+#   clamav-socket:
 
 networks:
   proxy:
