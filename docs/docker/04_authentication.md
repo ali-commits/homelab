@@ -36,6 +36,7 @@ environment:
 ```
 
 #### Services with SSO Integration
+- **OpenCloud**: OIDC PKCE flow, auto-provisioning from `preferred_username` and `email` claims
 - **Lobe Chat**: NextAuth.js with Zitadel provider integration
 - **Karakeep**: OIDC via generic OAuth configuration
 - **Infisical**: Native Zitadel integration

@@ -7,7 +7,9 @@ Work-focused services for productivity, document management, collaboration, and 
 ## Cloud Storage & Synchronization
 
 ### Core Services
-- **Nextcloud** - Personal cloud & file sharing ([📖](../../services/nextcloud/documentation.md))
+
+- **OpenCloud** - Primary cloud storage & file sharing with OnlyOffice collaboration ([📖](../../services/opencloud/documentation.md))
+- **Nextcloud** - Legacy cloud storage (being phased out — data migrated to OpenCloud) ([📖](../../services/nextcloud/documentation.md))
 - **Syncthing** - Decentralized file synchronization ([📖](../../services/syncthing/documentation.md))
 
 ## Document Management
@@ -26,7 +28,9 @@ Work-focused services for productivity, document management, collaboration, and 
 ## Office & Collaboration
 
 ### Document Editing
-- **OnlyOffice** - Document editing & collaboration ([📖](../../services/onlyoffice/documentation.md))
+
+- **OnlyOffice** - Document editing for Nextcloud ([📖](../../services/onlyoffice/documentation.md))
+- **OpenCloud + OnlyOffice** - Dedicated OnlyOffice instance for OpenCloud at `onlyoffice.alimunee.com` (bundled in OpenCloud stack)
 
 ## Workflow Automation
 
@@ -62,28 +66,41 @@ Work-focused services for productivity, document management, collaboration, and 
 ## Integration Patterns
 
 ### SSO Integration
+
 Services with Zitadel SSO support:
+
+- **OpenCloud**: OIDC PKCE flow, auto-provisioning from Zitadel claims
 - **Nextcloud**: OIDC app integration
 - **Paperless-ngx**: OIDC configuration available
 - **N8N**: Built-in OIDC support
 
 ### Email Integration
+
 Services using SMTP relay:
+
 - **Nextcloud**: Sharing notifications, user management
 - **Paperless-ngx**: Document processing notifications
 - **N8N**: Workflow notifications and alerts
 
 ### Cross-Service Integration
 
+#### OpenCloud + OnlyOffice
+
+- **Document Editing**: In-browser editing via dedicated OnlyOffice at `onlyoffice.alimunee.com`
+- **WOPI Protocol**: Collaboration bridge connects OpenCloud to OnlyOffice
+
 #### Nextcloud + OnlyOffice
+
 - **Document Editing**: Seamless in-browser document editing
 - **Real-time Collaboration**: Multiple users editing simultaneously
 
 #### Paperless-ngx + Paperless-GPT
+
 - **AI Enhancement**: Improved OCR and metadata extraction
 - **Automatic Tagging**: AI-powered document categorization
 
 #### N8N Workflow Integrations
+
 - **Nextcloud**: File monitoring and processing workflows
 - **Paperless-ngx**: Document processing automation
 

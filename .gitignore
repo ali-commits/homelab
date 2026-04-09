@@ -1,3 +1,5 @@
+ignore/
+
 # Ignore Visual Studio Code files
 .vscode/
 *.code-workspace
@@ -9,3 +11,4 @@ configs/defaults/*
 
 calligraphy-compare*
 .github
+

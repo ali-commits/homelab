@@ -1,8 +1,8 @@
 # Docker Infrastructure Overview
 
 ## Quick Status Dashboard
-- **Total Services**: 41 deployed and running (13 managed via Sablier wake-on-demand)
-- **Last Updated**: March 27, 2026
+- **Total Services**: 42 deployed and running (13 managed via Sablier wake-on-demand)
+- **Last Updated**: April 9, 2026
 - **Infrastructure Health**: ✅ All systems operational
 
 ## Service Categories & Quick Access
@@ -15,9 +15,9 @@
 | **Authentication**               | 1     | Zitadel                                                                  | [📖](04_authentication.md)             |
 | **AI/ML Services**               | 4     | Lobe Chat, Karakeep, Paperless-GPT, Immich ML                            | [📖](05_ai-ml-services.md)             |
 | **Notifications & SMTP**         | 2     | ntfy, Postfix                                                            | [📖](06_notifications-smtp.md)         |
-| **Data Services**                | 13    | Nextcloud, Immich, Karakeep, AFFiNE                                      | [📖](07_data-services.md)              |
+| **Data Services**                | 12    | Nextcloud, Immich, Karakeep, AFFiNE                                      | [📖](07_data-services.md)              |
 | **Media & Entertainment**        | 9     | Jellyfin, *arr stack, Kavita                                             | [📖](08_media-entertainment.md)        |
-| **Productivity & Collaboration** | 12    | AFFiNE, OnlyOffice, N8N, Syncthing, Vert.sh, Excalidraw, ChartDB, DrawDB | [📖](09_productivity-collaboration.md) |
+| **Productivity & Collaboration** | 13    | OpenCloud, OnlyOffice, N8N, Syncthing, Vert.sh, Excalidraw, ChartDB, DrawDB | [📖](09_productivity-collaboration.md) |
 | **Monitoring & Management**      | 6     | Uptime Kuma, Beszel, Infisical, Arcane, Glance, Sablier                  | [📖](10_monitoring-management.md)      |
 
 ## Complete Service Reference
@@ -50,7 +50,9 @@
 | [**linkwarden**](../services/linkwarden/docker-compose.yml)       | [📖](../services/linkwarden/documentation.md)    | 3000             | proxy, linkwarden_internal                          | links.alimunee.com        | Bookmark & link manager                   |
 | [**lobe-chat**](../services/lobe-chat/docker-compose.yml)         | [📖](../services/lobe-chat/documentation.md)     | 3210             | proxy, lobe_chat_internal, db_network               | chat.alimunee.com         | AI chat interface with multi-LLM support  |
 | [**n8n**](../services/n8n/docker-compose.yml)                     | [📖](../services/n8n/documentation.md)           | 5678             | proxy, n8n_internal                                 | automate.alimunee.com     | Workflow automation platform              |
-| [**nextcloud**](../services/nextcloud/docker-compose.yml)         | [📖](../services/nextcloud/documentation.md)     | 80               | proxy, nextcloud_internal                           | cloud.alimunee.com        | Personal cloud & file sharing             |
+| [**opencloud**](../services/opencloud/docker-compose.yml)         | [📖](../services/opencloud/documentation.md)     | 9200             | proxy, opencloud_internal                           | drive.alimunee.com        | Primary cloud storage with OnlyOffice     |
+| [opencloud-onlyoffice](../services/opencloud/docker-compose.yml)  | [📖](../services/opencloud/documentation.md)     | 80               | proxy, opencloud_internal                           | onlyoffice.alimunee.com   | Dedicated OnlyOffice for OpenCloud        |
+| [**nextcloud**](../services/nextcloud/docker-compose.yml)         | [📖](../services/nextcloud/documentation.md)     | 80               | proxy, nextcloud_internal                           | cloud.alimunee.com        | Legacy cloud storage (migrated)           |
 | [**ntfy**](../services/ntfy/docker-compose.yml)                   | [📖](../services/ntfy/documentation.md)          | 8888             | proxy                                               | notification.alimunee.com | Push notification service                 |
 | [**onlyoffice**](../services/onlyoffice/docker-compose.yml)       | [📖](../services/onlyoffice/documentation.md)    | 80               | proxy, onlyoffice_internal                          | office.alimunee.com       | Document editing & collaboration          |
 | [**paperless-gpt**](../services/paperless-gpt/docker-compose.yml) | [📖](../services/paperless-gpt/documentation.md) | 8080             | proxy, paperless_internal                           | aidocs.alimunee.com       | AI enhancement for paperless-ngx          |

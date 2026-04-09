@@ -28,9 +28,12 @@ Core storage architecture using Btrfs filesystem with Docker volumes for persist
 │   └── downloads/     → qBittorrent downloads
 ├── Immich/            → Photo storage (HDD)
 │   └── uploads/       → Photo & video uploads
-├── nextcloud/         → Nextcloud storage (HDD)
+├── nextcloud/         → Nextcloud storage (HDD, legacy)
 │   ├── data/          → User files
 │   └── config/        → Nextcloud configuration
+├── opencloud/         → OpenCloud storage (HDD)
+│   ├── data/          → User files (decomposed filesystem)
+│   └── config/        → OpenCloud configuration & secrets
 └── shared/            → Shared between services (HDD)
 ```
 
@@ -42,7 +45,8 @@ Core storage architecture using Btrfs filesystem with Docker volumes for persist
 | **System Data**      | `/storage/data/service`    | NVMe SSD     | Service configuration & databases |
 | **Media Files**      | `/storage/media/*`         | HDD          | Media library storage             |
 | **Photo Storage**    | `/storage/Immich/*`        | HDD          | Photo & video uploads             |
-| **Cloud Storage**    | `/storage/nextcloud/*`     | HDD          | Nextcloud files                   |
+| **Cloud Storage**    | `/storage/nextcloud/*`     | HDD          | Nextcloud files (legacy)          |
+| **Cloud Storage**    | `/storage/data/opencloud`  | HDD          | OpenCloud config, data & files    |
 | **Document Storage** | `/storage/paperless-ngx/*` | HDD          | Document archive                  |
 | **Shared Data**      | `/storage/shared/*`        | HDD          | Cross-service data                |
 
