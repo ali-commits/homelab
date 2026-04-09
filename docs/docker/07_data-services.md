@@ -15,15 +15,17 @@ Services requiring persistent data storage with databases.
 | Service           | Database              | Storage Location                   |
 | ----------------- | --------------------- | ---------------------------------- |
 | **Immich**        | PostgreSQL (pgvector) | `/storage/data/immich/database`    |
-| **Nextcloud**     | PostgreSQL            | `/storage/nextcloud/db`            |
+| **Nextcloud**     | PostgreSQL            | `/storage/data/nextcloud/db`       |
 | **Paperless-ngx** | PostgreSQL            | `/storage/data/paperless-ngx/db`   |
 | **Zitadel**       | PostgreSQL            | `/storage/data/zitadel/zitadel-db` |
 | **Karakeep**      | PostgreSQL            | `/storage/data/karakeep/db`        |
 | **Infisical**     | PostgreSQL            | `/storage/data/infisical/db`       |
 | **OnlyOffice**    | PostgreSQL            | `/storage/data/onlyoffice/db`      |
 | **N8N**           | PostgreSQL            | `/storage/data/n8n/db`             |
-| **AFFiNE**        | PostgreSQL            | `/storage/data/affine/db`          |
+| **AFFiNE**        | PostgreSQL (pgvector) | `/storage/data/affine/postgres`    |
 | **Linkwarden**    | PostgreSQL            | `/storage/data/linkwarden/db`      |
+| **Lobe Chat**     | PostgreSQL (pgvector) | `/storage/data/lobe-chat/db`       |
+| **Outline**       | PostgreSQL            | `/storage/data/outline/db`         |
 
 ## Services by Database Type
 

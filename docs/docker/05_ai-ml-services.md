@@ -19,8 +19,7 @@ Services leveraging artificial intelligence and machine learning capabilities.
 | **Anthropic Claude**       | Advanced reasoning and analysis | Lobe Chat                          | Complex reasoning, document analysis       |
 | **Google Gemini**          | Multi-modal AI interactions     | Lobe Chat, Karakeep, Paperless-GPT | Text, image, and document processing       |
 | **Azure OpenAI**           | Enterprise AI services          | Lobe Chat                          | Scalable AI with enterprise features       |
-| **gemini-2.5-flash-lite**  | Fast text processing            | Karakeep                           | Quick content analysis, tagging            |
-| **gemini-2.5-flash-image** | Image analysis and OCR          | Karakeep, Paperless-GPT            | Image content extraction, OCR              |
+| **gemini-2.0-flash-exp**   | Fast text & image processing    | Karakeep                           | Content analysis, tagging, image OCR       |
 | **gemini-1.5-pro**         | Advanced document understanding | Paperless-GPT                      | Complex document analysis                  |
 | **gemini-1.5-pro-vision**  | Enhanced OCR capabilities       | Paperless-GPT                      | Superior OCR for scanned documents         |
 

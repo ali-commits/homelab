@@ -23,17 +23,21 @@ Internet → Cloudflare → Cloudflared → Traefik → Services
 
 ### Internal Networks
 
-| Network                 | Purpose                        | Services                                                 |
-| ----------------------- | ------------------------------ | -------------------------------------------------------- |
-| **immich_internal**     | Immich services isolation      | Immich app + database + redis + ML                       |
-| **infisical_internal**  | Infisical services isolation   | Infisical + database + redis                             |
-| **nextcloud_internal**  | Nextcloud services isolation   | Nextcloud + database + redis + cron                      |
-| **onlyoffice_internal** | OnlyOffice services isolation  | OnlyOffice + database + redis + rabbitmq                 |
-| **n8n_internal**        | N8N services isolation         | N8N + database                                           |
-| **zitadel_internal**    | Zitadel services isolation     | Zitadel + login + database                               |
-| **linkwarden_internal** | Linkwarden services isolation  | Linkwarden + database                                    |
-| **karakeep_internal**   | Karakeep services isolation    | Karakeep + database + Meilisearch                        |
-| **paperless_internal**  | Paperless services isolation   | Paperless-ngx + Paperless-GPT + Tika + Gotenberg + Redis |
+| Network                  | Purpose                         | Services                                                 |
+| ------------------------ | ------------------------------- | -------------------------------------------------------- |
+| **immich_internal**      | Immich services isolation       | Immich app + database + redis + ML                       |
+| **infisical_internal**   | Infisical services isolation    | Infisical + database + redis                             |
+| **nextcloud_internal**   | Nextcloud services isolation    | Nextcloud + OnlyOffice + database + redis + cron         |
+| **onlyoffice_internal**  | OnlyOffice services isolation   | OnlyOffice + database + redis + rabbitmq                 |
+| **opencloud_internal**   | OpenCloud services isolation    | OpenCloud + OnlyOffice + collaboration + Tika + ClamAV   |
+| **n8n_internal**         | N8N services isolation          | N8N + database                                           |
+| **zitadel_internal**     | Zitadel services isolation      | Zitadel + login + database                               |
+| **linkwarden_internal**  | Linkwarden services isolation   | Linkwarden + database + Meilisearch                      |
+| **karakeep_internal**    | Karakeep services isolation     | Karakeep + database + Meilisearch                        |
+| **paperless_internal**   | Paperless services isolation    | Paperless-ngx + Paperless-GPT + Tika + Gotenberg + Redis |
+| **outline_internal**     | Outline services isolation      | Outline + database + redis                               |
+| **lobe_chat_internal**   | Lobe Chat services isolation    | Lobe Chat + database + MinIO                             |
+| **checkmate_internal**   | Checkmate services isolation    | Checkmate + MongoDB                                      |
 
 ## Network Configuration Patterns
 
@@ -171,16 +175,20 @@ docker network inspect [network] | jq '.[0].Containers'
 - **Traefik**: proxy
 - **Cloudflared**: proxy
 - **AdGuard**: proxy (plus host network for DNS)
+- **Sablier**: proxy
 
 ### Authentication & Communication
 - **Zitadel**: proxy, zitadel_internal
-- **Postfix**: mail_network
+- **Postfix**: proxy, mail_network
 
 ### Monitoring & Management
 - **Uptime Kuma**: proxy
+- **Checkmate**: proxy, checkmate_internal, mail_network
+- **Beszel**: proxy
 - **ntfy**: proxy
 - **Glance**: proxy
 - **Infisical**: proxy, infisical_internal, mail_network
+- **Arcane**: proxy
 
 ### Media Services
 - **Jellyfin**: proxy
@@ -193,19 +201,28 @@ docker network inspect [network] | jq '.[0].Containers'
 - **Flood**: proxy
 - **Flaresolverr**: proxy
 - **Kavita**: proxy
+
 ### Productivity Services
-- **Nextcloud**: proxy, nextcloud_internal
-- **Immich**: proxy, immich_internal
-- **AFFiNE**: proxy
-- **OnlyOffice**: proxy, onlyoffice_internal
+- **OpenCloud**: proxy, opencloud_internal
+- **Nextcloud**: proxy, nextcloud_internal, mail_network
+- **Immich**: proxy, immich_internal, mail_network
+- **AFFiNE**: proxy, mail_network
+- **OnlyOffice**: proxy, onlyoffice_internal, nextcloud_internal
+- **Outline**: proxy, outline_internal, mail_network, db_network
+- **Lobe Chat**: proxy, lobe_chat_internal, db_network
 - **N8N**: proxy, n8n_internal
 - **Linkwarden**: proxy, linkwarden_internal
-- **Karakeep**: proxy, karakeep_internal, db_network
+- **Karakeep**: proxy, karakeep_internal
 - **Syncthing**: proxy
 - **IT-Tools**: proxy
-- **Stirling PDF**: proxy
+- **Stirling PDF**: proxy, mail_network
+- **Vaultwarden**: proxy, mail_network
 - **Paperless-ngx**: proxy, paperless_internal, db_network, mail_network
 - **Paperless-GPT**: proxy, paperless_internal
+- **ChartDB**: proxy
+- **DrawDB**: proxy
+- **Excalidraw**: proxy
+- **Vert**: proxy
 
 ---
 

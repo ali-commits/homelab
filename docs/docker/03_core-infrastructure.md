@@ -9,7 +9,7 @@ Foundation services providing routing, networking, DNS, and system-level functio
 ### Traefik - Reverse Proxy & Load Balancer
 - **Purpose**: Routes external traffic to internal services
 - **Ports**: 80, 443, 8080 (dashboard)
-- **Domain**: traefik.alimunee.com
+- **Dashboard**: Port 8080 (`--api.insecure=true`, no Traefik Host rule)
 - **Documentation**: [📖](../../services/traefik/documentation.md)
 
 ### Cloudflared - Cloudflare Tunnel Service

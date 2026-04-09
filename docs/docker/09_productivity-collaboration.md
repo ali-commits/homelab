@@ -57,9 +57,10 @@ Work-focused services for productivity, document management, collaboration, and 
 ```
 /storage/
 ├── data/                   → Service configurations and databases
-├── nextcloud/             → Nextcloud user files
-├── paperless-ngx/         → Document storage
-├── syncthing/             → Synchronized files
+│   ├── opencloud/         → OpenCloud config & user data
+│   ├── paperless-ngx/     → Document storage
+│   └── syncthing/         → Synchronized files
+├── nextcloud/             → Nextcloud user files (legacy)
 └── shared/                → Cross-service shared data
 ```
 
@@ -70,9 +71,8 @@ Work-focused services for productivity, document management, collaboration, and 
 Services with Zitadel SSO support:
 
 - **OpenCloud**: OIDC PKCE flow, auto-provisioning from Zitadel claims
-- **Nextcloud**: OIDC app integration
-- **Paperless-ngx**: OIDC configuration available
-- **N8N**: Built-in OIDC support
+- **Nextcloud**: OIDC app integration (configured via admin UI)
+- **Linkwarden**: Native Zitadel SSO integration
 
 ### Email Integration
 
@@ -80,7 +80,7 @@ Services using SMTP relay:
 
 - **Nextcloud**: Sharing notifications, user management
 - **Paperless-ngx**: Document processing notifications
-- **N8N**: Workflow notifications and alerts
+- **Stirling PDF**: Email delivery of processed PDFs
 
 ### Cross-Service Integration
 

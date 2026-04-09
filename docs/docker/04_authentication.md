@@ -29,7 +29,7 @@ Zitadel provides modern OIDC/OAuth2 authentication:
 #### Standard OIDC Configuration
 ```yaml
 environment:
-  - OAUTH_WELLKNOWN_URL=https://zitadel.alimunee.com/.well-known/openid_configuration
+  - OAUTH_WELLKNOWN_URL=https://zitadel.alimunee.com/.well-known/openid-configuration
   - OAUTH_CLIENT_ID=${ZITADEL_CLIENT_ID}
   - OAUTH_CLIENT_SECRET=${ZITADEL_CLIENT_SECRET}
   - OAUTH_SCOPE=openid email profile
@@ -39,10 +39,8 @@ environment:
 - **OpenCloud**: OIDC PKCE flow, auto-provisioning from `preferred_username` and `email` claims
 - **Lobe Chat**: NextAuth.js with Zitadel provider integration
 - **Karakeep**: OIDC via generic OAuth configuration
-- **Infisical**: Native Zitadel integration
-- **Nextcloud**: OIDC app integration
-- **Paperless-ngx**: OIDC configuration available
-- **Komodo**: Built-in OIDC support
+- **Linkwarden**: Native Zitadel SSO integration
+- **Nextcloud**: OIDC app integration (configured via Nextcloud admin UI, not compose)
 
 ### Application Configuration in Zitadel
 
@@ -73,7 +71,7 @@ https://[service].alimunee.com/oauth/callback
 2. **Configure Service Environment**:
    ```yaml
    environment:
-     - OAUTH_WELLKNOWN_URL=https://zitadel.alimunee.com/.well-known/openid_configuration
+     - OAUTH_WELLKNOWN_URL=https://zitadel.alimunee.com/.well-known/openid-configuration
      - OAUTH_CLIENT_ID=${ZITADEL_CLIENT_ID}
      - OAUTH_CLIENT_SECRET=${ZITADEL_CLIENT_SECRET}
      - OAUTH_SCOPE=openid email profile

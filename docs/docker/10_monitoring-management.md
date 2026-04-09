@@ -44,8 +44,7 @@ Services for system monitoring, container management, infrastructure oversight, 
 
 Sablier intercepts Traefik requests and wakes stopped containers on first access. Services are stopped when idle to reduce resource consumption.
 
-- **Config**: `/HOMELAB/services/sablier/config.yml`
-- **Port**: 10000 (internal, accessed by Traefik plugin)
+- **Port**: 10000 (internal, accessed by Traefik plugin via `http://sablier:10000`)
 - **Default session**: 5 minutes idle before scale-to-zero
 - **Loading page theme**: `hacker-terminal` while containers wake up
 

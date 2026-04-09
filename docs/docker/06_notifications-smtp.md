@@ -14,7 +14,7 @@ Centralized notification and email delivery services providing push notification
 
 ### Postfix - SMTP Relay Server
 - **Purpose**: Centralized email delivery via Brevo upstream
-- **Port**: 25 (internal)
+- **Ports**: 25, 587 (internal)
 - **Network**: mail_network
 - **Upstream**: Brevo SMTP servers (smtp-relay.brevo.com:587)
 - **Documentation**: [📖](../../services/postfix/documentation.md)
@@ -39,7 +39,7 @@ Services connect to the SMTP relay using these settings:
 | Setting            | Value                    | Description                    |
 | ------------------ | ------------------------ | ------------------------------ |
 | **SMTP Host**      | `postfix`                | Container name on mail_network |
-| **SMTP Port**      | `25`                     | Standard SMTP port (internal)  |
+| **SMTP Ports**     | `25, 587`                | Standard SMTP ports (internal) |
 | **Authentication** | None                     | Relay handles upstream auth    |
 | **From Address**   | `[service]@alimunee.com` | Service-specific sender        |
 
@@ -49,11 +49,13 @@ Services connect to the SMTP relay using these settings:
 | ----------------- | ------------------------- | -------------------------------------- |
 | **Zitadel**       | `auth@alimunee.com`       | Authentication emails, password resets |
 | **Infisical**     | `secrets@alimunee.com`    | Security alerts, invitations           |
-| **Firefly III**   | `budget@alimunee.com`     | Financial reports, notifications       |
 | **Nextcloud**     | `cloud@alimunee.com`      | Sharing notifications, updates         |
-| **Uptime Kuma**   | `monitoring@alimunee.com` | Service alerts, status updates         |
-| **BookLore**      | `books@alimunee.com`      | Book delivery, notifications           |
-| **Paperless-ngx** | `docs@alimunee.com`       | Document processing, sharing           |
+| **Paperless-ngx** | `paperless@alimunee.com`  | Document processing, sharing           |
+| **AFFiNE**        | -                         | Notifications                          |
+| **Outline**       | `outline@alimunee.com`    | Wiki notifications, invitations        |
+| **Checkmate**     | `checkmate@alimunee.com`  | Monitoring alerts                      |
+| **Immich**        | -                         | Sharing notifications                  |
+| **Stirling PDF**  | -                         | Email delivery of processed PDFs       |
 
 ### Network Configuration
 

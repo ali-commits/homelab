@@ -28,12 +28,7 @@ Core storage architecture using Btrfs filesystem with Docker volumes for persist
 │   └── downloads/     → qBittorrent downloads
 ├── Immich/            → Photo storage (HDD)
 │   └── uploads/       → Photo & video uploads
-├── nextcloud/         → Nextcloud storage (HDD, legacy)
-│   ├── data/          → User files
-│   └── config/        → Nextcloud configuration
-├── opencloud/         → OpenCloud storage (HDD)
-│   ├── data/          → User files (decomposed filesystem)
-│   └── config/        → OpenCloud configuration & secrets
+├── nextcloud/         → Nextcloud user files (HDD, legacy)
 └── shared/            → Shared between services (HDD)
 ```
 
@@ -45,9 +40,9 @@ Core storage architecture using Btrfs filesystem with Docker volumes for persist
 | **System Data**      | `/storage/data/service`    | NVMe SSD     | Service configuration & databases |
 | **Media Files**      | `/storage/media/*`         | HDD          | Media library storage             |
 | **Photo Storage**    | `/storage/Immich/*`        | HDD          | Photo & video uploads             |
-| **Cloud Storage**    | `/storage/nextcloud/*`     | HDD          | Nextcloud files (legacy)          |
-| **Cloud Storage**    | `/storage/data/opencloud`  | HDD          | OpenCloud config, data & files    |
-| **Document Storage** | `/storage/paperless-ngx/*` | HDD          | Document archive                  |
+| **Cloud Storage**    | `/storage/nextcloud/*`     | HDD          | Nextcloud user files (legacy)     |
+| **Cloud Storage**    | `/storage/data/opencloud`  | NVMe SSD     | OpenCloud config, data & files    |
+| **Document Storage** | `/storage/data/paperless`  | NVMe SSD     | Document archive (paperless-ngx)  |
 | **Shared Data**      | `/storage/shared/*`        | HDD          | Cross-service data                |
 
 ### Common Volume Patterns
@@ -74,7 +69,7 @@ Core storage architecture using Btrfs filesystem with Docker volumes for persist
 | **Infisical**     | PostgreSQL            | `/storage/data/infisical/db`       |
 | **OnlyOffice**    | PostgreSQL            | `/storage/data/onlyoffice/db`      |
 | **N8N**           | PostgreSQL            | `/storage/data/n8n/db`             |
-| **AFFiNE**        | PostgreSQL            | `/storage/data/affine/db`          |
+| **AFFiNE**        | PostgreSQL (pgvector) | `/storage/data/affine/postgres`    |
 | **Linkwarden**    | PostgreSQL            | `/storage/data/linkwarden/db`      |
 
 ### Database Volume Configuration
@@ -111,28 +106,28 @@ volumes:
 ```yaml
 # Nextcloud
 volumes:
-  - /storage/nextcloud/data:/var/www/html
-  - /storage/nextcloud/config:/var/www/html/config
+  - /storage/data/nextcloud/html:/var/www/html
+  - /storage/nextcloud:/var/www/html/data
 
 # Paperless-ngx
 volumes:
-  - /storage/data/paperless-ngx:/usr/src/paperless/data
-  - /storage/paperless-ngx/media:/usr/src/paperless/media
-  - /storage/paperless-ngx/consume:/usr/src/paperless/consume
-  - /storage/paperless-ngx/export:/usr/src/paperless/export
+  - /storage/data/paperless-ngx/data:/usr/src/paperless/data
+  - /storage/data/paperless-ngx/media:/usr/src/paperless/media
+  - /storage/data/paperless-ngx/consume:/usr/src/paperless/consume
+  - /storage/data/paperless-ngx/export:/usr/src/paperless/export
 
 # Syncthing
 volumes:
   - /storage/data/syncthing/config:/var/syncthing/config
-  - /storage/syncthing:/var/syncthing/data
+  - /storage/data/syncthing/data:/var/syncthing/data
 ```
 
 ### AI/ML Services
 ```yaml
 # Immich
 volumes:
-  - /storage/data/immich:/usr/src/app/upload
-  - /storage/Immich:/usr/src/app/external
+  - /storage/Immich/uploads:/data
+  - /storage/data/immich/model-cache:/cache
 
 # Karakeep
 volumes:
