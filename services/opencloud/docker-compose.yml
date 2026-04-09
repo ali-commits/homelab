@@ -1,0 +1,195 @@
+services:
+  opencloud:
+    image: opencloudeu/opencloud-rolling:latest
+    container_name: opencloud
+    user: 1000:1000
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+    # run opencloud init to initialize a configuration file with random secrets
+    # it will fail on subsequent runs, because the config file already exists
+    # therefore we ignore the error and then start the opencloud server
+    command: ["-c", "opencloud init || true; opencloud server"]
+    environment:
+      # enable services that are not started automatically
+      OC_ADD_RUN_SERVICES: "antivirus"
+      OC_URL: https://drive.alimunee.com
+      OC_LOG_COLOR: true
+      OC_LOG_PRETTY: true
+      # do not use SSL between the reverse proxy and OpenCloud
+      PROXY_TLS: "false"
+      OC_INSECURE: false
+      PROXY_ENABLE_BASIC_AUTH: "true"
+      FRONTEND_ARCHIVER_MAX_SIZE: "10000000000"
+      PROXY_CSP_CONFIG_FILE_LOCATION: /etc/opencloud/csp.yaml
+      # public share password policy
+      OC_SHARING_PUBLIC_SHARE_MUST_HAVE_PASSWORD: false
+      OC_SHARING_PUBLIC_WRITEABLE_SHARE_MUST_HAVE_PASSWORD: false
+      # OIDC - Zitadel SSO
+      OC_OIDC_ISSUER: "https://zitadel.alimunee.com"
+      WEB_OIDC_CLIENT_ID: ${OC_CLIENT_ID}
+      WEB_OIDC_SCOPE: "openid profile email"
+      WEB_OIDC_POST_LOGOUT_REDIRECT_URI: "https://drive.alimunee.com"
+      PROXY_OIDC_REWRITE_WELLKNOWNL: "true"
+      PROXY_OIDC_ACCESS_TOKEN_VERIFY_METHOD: "none"
+      PROXY_USER_OIDC_CLAIM: "preferred_username"
+      PROXY_AUTOPROVISION_ACCOUNTS: "true"
+      PROXY_AUTOPROVISION_CLAIM_EMAIL: "email"
+      PROXY_AUTOPROVISION_CLAIM_DISPLAYNAME: "preferred_username"
+      PROXY_AUTOPROVISION_CLAIM_USERNAME: "preferred_username"
+      # fulltext search
+      SEARCH_EXTRACTOR_TYPE: tika
+      SEARCH_EXTRACTOR_TIKA_TIKA_URL: http://tika:9998
+      FRONTEND_FULL_TEXT_SEARCH_ENABLED: "true"
+      # antivirus
+      POSTPROCESSING_STEPS: "virusscan"
+      STORAGE_USERS_DATA_GATEWAY_URL: "http://opencloud:9200/data"
+      ANTIVIRUS_MAX_SCAN_SIZE: 100MB
+      ANTIVIRUS_INFECTED_FILE_HANDLING: abort
+      ANTIVIRUS_MAX_SCAN_SIZE_MODE: partial
+      ANTIVIRUS_WORKERS: 1
+      ANTIVIRUS_CLAMAV_SOCKET: /var/run/clamav/clamd.sock
+      ANTIVIRUS_SCANNER_TYPE: clamav
+      # office collaboration
+      ONLYOFFICE_DOMAIN: onlyoffice.alimunee.com
+      # expose nats and the reva gateway for the collaboration service
+      NATS_NATS_HOST: 0.0.0.0
+      GATEWAY_GRPC_ADDR: 0.0.0.0:9142
+    volumes:
+      - ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml
+      - ./config/opencloud/apps:/var/lib/opencloud/web/assets/apps
+      - /storage/data/opencloud/config:/etc/opencloud
+      - /storage/data/opencloud/data:/var/lib/opencloud
+      - clamav-socket:/var/run/clamav
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    networks:
+      - proxy
+      - opencloud_internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.opencloud.rule=Host(`drive.alimunee.com`)"
+      - "traefik.http.services.opencloud.loadbalancer.server.port=9200"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.middlewares.opencloud-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.opencloud-headers.headers.customrequestheaders.X-Forwarded-Host=drive.alimunee.com"
+      - "traefik.http.middlewares.opencloud-secure.headers.stsSeconds=15552000"
+      - "traefik.http.middlewares.opencloud-secure.headers.stsIncludeSubdomains=true"
+      - "traefik.http.middlewares.opencloud-secure.headers.stsPreload=true"
+      - "traefik.http.middlewares.opencloud-secure.headers.contentTypeNosniff=true"
+      - "traefik.http.middlewares.opencloud-secure.headers.browserXssFilter=true"
+      - "traefik.http.routers.opencloud.middlewares=opencloud-secure,opencloud-headers"
+      - "watchtower.enable=true"
+
+  # Full-text search service
+  tika:
+    image: apache/tika:latest-full
+    container_name: opencloud-tika
+    restart: unless-stopped
+    networks:
+      - opencloud_internal
+
+  # Antivirus service
+  clamav:
+    image: clamav/clamav:latest
+    container_name: opencloud-clamav
+    restart: unless-stopped
+    environment:
+      CLAMD_CONF_StreamMaxLength: 100M
+    volumes:
+      - clamav-socket:/tmp
+      - clamav-db:/var/lib/clamav
+    networks:
+      - opencloud_internal
+
+  # Office collaboration bridge (connects OpenCloud to OnlyOffice via WOPI)
+  collaboration:
+    image: opencloudeu/opencloud-rolling:latest
+    container_name: opencloud-collaboration
+    user: 1000:1000
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+    command: ["-c", "opencloud collaboration server"]
+    depends_on:
+      opencloud:
+        condition: service_started
+      opencloud-onlyoffice:
+        condition: service_healthy
+    environment:
+      COLLABORATION_GRPC_ADDR: 0.0.0.0:9301
+      COLLABORATION_HTTP_ADDR: 0.0.0.0:9300
+      MICRO_REGISTRY: "nats-js-kv"
+      MICRO_REGISTRY_ADDRESS: "opencloud:9233"
+      COLLABORATION_WOPI_SRC: http://collaboration:9300
+      COLLABORATION_APP_NAME: "OnlyOffice"
+      COLLABORATION_APP_PRODUCT: "OnlyOffice"
+      COLLABORATION_APP_ADDR: https://onlyoffice.alimunee.com
+      COLLABORATION_APP_ICON: https://onlyoffice.alimunee.com/web-apps/apps/documenteditor/main/resources/img/favicon.ico
+      COLLABORATION_APP_INSECURE: false
+      COLLABORATION_CS3API_DATAGATEWAY_INSECURE: false
+      OC_URL: https://drive.alimunee.com
+    volumes:
+      - /storage/data/opencloud/config:/etc/opencloud
+    networks:
+      - opencloud_internal
+      - proxy
+
+  # Dedicated OnlyOffice instance for OpenCloud (separate from Nextcloud's OnlyOffice)
+  opencloud-onlyoffice:
+    image: onlyoffice/documentserver:latest
+    container_name: opencloud-onlyoffice
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - /entrypoint-override.sh
+    environment:
+      WOPI_ENABLED: "true"
+      USE_UNAUTHORIZED_STORAGE: false
+    volumes:
+      - ./config/onlyoffice/entrypoint-override.sh:/entrypoint-override.sh
+      - ./config/onlyoffice/local.json:/etc/onlyoffice/documentserver/local.dist.json
+      - /storage/data/opencloud/onlyoffice/data:/var/www/onlyoffice/Data
+      - /storage/data/opencloud/onlyoffice/logs:/var/log/onlyoffice
+      - /etc/localtime:/etc/localtime:ro
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    networks:
+      - opencloud_internal
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.opencloud-onlyoffice.rule=Host(`onlyoffice.alimunee.com`)"
+      - "traefik.http.services.opencloud-onlyoffice.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+      # websockets require X-Forwarded-Proto
+      - "traefik.http.middlewares.opencloud-onlyoffice.headers.customrequestheaders.X-Forwarded-Proto=https"
+      # CSP to allow embedding OnlyOffice in OpenCloud
+      - "traefik.http.middlewares.opencloud-onlyoffice.headers.contentSecurityPolicy=frame-ancestors 'self' https://drive.alimunee.com"
+      - "traefik.http.routers.opencloud-onlyoffice.middlewares=opencloud-onlyoffice"
+      - "watchtower.enable=true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/hosting/discovery"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 1G
+
+volumes:
+  clamav-db:
+  clamav-socket:
+
+networks:
+  proxy:
+    external: true
+  opencloud_internal:
+    name: opencloud_internal
+    internal: true
