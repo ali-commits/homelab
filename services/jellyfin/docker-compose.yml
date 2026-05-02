@@ -14,11 +14,6 @@ services:
       - /storage/media/movies:/movies
       - /storage/media/tv:/tv
       - /storage/media/anime:/anime
-    devices:
-      - /dev/nvidia0:/dev/nvidia0
-      - /dev/nvidiactl:/dev/nvidiactl
-      - /dev/nvidia-uvm:/dev/nvidia-uvm
-      - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
     group_add:
       - "105" # render group for GPU access
       - "39" # video group for GPU access

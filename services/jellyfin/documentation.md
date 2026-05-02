@@ -32,15 +32,14 @@
 | TV Shows      | `/storage/media/tv`      | TV show library            |
 | Anime         | `/storage/media/anime`   | Anime library              |
 
-**GPU Device Mappings**:
+**GPU Access**:
 
-| Device                | Container Path           | Purpose                    |
-| --------------------- | ------------------------ | -------------------------- |
-| `/dev/nvidia0`        | `/dev/nvidia0`           | NVIDIA GPU access          |
-| `/dev/nvidiactl`      | `/dev/nvidiactl`         | NVIDIA control device     |
-| `/dev/nvidia-uvm`     | `/dev/nvidia-uvm`        | Unified memory management  |
-| `/dev/nvidia-uvm-tools` | `/dev/nvidia-uvm-tools`| UVM tools                  |
-| `/dev/dri`            | `/dev/dri`               | VA-API fallback support    |
+GPU devices are injected automatically by the NVIDIA Container Runtime (set as Docker's default runtime in `/etc/docker/daemon.json`). The container opts in via:
+
+- `NVIDIA_VISIBLE_DEVICES=all`
+- `NVIDIA_DRIVER_CAPABILITIES=all`
+
+The runtime also triggers driver initialization on container start, so the `/dev/nvidia*` nodes don't need to exist beforehand. `nvidia-persistenced.service` runs at boot to keep the driver loaded across idle periods.
 
 **Group Memberships**:
 - Group `105` (render): GPU rendering access
@@ -97,7 +96,7 @@ Each library is properly configured with metadata agents and automated scanning 
 
 ```bash
 # Test GPU access in container
-docker exec jellyfin ls -la /dev/nvidia* /dev/dri/
+docker exec jellyfin nvidia-smi
 
 # Check available NVENC encoders
 docker exec jellyfin /usr/lib/jellyfin-ffmpeg/ffmpeg -encoders | grep nvenc

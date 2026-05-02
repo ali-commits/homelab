@@ -45,12 +45,6 @@ services:
       # GPU-specific environment variables
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility
-    devices:
-      # GPU device access (same as Jellyfin)
-      - /dev/nvidia0:/dev/nvidia0
-      - /dev/nvidiactl:/dev/nvidiactl
-      - /dev/nvidia-uvm:/dev/nvidia-uvm
-      - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
     group_add:
       - "105" # render group for GPU access
       - "39" # video group for GPU access
