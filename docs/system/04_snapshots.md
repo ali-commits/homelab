@@ -20,11 +20,10 @@ The homelab uses Snapper for local snapshot management:
 | -------------------- | ------ | ----- | ------ | ------- | ----------- | ---------- |
 | `/` (root)           | 0      | 7     | 0      | 2       | 20%         | 20%        |
 | `/storage/data`      | 4      | 7     | 0      | 4       | 20%         | 20%        |
-| `/storage/nextcloud` | 5      | 7     | 4      | 2       | 25%         | 20%        |
 | `/storage/Immich`    | 5      | 7     | 4      | 2       | 25%         | 20%        |
 | `/storage/shared`    | 5      | 7     | 4      | 2       | 25%         | 20%        |
 
-> **Note:** Root and data retention tightened in March 2026 after the NVMe storage exhaustion incident. Weekly snapshots removed; root hourly disabled entirely. Other subvolumes (nextcloud, immich, shared) retain original schedule.
+> **Note:** Root and data retention tightened in March 2026 after the NVMe storage exhaustion incident. Weekly snapshots removed; root hourly disabled entirely. Other subvolumes (immich, shared) retain original schedule.
 
 ## Configuration Details
 
@@ -36,9 +35,8 @@ The homelab uses Snapper for local snapshot management:
   - Conservative space usage (20% limits)
   - Automatic cleanup enabled
 
-### Data Volumes (nextcloud, immich, data, shared)
+### Data Volumes (immich, data, shared)
 - **Config Files**:
-  - `/HOMELAB/configs/snapper/nextcloud`
   - `/HOMELAB/configs/snapper/immich`
   - `/HOMELAB/configs/snapper/data`
   - `/HOMELAB/configs/snapper/shared`
@@ -57,7 +55,6 @@ sudo snapper list-configs
 
 # List snapshots for specific config
 sudo snapper -c root list
-sudo snapper -c nextcloud list
 sudo snapper -c immich list
 ```
 
@@ -65,14 +62,14 @@ sudo snapper -c immich list
 ```bash
 # Create manual snapshot
 sudo snapper -c root create --description "Before system update"
-sudo snapper -c nextcloud create --description "Before app update"
+sudo snapper -c immich create --description "Before app update"
 ```
 
 ### Cleanup
 ```bash
 # Manual cleanup
 sudo snapper -c root cleanup number
-sudo snapper -c nextcloud cleanup timeline
+sudo snapper -c immich cleanup timeline
 ```
 
 ## Common Settings for All Configs

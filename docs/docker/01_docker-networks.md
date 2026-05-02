@@ -26,8 +26,6 @@ Internet → Cloudflare → Cloudflared → Traefik → Services
 | ------------------------ | ------------------------------- | -------------------------------------------------------- |
 | **immich_internal**      | Immich services isolation       | Immich app + database + redis + ML                       |
 | **infisical_internal**   | Infisical services isolation    | Infisical + database + redis                             |
-| **nextcloud_internal**   | Nextcloud services isolation    | Nextcloud + OnlyOffice + database + redis + cron         |
-| **onlyoffice_internal**  | OnlyOffice services isolation   | OnlyOffice + database + redis + rabbitmq                 |
 | **opencloud_internal**   | OpenCloud services isolation    | OpenCloud + OnlyOffice + collaboration + Tika + ClamAV   |
 | **n8n_internal**         | N8N services isolation          | N8N + database                                           |
 | **zitadel_internal**     | Zitadel services isolation      | Zitadel + login + database                               |
@@ -187,10 +185,8 @@ docker network inspect [network] | jq '.[0].Containers'
 
 ### Productivity Services
 - **OpenCloud**: proxy, opencloud_internal
-- **Nextcloud**: proxy, nextcloud_internal
 - **Immich**: proxy, immich_internal
 - **AFFiNE**: proxy
-- **OnlyOffice**: proxy, onlyoffice_internal, nextcloud_internal
 - **Outline**: proxy, outline_internal, db_network
 - **Lobe Chat**: proxy, lobe_chat_internal, db_network
 - **N8N**: proxy, n8n_internal

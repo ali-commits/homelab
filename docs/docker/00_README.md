@@ -1,7 +1,7 @@
 # Docker Infrastructure Overview
 
 ## Quick Status Dashboard
-- **Total Services**: 44 deployed and running (13 managed via Sablier wake-on-demand)
+- **Total Services**: 41 deployed and running (13 managed via Sablier wake-on-demand)
 - **Last Updated**: April 9, 2026
 - **Infrastructure Health**: ✅ All systems operational
 
@@ -15,9 +15,9 @@
 | **Authentication**               | 1     | Zitadel                                                                  | [📖](04_authentication.md)             |
 | **AI/ML Services**               | 4     | Lobe Chat, Karakeep, Paperless-GPT, Immich ML                            | [📖](05_ai-ml-services.md)             |
 | **Notifications & SMTP**         | 2     | ntfy, Postfix                                                            | [📖](06_notifications-smtp.md)         |
-| **Data Services**                | 12    | Nextcloud, Immich, Karakeep, AFFiNE                                      | [📖](07_data-services.md)              |
+| **Data Services**                | 10    | Immich, Karakeep, AFFiNE                                                 | [📖](07_data-services.md)              |
 | **Media & Entertainment**        | 9     | Jellyfin, *arr stack, Kavita                                             | [📖](08_media-entertainment.md)        |
-| **Productivity & Collaboration** | 13    | OpenCloud, OnlyOffice, N8N, Syncthing, Vert.sh, Excalidraw, ChartDB, DrawDB | [📖](09_productivity-collaboration.md) |
+| **Productivity & Collaboration** | 11    | OpenCloud, N8N, Syncthing, Vert.sh, Excalidraw, ChartDB, DrawDB             | [📖](09_productivity-collaboration.md) |
 | **Monitoring & Management**      | 6     | Uptime Kuma, Beszel, Infisical, Arcane, Glance, Sablier                  | [📖](10_monitoring-management.md)      |
 
 ## Complete Service Reference
@@ -52,10 +52,8 @@
 | [**n8n**](../services/n8n/docker-compose.yml)                     | [📖](../services/n8n/documentation.md)           | 5678             | proxy, n8n_internal                                 | automate.alimunee.com     | Workflow automation platform              |
 | [**opencloud**](../services/opencloud/docker-compose.yml)         | [📖](../services/opencloud/documentation.md)     | 9200             | proxy, opencloud_internal                           | drive.alimunee.com        | Primary cloud storage with OnlyOffice     |
 | [opencloud-onlyoffice](../services/opencloud/docker-compose.yml)  | [📖](../services/opencloud/documentation.md)     | 80               | proxy, opencloud_internal                           | onlyoffice.alimunee.com   | Dedicated OnlyOffice for OpenCloud        |
-| [**nextcloud**](../services/nextcloud/docker-compose.yml)         | [📖](../services/nextcloud/documentation.md)     | 80               | proxy, nextcloud_internal                           | cloud.alimunee.com        | Legacy cloud storage (migrated)           |
 | [**ntfy**](../services/ntfy/docker-compose.yml)                   | [📖](../services/ntfy/documentation.md)          | 8888             | proxy                                               | notification.alimunee.com | Push notification service                 |
 | [**outline**](../services/outline/docker-compose.yml)             | [📖](../services/outline/documentation.md)       | 3000             | proxy, outline_internal, db_network                 | note.alimunee.com         | Wiki & knowledge base                     |
-| [**onlyoffice**](../services/onlyoffice/docker-compose.yml)       | [📖](../services/onlyoffice/documentation.md)    | 80               | proxy, onlyoffice_internal, nextcloud_internal      | office.alimunee.com       | Document editing for Nextcloud            |
 | [**paperless-gpt**](../services/paperless-gpt/docker-compose.yml) | [📖](../services/paperless-gpt/documentation.md) | 8080             | proxy, paperless_internal                           | aidocs.alimunee.com       | AI enhancement for paperless-ngx          |
 | [**paperless-ngx**](../services/paperless-ngx/docker-compose.yml) | [📖](../services/paperless-ngx/documentation.md) | 8000             | proxy, paperless_internal, db_network               | docs.alimunee.com         | Document management with OCR              |
 | [**postfix**](../services/postfix/docker-compose.yml)             | [📖](../services/postfix/documentation.md)       | 25,587           | proxy                                               | -                         | SMTP relay server (Brevo upstream)        |

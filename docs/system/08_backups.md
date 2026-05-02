@@ -43,7 +43,6 @@ The backup system follows the **3-2-1 rule** by creating an off-site, encrypted,
 | -------------------- | -------- | ------------ | ------------------------------------------- |
 | `/storage/data`      | ✅ Active | ~10 GB       | Docker service configurations and databases |
 | `/storage/Immich`    | ✅ Active | ~131 GB      | Photo and video library                     |
-| `/storage/nextcloud` | ✅ Active | ~360 MB      | Nextcloud data and files                    |
 
 ### S3 Lifecycle Policy
 ```json

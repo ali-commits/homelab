@@ -86,9 +86,9 @@ pages:
             title: ☁️ Productivity & Storage
             cache: 1m
             sites:
-              - title: Nextcloud
-                url: https://cloud.alimunee.com
-                icon: sh:nextcloud
+              - title: OpenCloud
+                url: https://drive.alimunee.com
+                icon: sh:opencloud
               - title: Immich Photos
                 url: https://photos.alimunee.com
                 icon: sh:immich

@@ -49,7 +49,6 @@ Services connect to the SMTP relay using these settings:
 | ----------------- | ------------------------- | -------------------------------------- |
 | **Zitadel**       | `auth@alimunee.com`       | Authentication emails, password resets |
 | **Infisical**     | `secrets@alimunee.com`    | Security alerts, invitations           |
-| **Nextcloud**     | `cloud@alimunee.com`      | Sharing notifications, updates         |
 | **Paperless-ngx** | `paperless@alimunee.com`  | Document processing, sharing           |
 | **AFFiNE**        | -                         | Notifications                          |
 | **Outline**       | `outline@alimunee.com`    | Wiki notifications, invitations        |

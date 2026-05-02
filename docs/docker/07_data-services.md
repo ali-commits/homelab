@@ -15,12 +15,10 @@ Services requiring persistent data storage with databases.
 | Service           | Database              | Storage Location                   |
 | ----------------- | --------------------- | ---------------------------------- |
 | **Immich**        | PostgreSQL (pgvector) | `/storage/data/immich/database`    |
-| **Nextcloud**     | PostgreSQL            | `/storage/data/nextcloud/db`       |
 | **Paperless-ngx** | PostgreSQL            | `/storage/data/paperless-ngx/db`   |
 | **Zitadel**       | PostgreSQL            | `/storage/data/zitadel/zitadel-db` |
 | **Karakeep**      | PostgreSQL            | `/storage/data/karakeep/db`        |
 | **Infisical**     | PostgreSQL            | `/storage/data/infisical/db`       |
-| **OnlyOffice**    | PostgreSQL            | `/storage/data/onlyoffice/db`      |
 | **N8N**           | PostgreSQL            | `/storage/data/n8n/db`             |
 | **AFFiNE**        | PostgreSQL (pgvector) | `/storage/data/affine/postgres`    |
 | **Linkwarden**    | PostgreSQL            | `/storage/data/linkwarden/db`      |
@@ -33,7 +31,6 @@ Services requiring persistent data storage with databases.
 
 #### Core Services
 - **Immich** - Photo management & AI features ([📖](../../services/immich/documentation.md))
-- **Nextcloud** - Personal cloud & file sharing ([📖](../../services/nextcloud/documentation.md))
 - **Zitadel** - SSO & identity management ([📖](../../services/zitadel/documentation.md))
 
 #### Document & Knowledge Management
@@ -44,7 +41,6 @@ Services requiring persistent data storage with databases.
 
 #### Productivity
 - **Infisical** - Secrets management ([📖](../../services/infisical/documentation.md))
-- **OnlyOffice** - Document editing ([📖](../../services/onlyoffice/documentation.md))
 - **N8N** - Workflow automation ([📖](../../services/n8n/documentation.md))
 
 ### Redis & Caching
@@ -64,7 +60,7 @@ networks:
 
 ### Internal Networks
 Each multi-container service uses its own internal network:
-- **immich_internal**, **nextcloud_internal**, **onlyoffice_internal**, etc.
+- **immich_internal**, **opencloud_internal**, etc.
 
 ## Backup Strategies
 

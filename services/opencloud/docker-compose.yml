@@ -137,7 +137,7 @@ services:
       - opencloud_internal
       - proxy
 
-  # Dedicated OnlyOffice instance for OpenCloud (separate from Nextcloud's OnlyOffice)
+  # Dedicated OnlyOffice instance for OpenCloud
   opencloud-onlyoffice:
     image: onlyoffice/documentserver:latest
     container_name: opencloud-onlyoffice

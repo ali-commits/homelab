@@ -23,5 +23,4 @@ UUID=cfe839e4-9e04-499f-afab-d4a502232a7a /var/logs               btrfs   subvol
 # HDD Storage Drive (3.6TB) - Btrfs subvolumes
 UUID=b57a5e4e-4648-40bf-916c-4e17b958d47e /storage/media          btrfs   defaults,noatime,compress=zstd:3,space_cache=v2,subvol=@media     0       0
 UUID=b57a5e4e-4648-40bf-916c-4e17b958d47e /storage/Immich         btrfs   defaults,noatime,compress=zstd:3,space_cache=v2,subvol=@immich    0       0
-UUID=b57a5e4e-4648-40bf-916c-4e17b958d47e /storage/nextcloud      btrfs   defaults,noatime,compress=zstd:3,space_cache=v2,subvol=@nextcloud 0       0
 UUID=b57a5e4e-4648-40bf-916c-4e17b958d47e /storage/shared         btrfs   defaults,noatime,compress=zstd:3,space_cache=v2,subvol=@shared    0       0

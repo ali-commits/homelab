@@ -62,7 +62,6 @@ The homelab uses a multi-tier Btrfs storage architecture providing flexibility, 
 | `@var_logs`       | `/var/logs`          | System logs      | NVMe   | No            |
 | `@var_lib_docker` | `/var/lib/docker`    | Docker data      | NVMe   | No            |
 | `@media`          | `/storage/media`     | Media files      | HDD    | Manual        |
-| `@nextcloud`      | `/storage/nextcloud` | Cloud storage    | HDD    | Yes (Snapper) |
 | `@immich`         | `/storage/Immich`    | Photo library    | HDD    | Yes (Snapper) |
 | `@shared`         | `/storage/shared`    | Shared data      | HDD    | Yes (Snapper) |
 
@@ -90,7 +89,7 @@ sudo btrfs device stats /storage/media
 
 # Check space usage by subvolume
 sudo btrfs subvolume list /
-sudo btrfs subvolume show /storage/nextcloud
+sudo btrfs subvolume show /storage/Immich
 ```
 
 ### RAID Management
@@ -112,11 +111,11 @@ sudo btrfs balance start -dusage=50 /storage/media
 ```bash
 # Manual snapshot creation
 sudo snapper -c root create --description "Before system update"
-sudo snapper -c nextcloud create --description "Before upgrade"
+sudo snapper -c immich create --description "Before upgrade"
 
 # List snapshots
 sudo snapper -c root list
-sudo snapper -c nextcloud list
+sudo snapper -c immich list
 
 # Cleanup old snapshots
 sudo snapper -c root cleanup number
@@ -156,7 +155,7 @@ sudo snapper cleanup
 sudo btrfs filesystem defragment -r -v /home
 
 # Check compression ratio
-sudo compsize /storage/nextcloud
+sudo compsize /storage/Immich
 
 # Find large files
 sudo du -sh /storage/* | sort -hr

@@ -28,7 +28,6 @@ Core storage architecture using Btrfs filesystem with Docker volumes for persist
 │   └── downloads/     → qBittorrent downloads
 ├── Immich/            → Photo storage (HDD)
 │   └── uploads/       → Photo & video uploads
-├── nextcloud/         → Nextcloud user files (HDD, legacy)
 └── shared/            → Shared between services (HDD)
 ```
 
@@ -40,7 +39,6 @@ Core storage architecture using Btrfs filesystem with Docker volumes for persist
 | **System Data**      | `/storage/data/service`    | NVMe SSD     | Service configuration & databases |
 | **Media Files**      | `/storage/media/*`         | HDD          | Media library storage             |
 | **Photo Storage**    | `/storage/Immich/*`        | HDD          | Photo & video uploads             |
-| **Cloud Storage**    | `/storage/nextcloud/*`     | HDD          | Nextcloud user files (legacy)     |
 | **Cloud Storage**    | `/storage/data/opencloud`  | NVMe SSD     | OpenCloud config, data & files    |
 | **Document Storage** | `/storage/data/paperless`  | NVMe SSD     | Document archive (paperless-ngx)  |
 | **Shared Data**      | `/storage/shared/*`        | HDD          | Cross-service data                |
@@ -62,12 +60,10 @@ Core storage architecture using Btrfs filesystem with Docker volumes for persist
 | Service           | Database Type         | Storage Location                   |
 | ----------------- | --------------------- | ---------------------------------- |
 | **Immich**        | PostgreSQL (pgvector) | `/storage/data/immich/database`    |
-| **Nextcloud**     | PostgreSQL            | `/storage/data/nextcloud/db`       |
 | **Paperless-ngx** | PostgreSQL            | `/storage/data/paperless-ngx/db`   |
 | **Zitadel**       | PostgreSQL            | `/storage/data/zitadel/zitadel-db` |
 | **Karakeep**      | PostgreSQL            | `/storage/data/karakeep/db`        |
 | **Infisical**     | PostgreSQL            | `/storage/data/infisical/db`       |
-| **OnlyOffice**    | PostgreSQL            | `/storage/data/onlyoffice/db`      |
 | **N8N**           | PostgreSQL            | `/storage/data/n8n/db`             |
 | **AFFiNE**        | PostgreSQL (pgvector) | `/storage/data/affine/postgres`    |
 | **Linkwarden**    | PostgreSQL            | `/storage/data/linkwarden/db`      |
@@ -104,11 +100,6 @@ volumes:
 
 ### Productivity Services
 ```yaml
-# Nextcloud
-volumes:
-  - /storage/data/nextcloud/html:/var/www/html
-  - /storage/nextcloud:/var/www/html/data
-
 # Paperless-ngx
 volumes:
   - /storage/data/paperless-ngx/data:/usr/src/paperless/data
@@ -149,7 +140,7 @@ volumes:
 
 ### Storage Performance
 - **NVMe SSD**: `/storage/data/` - High-performance storage for databases and configs
-- **HDD**: `/storage/media/`, `/storage/nextcloud/`, etc. - Large capacity for media and documents
+- **HDD**: `/storage/media/`, etc. - Large capacity for media and documents
 - **Compression**: Reduces storage usage by 20-40% depending on data type
 
 ### Permissions Management

@@ -55,7 +55,7 @@ All groups are defined in `config.yml`. Session duration is set per-service via 
 | `paperless-gpt-stack` | paperless-gpt                                                                     | 5m      |
 | `stirling-pdf-stack`  | stirling-pdf                                                                      | 5m      |
 
-> **Not managed by Sablier**: OnlyOffice runs `always-on` (`restart: unless-stopped`). Sablier's dynamic (loading-page) mode is incompatible with Nextcloud's server-side health checks — when OnlyOffice is stopped, Nextcloud can't resolve the `http://onlyoffice/` internal URL and disables document editing for all users.
+> **Not managed by Sablier**: OpenCloud's OnlyOffice (`opencloud-onlyoffice`) runs `always-on` (`restart: unless-stopped`). It must remain available for document editing via the collaboration service.
 
 ## Adding a Service to Sablier
 

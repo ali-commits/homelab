@@ -299,7 +299,7 @@ send_notification "System Update" "System updated successfully" "maintenance" 2
 | Event Type           | Priority | Example Message                         |
 | -------------------- | -------- | --------------------------------------- |
 | **Update Success**   | 2        | `Container updated: jellyfin:latest`    |
-| **Update Failed**    | 4        | `Failed to update container: nextcloud` |
+| **Update Failed**    | 4        | `Failed to update container: immich`    |
 | **Multiple Updates** | 3        | `Updated 5 containers successfully`     |
 | **Critical Failure** | 5        | `Watchtower service crashed`            |
 

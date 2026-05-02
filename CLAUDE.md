@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**RedRipper** is a single-node homelab running 41+ containerized services on Fedora Server with Docker Compose. The host is an AMD Threadripper 2920X / 32GB RAM / GTX 1070 with dual-tier Btrfs storage (1TB NVMe + 3.6TB HDD). Static IP: `192.168.1.2`.
+**RedRipper** is a single-node homelab running 39+ containerized services on Fedora Server with Docker Compose. The host is an AMD Threadripper 2920X / 32GB RAM / GTX 1070 with dual-tier Btrfs storage (1TB NVMe + 3.6TB HDD). Static IP: `192.168.1.2`.
 
 ## Repository Layout
 
@@ -60,7 +60,7 @@ Tailscale VPN (redripper.taila7b279.ts.net) ---------> Services
 ### Docker Networks
 - `proxy` — All web-facing services connect to this; Traefik routes traffic
 - `db_network` — Shared database access
-- Service-specific internal networks (e.g., `immich_internal`, `nextcloud_internal`, `infisical_internal`) isolate sensitive stacks
+- Service-specific internal networks (e.g., `immich_internal`, `opencloud_internal`, `infisical_internal`) isolate sensitive stacks
 
 ### Startup Order (`start-all.sh`)
 1. Infrastructure first: traefik, postfix, cloudflared, adguard
@@ -78,7 +78,7 @@ Tailscale VPN (redripper.taila7b279.ts.net) ---------> Services
 
 ### Storage Layout
 - **NVMe (1TB)**: `/` (root, snapper), `/storage/data` (snapper), `/var/lib/docker`
-- **HDD (3.6TB)**: `/storage/media`, `/storage/Immich` (snapper), `/storage/nextcloud` (snapper), `/storage/share` (snapper)
+- **HDD (3.6TB)**: `/storage/media`, `/storage/Immich` (snapper), `/storage/share` (snapper)
 - **Backups**: Snapper snapshots (hourly/daily) + Kopia daily to AWS S3 Glacier
 
 ## Working with Services

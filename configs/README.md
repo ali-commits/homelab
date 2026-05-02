@@ -20,7 +20,6 @@ This directory contains all configuration files for the homelab including system
 ├── snapper/                # Btrfs snapshot configurations
 │   ├── data                # Snapper config for /data
 │   ├── immich              # Snapper config for immich volume
-│   ├── nextcloud           # Snapper config for nextcloud volume
 │   ├── root                # Snapper config for root filesystem
 │   └── shared              # Snapper config for shared volume
 ├── nfs/                    # NFS server configurations

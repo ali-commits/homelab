@@ -99,7 +99,7 @@ VERT is a self-hosted filn service that provides client-side file format convers
 - **Offline Operation**: Works without internet connection
 
 ### Workflow Integration
-- **Nextcloud**: Convert files before uploading to cloud storage
+- **OpenCloud**: Convert files before uploading to cloud storage
 - **Paperless-ngx**: Convert documents before OCR processing
 - **Media Stack**: Convert video/audio formats for compatibility
 - **Development**: Convert assets and media files for projects
@@ -264,7 +264,7 @@ docker compose -f services/vert/docker-compose.yml restart
 # No database or external service dependencies
 # Can be used alongside other homelab services
 
-# Example: Use with Nextcloud for file conversion before upload
+# Example: Use with OpenCloud for file conversion before upload
 # Example: Use with Paperless-ngx for document format standardization
 ```
 

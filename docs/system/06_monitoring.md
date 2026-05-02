@@ -46,7 +46,6 @@
 | **NVMe System** | `/`                  | /dev/nvme0n1p2 | System files and Docker |
 | **HDD Storage** | `/storage/media`     | /dev/sda1      | Media files             |
 | **HDD Storage** | `/storage/Immich`    | /dev/sda1      | Photo storage           |
-| **HDD Storage** | `/storage/nextcloud` | /dev/sda1      | Cloud storage           |
 | **HDD Storage** | `/storage/shared`    | /dev/sda1      | Shared data             |
 
 ### 3. Snapshot Monitoring

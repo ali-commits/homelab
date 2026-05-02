@@ -61,7 +61,7 @@ OpenCloud uses Zitadel for SSO via OIDC (PKCE flow).
 
 ## OnlyOffice Integration
 
-This is a **dedicated OnlyOffice instance** for OpenCloud (separate from the Nextcloud OnlyOffice at `office.alimunee.com`).
+This is a **dedicated OnlyOffice instance** for OpenCloud.
 
 Communication flow:
 ```

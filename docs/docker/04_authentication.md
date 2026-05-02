@@ -40,7 +40,6 @@ environment:
 - **Lobe Chat**: NextAuth.js with Zitadel provider integration
 - **Karakeep**: OIDC via generic OAuth configuration
 - **Linkwarden**: Native Zitadel SSO integration
-- **Nextcloud**: OIDC app integration (configured via Nextcloud admin UI, not compose)
 
 ### Application Configuration in Zitadel
 

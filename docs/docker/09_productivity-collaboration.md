@@ -9,7 +9,6 @@ Work-focused services for productivity, document management, collaboration, and 
 ### Core Services
 
 - **OpenCloud** - Primary cloud storage & file sharing with OnlyOffice collaboration ([📖](../../services/opencloud/documentation.md))
-- **Nextcloud** - Legacy cloud storage (being phased out — data migrated to OpenCloud) ([📖](../../services/nextcloud/documentation.md))
 - **Syncthing** - Decentralized file synchronization ([📖](../../services/syncthing/documentation.md))
 
 ## Document Management
@@ -29,7 +28,6 @@ Work-focused services for productivity, document management, collaboration, and 
 
 ### Document Editing
 
-- **OnlyOffice** - Document editing for Nextcloud ([📖](../../services/onlyoffice/documentation.md))
 - **OpenCloud + OnlyOffice** - Dedicated OnlyOffice instance for OpenCloud at `onlyoffice.alimunee.com` (bundled in OpenCloud stack)
 
 ## Workflow Automation
@@ -60,7 +58,6 @@ Work-focused services for productivity, document management, collaboration, and 
 │   ├── opencloud/         → OpenCloud config & user data
 │   ├── paperless-ngx/     → Document storage
 │   └── syncthing/         → Synchronized files
-├── nextcloud/             → Nextcloud user files (legacy)
 └── shared/                → Cross-service shared data
 ```
 
@@ -71,14 +68,12 @@ Work-focused services for productivity, document management, collaboration, and 
 Services with Zitadel SSO support:
 
 - **OpenCloud**: OIDC PKCE flow, auto-provisioning from Zitadel claims
-- **Nextcloud**: OIDC app integration (configured via admin UI)
 - **Linkwarden**: Native Zitadel SSO integration
 
 ### Email Integration
 
 Services using SMTP relay:
 
-- **Nextcloud**: Sharing notifications, user management
 - **Paperless-ngx**: Document processing notifications
 - **Stirling PDF**: Email delivery of processed PDFs
 
@@ -89,11 +84,6 @@ Services using SMTP relay:
 - **Document Editing**: In-browser editing via dedicated OnlyOffice at `onlyoffice.alimunee.com`
 - **WOPI Protocol**: Collaboration bridge connects OpenCloud to OnlyOffice
 
-#### Nextcloud + OnlyOffice
-
-- **Document Editing**: Seamless in-browser document editing
-- **Real-time Collaboration**: Multiple users editing simultaneously
-
 #### Paperless-ngx + Paperless-GPT
 
 - **AI Enhancement**: Improved OCR and metadata extraction
@@ -101,7 +91,6 @@ Services using SMTP relay:
 
 #### N8N Workflow Integrations
 
-- **Nextcloud**: File monitoring and processing workflows
 - **Paperless-ngx**: Document processing automation
 
 ---

@@ -91,7 +91,7 @@ BACKUP_DIR="/storage/backups/databases/$(date +%Y%m%d)"
 mkdir -p "$BACKUP_DIR"
 
 # PostgreSQL services
-POSTGRES_SERVICES="immich nextcloud paperless-ngx zitadel karakeep infisical onlyoffice n8n affine linkwarden"
+POSTGRES_SERVICES="immich paperless-ngx zitadel karakeep infisical n8n affine linkwarden"
 
 for service in $POSTGRES_SERVICES; do
     docker exec ${service}-db pg_dump -U ${service} -d ${service} > "$BACKUP_DIR/${service}-$(date +%Y%m%d).sql"
@@ -124,7 +124,7 @@ tar -czf "$BACKUP_DIR/app-data-$(date +%Y%m%d).tar.gz" -C /storage/data .
 
 #### Database Recovery
 ```bash
-SERVICE="nextcloud"  # Example service
+SERVICE="immich"  # Example service
 
 # Stop service
 docker compose -f services/$SERVICE/docker-compose.yml down
@@ -190,7 +190,7 @@ docker system prune -f --filter "until=24h"
 /usr/local/bin/backup-full-system.sh
 
 # Database optimization
-for service in nextcloud immich paperless-ngx;
+for service in immich paperless-ngx;
   docker exec ${service}-db psql -U ${service} -d ${service} -c "VACUUM ANALYZE;"
 done
 
@@ -202,7 +202,7 @@ docker system prune -af --volumes --filter "until=168h"
 
 #### Manual Service Update
 ```bash
-SERVICE="nextcloud"
+SERVICE="immich"
 
 # Backup before update
 docker exec ${SERVICE}-db pg_dump -U ${SERVICE} ${SERVICE} > "${SERVICE}-pre-update-$(date +%Y%m%d).sql"

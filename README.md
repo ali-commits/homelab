@@ -6,7 +6,7 @@
 
 ## 🏆 Infrastructure Highlights
 
-**RedRipper** is a comprehensive homelab infrastructure running **41 containerized services** on Fedora 42 Server, delivering enterprise-grade capabilities for media streaming, cloud storage, AI/ML workloads, and system monitoring. Built with security, performance, and automation at its core.
+**RedRipper** is a comprehensive homelab infrastructure running **39 containerized services** on Fedora 42 Server, delivering enterprise-grade capabilities for media streaming, cloud storage, AI/ML workloads, and system monitoring. Built with security, performance, and automation at its core.
 
 ### ⚡ Performance Powerhouse
 - **AMD Threadripper 2920X**: 12-core/24-thread @ 3.5GHz for heavy workloads
@@ -26,7 +26,7 @@
 - **3-2-1 Backup Strategy**: Snapper snapshots + Kopia daily backups to S3 Glacier
 - **Remote Access**: Tailscale VPN with Magic DNS and subnet routing
 - **Email Delivery**: Postfix SMTP relay with Brevo upstream for notifications
-- **Container Orchestration**: 41 services across 7 categories with Traefik routing
+- **Container Orchestration**: 39 services across 7 categories with Traefik routing
 - **Wake-on-Demand**: Sablier scales 13 low-traffic services to zero, waking them instantly on request
 
 ---
@@ -36,14 +36,14 @@
 | **Category**                   | **Count** | **Key Services**                          | **Purpose**                                         |
 | ------------------------------ | --------- | ----------------------------------------- | --------------------------------------------------- |
 | **🎬 Media & Entertainment**    | 9         | Jellyfin, *arr stack, Kavita              | GPU-accelerated streaming & content management      |
-| **☁️ Data & Productivity**      | 13        | Nextcloud, Immich, AFFiNE, Karakeep       | Cloud storage, photo AI, knowledge base             |
+| **☁️ Data & Productivity**      | 11        | OpenCloud, Immich, AFFiNE, Karakeep       | Cloud storage, photo AI, knowledge base             |
 | **🤖 AI/ML Services**           | 4         | Lobe Chat, Karakeep, Paperless-GPT        | Multi-LLM chat, AI bookmarks, document processing   |
-| **🔧 Productivity Tools**       | 12        | OnlyOffice, N8N, Syncthing, IT-Tools      | Collaboration, automation, file sync, dev utilities |
+| **🔧 Productivity Tools**       | 10        | N8N, Syncthing, IT-Tools, Excalidraw      | Automation, file sync, dev utilities                |
 | **📊 Monitoring & Management**  | 6         | Uptime Kuma, Beszel, Arcane, Sablier      | Infrastructure monitoring, container management & wake-on-demand scaling |
 | **🛡️ Core Infrastructure**      | 3         | Traefik, Cloudflared, AdGuard             | Routing, tunneling, DNS filtering, auto-updates     |
 | **🔐 Security & Communication** | 3         | Zitadel, ntfy, Postfix                    | SSO, notifications, SMTP relay                      |
 
-**Total: 41 Production Services** | [📖 Complete Service Reference](docs/docker/00_README.md)
+**Total: 39 Production Services** | [📖 Complete Service Reference](docs/docker/00_README.md)
 
 ---
 
@@ -95,7 +95,7 @@
 │ Web Services  │ │             Backend Services              │ │Infrastructure │    │
 │               │ │                                           │ │               │    │
 │• Jellyfin     │ │• PostgreSQL        • Internal Networks    │ │• Zitadel (SSO)│    │
-│• Nextcloud    │ │• Redis             • Service Databases    │ │• AdGuard DNS  │    │
+│• OpenCloud    │ │• Redis             • Service Databases    │ │• AdGuard DNS  │    │
 │• Immich       │ │• MongoDB           • Cache Systems        │ │• Postfix SMTP ─────┘
 │• Uptime Kuma  │ │• Search Engines    • Message Queues       │ │• ntfy Notify  │
 │• Lobe Chat    │ │• File Systems      • Background Jobs      │ │• Arcane       │
@@ -112,18 +112,17 @@
        │ │ ┌─────────────────────────┐ │ ┌─────────────────────────────┐ ││
        │ │ │ /             (snapper) │ │ │ /storage/media              │ ││
        │ │ │ /storage/data (snapper) │ │ │ /storage/Immich    (snapper)│ ││
-       │ │ │ /var/lib/docker         │ │ │ /storage/nextcloud (snapper)│ ││
+       │ │ │ /var/lib/docker         │ │ │                             │ ││
        │ │ │ /var/logs               │ │ │ /storage/share     (snapper)│ ││
        │ │ └─────────────────────────┘ │ └─────────────────────────────┘ ││
        │ └─────────────────────────────┴─────────────────────────────────┘│
        └───────────────────────────────┬──────────────────────────────────┘
                                        │
                           ┌────────────▼─────────────┐                     ┌───────────────┐
-                          │ Backup Strategy (Kopia)  │─────────────────────▶  S3 Glacier  │
+                          │ Backup Strategy (Kopia)  │─────────────────────▶  S3 Glacier   │
                           │                          │                     └───────────────┘
-                          │ • /sotrage/data          │
+                          │ • /storage/data          │
                           │ • /storage/Immich        │
-                          │ • /storage/nextcloud     │
                           │                          │
                           └──────────────────────────┘
 
@@ -140,7 +139,7 @@
 - **Smart Organization**: Automated metadata, artwork, and library management
 
 ### ☁️ Personal Cloud Platform
-- **Nextcloud**: Full-featured cloud storage with mobile/desktop sync
+- **OpenCloud**: Modern cloud storage with mobile/desktop sync and built-in OnlyOffice
 - **Immich**: AI-powered photo management with facial recognition and object detection
 - **Document Management**: OCR processing, AI enhancement, collaborative editing
 - **Cross-device Sync**: Seamless file access across all devices

@@ -59,7 +59,6 @@ sudo smartctl -H /dev/sda
 # Manual scrub (can take hours)
 sudo btrfs scrub start /
 sudo btrfs scrub start /storage/Immich
-sudo btrfs scrub start /storage/nextcloud
 sudo btrfs scrub start /storage/media
 
 # Check scrub status
@@ -171,7 +170,6 @@ sensors | grep -E "Tdie|CPU Temp|CPU Fan|CPU OPT"
 ```bash
 # Stop all non-essential services
 sudo systemctl stop docker
-sudo systemctl stop nextcloud-aio-*
 
 # Emergency storage cleanup
 sudo dnf autoremove && sudo dnf clean all

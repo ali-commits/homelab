@@ -34,7 +34,6 @@ LOG_FILE="/var/log/kopia-backup.log"
 SUBVOLUMES_TO_BACKUP=(
     "/storage/data"
     "/storage/Immich"
-    "/storage/nextcloud"
 )
 
 # Load notification settings

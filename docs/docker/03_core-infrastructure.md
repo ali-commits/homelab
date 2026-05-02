@@ -48,7 +48,6 @@ Internet → Cloudflare → Cloudflared → Traefik → Services
 ├── data/               → System & service data (NVMe SSD)
 ├── media/             → Media library (HDD)
 ├── Immich/            → Photo storage (HDD)
-├── nextcloud/         → Nextcloud storage (HDD)
 ├── paperless-ngx/     → Document storage (HDD)
 ├── syncthing/         → Synchronized files (HDD)
 └── shared/            → Shared between services (HDD)

@@ -65,7 +65,7 @@ Sablier intercepts Traefik requests and wakes stopped containers on first access
 | `paperless-gpt-stack` | paperless-gpt |
 | `stirling-pdf-stack` | stirling-pdf |
 
-> **Not managed**: OnlyOffice is always-on — Sablier's dynamic mode breaks Nextcloud's server-side health checks against `http://onlyoffice/`, causing document editing to fail for all users.
+> **Not managed**: OpenCloud's OnlyOffice (`opencloud-onlyoffice`) is always-on to ensure document editing availability.
 
 **Note:** `start-all.sh` automatically stops Sablier-managed services after starting them, so they begin in scaled-to-zero state and wake only on demand.
 

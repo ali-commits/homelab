@@ -16,7 +16,7 @@ Glance is a lightweight, highly customizable dashboard that displays your homela
 ### Key Features
 - **Service Monitoring**: Monitor all homelab services with visual status indicators
 - **RSS Feeds**: Display homelab news and updates from selfh.st, LinuxServer blog
-- **Release Tracking**: Track updates for key services (Jellyfin, Immich, Nextcloud, etc.)
+- **Release Tracking**: Track updates for key services (Jellyfin, Immich, OpenCloud, etc.)
 - **Weather Widget**: Local weather information
 - **Calendar**: Built-in calendar widget
 - **Docker Integration**: Monitor container status (requires Docker socket access)
