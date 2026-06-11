@@ -12,6 +12,7 @@ services:
       - APP_ENV=production
       - PUBLIC_SESSION_SECRET=${SESSION_SECRET}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - JWT_SECRET=${JWT_SECRET}
       - PUID=1000
       - PGID=1000
     dns:
