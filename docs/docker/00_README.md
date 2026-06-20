@@ -1,8 +1,8 @@
 # Docker Infrastructure Overview
 
 ## Quick Status Dashboard
-- **Total Services**: 41 deployed and running (13 managed via Sablier wake-on-demand)
-- **Last Updated**: April 9, 2026
+- **Total Services**: 42 deployed and running (14 managed via Sablier wake-on-demand)
+- **Last Updated**: June 11, 2026
 - **Infrastructure Health**: ✅ All systems operational
 
 ## Service Categories & Quick Access
@@ -17,7 +17,7 @@
 | **Notifications & SMTP**         | 2     | ntfy, Postfix                                                            | [📖](06_notifications-smtp.md)         |
 | **Data Services**                | 10    | Immich, Karakeep, AFFiNE                                                 | [📖](07_data-services.md)              |
 | **Media & Entertainment**        | 9     | Jellyfin, *arr stack, Kavita                                             | [📖](08_media-entertainment.md)        |
-| **Productivity & Collaboration** | 11    | OpenCloud, N8N, Syncthing, Vert.sh, Excalidraw, ChartDB, DrawDB             | [📖](09_productivity-collaboration.md) |
+| **Productivity & Collaboration** | 12    | OpenCloud, N8N, Syncthing, Vert.sh, Excalidraw, ChartDB, DrawDB             | [📖](09_productivity-collaboration.md) |
 | **Monitoring & Management**      | 6     | Uptime Kuma, Beszel, Infisical, Arcane, Glance, Sablier                  | [📖](10_monitoring-management.md)      |
 
 ## Complete Service Reference
@@ -62,6 +62,7 @@
 | [**radarr**](../services/radarr/docker-compose.yml)               | [📖](../services/radarr/documentation.md)        | 7878             | proxy                                               | radarr.alimunee.com       | Movie collection manager                  |
 | [**sonarr**](../services/sonarr/docker-compose.yml)               | [📖](../services/sonarr/documentation.md)        | 8989             | proxy                                               | sonarr.alimunee.com       | TV show collection manager                |
 | [**stirling-pdf**](../services/stirling-pdf/docker-compose.yml)   | [📖](../services/stirling-pdf/documentation.md)  | 8080             | proxy                                               | pdf.alimunee.com          | PDF manipulation & processing tools       |
+| [**pdfcraft**](../services/pdfcraft/docker-compose.yml)           | [📖](../services/pdfcraft/documentation.md)      | 80               | proxy                                               | pdfcraft.alimunee.com     | Client-side PDF toolkit (90+ tools)       |
 | [**syncthing**](../services/syncthing/docker-compose.yml)         | [📖](../services/syncthing/documentation.md)     | 8384,22000,21027 | proxy                                               | sync.alimunee.com         | Decentralized file synchronization        |
 | [**traefik**](../services/traefik/docker-compose.yml)             | [📖](../services/traefik/documentation.md)       | 80,443,8080      | proxy                                               | - (port 8080 dashboard)   | Reverse proxy & load balancer             |
 | [**vaultwarden**](../services/vaultwarden/docker-compose.yml)     | [📖](../services/vaultwarden/documentation.md)   | 80,3012          | proxy                                               | vaultwarden.alimunee.com  | Password manager (Bitwarden-compatible)   |

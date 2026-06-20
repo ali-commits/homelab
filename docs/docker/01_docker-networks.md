@@ -195,6 +195,7 @@ docker network inspect [network] | jq '.[0].Containers'
 - **Syncthing**: proxy
 - **IT-Tools**: proxy
 - **Stirling PDF**: proxy
+- **PDFCraft**: proxy
 - **Vaultwarden**: proxy
 - **Paperless-ngx**: proxy, paperless_internal, db_network
 - **Paperless-GPT**: proxy, paperless_internal
