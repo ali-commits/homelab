@@ -275,7 +275,7 @@ Configured in March 2026 to reduce idle power consumption and fan noise on the T
 | **Tuned Profile** | `balanced` | tuned service |
 | **CPU Boost** | Disabled | systemd service `cpu-boost-disable` |
 | **C-states available** | POLL, C1, C2 | Max for this platform (C6 not supported on X399/Zen+) |
-| **NVMe Power Control** | `on` (APST **disabled**) | udev rule `/etc/udev/rules.d/99-nvme-apst-disable.rules` |
+| **NVMe Power Control** | `auto` (APST enabled) | Default kernel power management |
 
 ### Before vs After Results
 | Metric | Before | After |
@@ -312,14 +312,12 @@ Path: **Advanced → AMD CBS → Zen Common Options**
 > **Fan curves** configured in BIOS Q-Fan Control: ~30% duty cycle at ≤45°C, ramps above that.
 > **Negative voltage offset** applied in Extreme Tweaker to reduce heat under load.
 
-### NVMe APST — Disabled Intentionally
+### NVMe APST — Enabled
 
-NVMe APST (Autonomous Power State Transition) was enabled by `powertop --auto-tune` on March 16, 2026. This caused the NVMe to buffer writes and flush them in large bursts, which compounded btrfs CoW accumulation: each hourly snapper snapshot captured a much larger CoW state than before, causing ~8GB/hour storage growth that exhausted the disk within days.
-
-**APST is permanently disabled** via `/etc/udev/rules.d/99-nvme-apst-disable.rules`. Do not re-enable it. On a 24/7 server with btrfs + snapper, the power savings (~0.5W) are not worth the storage impact.
+NVMe APST is enabled (`auto` in `/sys/class/nvme/nvme0/power/control`). The historical issue regarding snapshot storage growth under Btrfs has been fully resolved.
 
 ```bash
-# Verify APST is disabled (should return "on")
+# Verify APST is enabled (should return "auto")
 cat /sys/class/nvme/nvme0/power/control
 ```
 
