@@ -25,7 +25,6 @@ services:
       - "traefik.http.routers.kavita.rule=Host(`comics.alimunee.com`)"
       - "traefik.http.services.kavita.loadbalancer.server.port=5000"
       - "traefik.docker.network=proxy"
-      - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:5000/" ]
       interval: 30s

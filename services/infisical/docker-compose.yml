@@ -30,7 +30,6 @@ services:
       - "traefik.http.middlewares.infisical-secure.headers.browserXssFilter=true"
       - "traefik.http.middlewares.infisical-secure.headers.customFrameOptionsValue=SAMEORIGIN"
       - "traefik.http.routers.infisical.middlewares=infisical-secure"
-      - "watchtower.enable=true"
     depends_on:
       infisical-db:
         condition: service_healthy

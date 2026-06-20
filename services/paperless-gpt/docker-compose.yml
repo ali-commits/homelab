@@ -54,7 +54,6 @@ services:
     - traefik.http.middlewares.paperless-gpt-sablier.plugin.sablier.dynamic.theme=hacker-terminal
     - traefik.docker.allownonrunning=true
     - traefik.http.routers.paperless-gpt.middlewares=paperless-gpt-sablier
-    - com.centurylinklabs.watchtower.enable=true
     - sablier.enable=true
     - sablier.group=paperless-gpt-stack
 networks:

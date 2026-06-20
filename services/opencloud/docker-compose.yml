@@ -85,7 +85,6 @@ services:
       - "traefik.http.middlewares.opencloud-secure.headers.contentTypeNosniff=true"
       - "traefik.http.middlewares.opencloud-secure.headers.browserXssFilter=true"
       - "traefik.http.routers.opencloud.middlewares=opencloud-secure,opencloud-headers"
-      - "watchtower.enable=true"
 
   # Full-text search service
   tika:
@@ -174,7 +173,6 @@ services:
       # CSP to allow embedding OnlyOffice in OpenCloud
       - "traefik.http.middlewares.opencloud-onlyoffice.headers.contentSecurityPolicy=frame-ancestors 'self' https://drive.alimunee.com"
       - "traefik.http.routers.opencloud-onlyoffice.middlewares=opencloud-onlyoffice"
-      - "watchtower.enable=true"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost/hosting/discovery" ]
       interval: 10s

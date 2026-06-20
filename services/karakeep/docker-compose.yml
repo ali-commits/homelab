@@ -42,8 +42,6 @@ services:
       - "traefik.http.routers.keep.rule=Host(`keep.alimunee.com`)"
       - "traefik.http.services.keep.loadbalancer.server.port=3000"
       - "traefik.docker.network=proxy"
-      # Watchtower labels
-      - "com.centurylinklabs.watchtower.enable=true"
     depends_on:
       - karakeep-db
       - meilisearch

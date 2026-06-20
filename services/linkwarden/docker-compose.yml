@@ -37,7 +37,6 @@ services:
     - traefik.http.middlewares.bookmarks-sablier.plugin.sablier.dynamic.theme=hacker-terminal
     - traefik.docker.allownonrunning=true
     - traefik.http.routers.bookmarks.middlewares=bookmarks-sablier
-    - com.centurylinklabs.watchtower.enable=true
     - sablier.enable=true
     - sablier.group=linkwarden-stack
     depends_on:

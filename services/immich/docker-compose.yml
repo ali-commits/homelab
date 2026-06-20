@@ -27,8 +27,6 @@ services:
       - "traefik.http.routers.immich.rule=Host(`photos.alimunee.com`)"
       - "traefik.http.services.immich.loadbalancer.server.port=2283"
       - "traefik.docker.network=proxy"
-      # Watchtower labels
-      - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
       disable: false
 

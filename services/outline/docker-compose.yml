@@ -47,7 +47,6 @@ services:
     - traefik.http.middlewares.outline-sablier.plugin.sablier.dynamic.theme=hacker-terminal
     - traefik.docker.allownonrunning=true
     - traefik.http.routers.outline.middlewares=outline-sablier
-    - com.centurylinklabs.watchtower.enable=true
     - sablier.enable=true
     - sablier.group=outline-stack
     depends_on:

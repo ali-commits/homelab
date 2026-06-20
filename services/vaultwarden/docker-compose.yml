@@ -49,8 +49,6 @@ services:
       - "traefik.http.routers.vaultwarden-websocket.service=vaultwarden-websocket"
       - "traefik.http.routers.vaultwarden-websocket.middlewares=vaultwarden-headers@docker"
       - "traefik.docker.network=proxy"
-      # Watchtower labels
-      - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
       test: [ "CMD-SHELL", "curl -f http://localhost/ || exit 1" ]
       interval: 30s

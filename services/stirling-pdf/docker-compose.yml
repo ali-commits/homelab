@@ -44,7 +44,6 @@ services:
     - traefik.http.middlewares.stirling-pdf-sablier.plugin.sablier.dynamic.theme=hacker-terminal
     - traefik.docker.allownonrunning=true
     - traefik.http.routers.stirling-pdf.middlewares=stirling-pdf-sablier
-    - com.centurylinklabs.watchtower.enable=true
     - sablier.enable=true
     - sablier.group=stirling-pdf-stack
     deploy:

@@ -28,8 +28,6 @@ services:
       - "traefik.http.routers.beszel.rule=Host(`monitor.alimunee.com`)"
       - "traefik.http.services.beszel.loadbalancer.server.port=8090"
       - "traefik.docker.network=proxy"
-      # Watchtower labels
-      - "com.centurylinklabs.watchtower.enable=true"
 
   beszel-agent:
     image: henrygd/beszel-agent:latest
@@ -55,9 +53,6 @@ services:
       interval: 120s
       timeout: 10s
       retries: 3
-    labels:
-      # Watchtower labels
-      - "com.centurylinklabs.watchtower.enable=true"
 
 networks:
   proxy:
