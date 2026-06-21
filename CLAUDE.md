@@ -79,7 +79,7 @@ Tailscale VPN (redripper.taila7b279.ts.net) ---------> Services
 ### Storage Layout
 - **NVMe (1TB)**: `/` (root, snapper), `/storage/data` (snapper), `/var/lib/docker`
 - **HDD (3.6TB)**: `/storage/media`, `/storage/Immich` (snapper), `/storage/share` (snapper)
-- **Backups**: Snapper snapshots (hourly/daily) + Kopia daily to AWS S3 Glacier
+- **Backups**: Snapper snapshots (hourly/daily) + Kopia daily to Backblaze B2 (S3-compatible API)
 
 ## Working with Services
 

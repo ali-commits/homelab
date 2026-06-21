@@ -23,7 +23,7 @@
 ### 🚀 Production Features
 - **GPU Acceleration**: 4-6x transcoding performance with NVENC hardware encoding
 - **Automated Monitoring**: Comprehensive health checks with ntfy notifications
-- **3-2-1 Backup Strategy**: Snapper snapshots + Kopia daily backups to S3 Glacier
+- **3-2-1 Backup Strategy**: Snapper snapshots + Kopia daily backups to Backblaze B2
 - **Remote Access**: Tailscale VPN with Magic DNS and subnet routing
 - **Email Delivery**: Postfix SMTP relay with Brevo upstream for notifications
 - **Container Orchestration**: 39 services across 7 categories with Traefik routing
@@ -119,7 +119,7 @@
        └───────────────────────────────┬──────────────────────────────────┘
                                        │
                           ┌────────────▼─────────────┐                     ┌───────────────┐
-                          │ Backup Strategy (Kopia)  │─────────────────────▶  S3 Glacier   │
+                          │ Backup Strategy (Kopia)  │─────────────────────▶  Backblaze B2 │
                           │                          │                     └───────────────┘
                           │ • /storage/data          │
                           │ • /storage/Immich        │
@@ -153,7 +153,7 @@
 ### 🛡️ Security & Data Protection
 - **Zero-trust Access**: Cloudflare tunnels eliminate port forwarding risks
 - **Remote VPN Access**: Tailscale mesh network with Magic DNS (`redripper.taila7b279.ts.net`)
-- **3-2-1 Backup Strategy**: Local Snapper snapshots + daily Kopia backups to S3 Glacier
+- **3-2-1 Backup Strategy**: Local Snapper snapshots + daily Kopia backups to Backblaze B2
 - **Email Infrastructure**: Postfix SMTP relay → Brevo → reliable email delivery
 - **Comprehensive Monitoring**: Real-time health checks with ntfy notifications
 - **Intrusion Detection**: Multi-layered security with fail2ban and SELinux
@@ -163,9 +163,9 @@
 ##   Backup & Remote Access
 
 ### 3-2-1 Backup Strategy
-- **3 Copies**: Original data + Snapper snapshots + S3 Glacier backups
+- **3 Copies**: Original data + Snapper snapshots + Backblaze B2 backups
 - **2 Media Types**: Local Btrfs storage + cloud object storage
-- **1 Offsite**: Daily Kopia backups to AWS S3 Glacier for long-term retention
+- **1 Offsite**: Daily Kopia backups to Backblaze B2 (10 daily / 4 weekly / 3 monthly retention)
 - **Automated Scheduling**: Snapper hourly/daily snapshots + Kopia daily cloud sync
 - **Point-in-time Recovery**: Granular restore from local snapshots or cloud archives
 

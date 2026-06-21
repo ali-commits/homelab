@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Kopia Backup Script for Homelab
-# Daily backups with automatic retention (10 days, 12 months)
+# Daily incremental backups to Backblaze B2 (S3-compatible API)
+# Retention: 10 daily + 4 weekly + 3 monthly snapshots (auto-pruned)
 
 # --- Configuration ---
 # Load environment variables (try system env file first, then development .env)
@@ -115,30 +116,21 @@ main() {
         fi
     done
 
-    # Run maintenance (cleanup old snapshots according to retention policy)
-    log_message "Running maintenance and cleanup"
-
-    # GLACIER COMPATIBILITY: Configure Kopia to avoid operations that access old blobs
-    # This prevents "storage class" errors when objects are in Glacier
-    log_message "Configuring maintenance policy for Glacier compatibility"
-    sudo -u ali -E KOPIA_PASSWORD="$KOPIA_PASSWORD" kopia maintenance set \
-        --enable-full=false \
-        --enable-quick=true \
-        --full-interval=8760h \
-        --quick-interval=24h || log_message "WARNING: Could not set maintenance policy"
-
-    # Run only quick maintenance (no pack rewriting that accesses old blobs)
-    if sudo -u ali -E KOPIA_PASSWORD="$KOPIA_PASSWORD" kopia maintenance run --safety=none; then
-        log_message "Quick maintenance completed successfully"
+    # Run maintenance: applies retention (10 daily / 4 weekly / 3 monthly) and
+    # reclaims space from expired snapshots. On Backblaze B2 (hot storage) full
+    # maintenance runs normally — no Glacier workaround needed. Runs as root,
+    # the repository's designated owner (root@redripper).
+    log_message "Running full maintenance and cleanup"
+    if KOPIA_PASSWORD="$KOPIA_PASSWORD" kopia maintenance run --full; then
+        log_message "Full maintenance completed successfully"
     else
-        log_message "WARNING: Maintenance had issues due to Glacier storage restrictions"
-        log_message "This is expected behavior when using S3 Glacier lifecycle policies"
+        log_message "WARNING: Maintenance reported issues — check the log"
     fi
 
     # Send final notification
     if [[ "$overall_success" == "true" ]]; then
         send_notification "Kopia Backup Completed" \
-            "Successfully backed up $backup_count subvolume(s). Data will transition to Glacier in 24 hours." 2
+            "Successfully backed up $backup_count subvolume(s) to Backblaze B2." 2
         log_message "Backup job completed successfully"
     else
         send_notification "Kopia Backup FAILED" \
