@@ -74,25 +74,26 @@ Config files:
 - `config/onlyoffice/local.json` — JWT secret, IP filtering (only `collaboration` container allowed)
 - `config/onlyoffice/entrypoint-override.sh` — startup script
 
-## Installed Web Apps
+## Web Apps / Extensions — intentionally NOT installed
 
-Located in `config/opencloud/apps/` (mounted over `/var/lib/opencloud/web/assets/apps`):
-- `draw-io` 2.0.0 — Diagram editor
-- `json-viewer` 2.0.0 — JSON file viewer
-- `maps` 3.0.0 — Maps integration
-- `unzip` 2.0.1 — In-browser zip extraction
+No custom web extensions are installed, and the `./config/opencloud/apps` volume mount has been
+**removed** from `docker-compose.yml`. OpenCloud uses its own built-in apps dir.
 
-Downloaded from https://github.com/opencloud-eu/web-extensions/releases (per-app tags, e.g. `draw-io-v2.0.0`).
-
-> **⚠️ Version coupling — these MUST match the OpenCloud web UI version.** They load via module
-> federation; the entrypoint must be a `js/remoteEntry-*.mjs` file. Old bundles (plain
-> `js/<app>-*.js`) fail with `cannot load application as applicationPath is not a valid module
-> federation remote entry`, and because the mount masks the container's built-in apps dir, a single
-> stale app breaks loading for **all** apps — **including the OnlyOffice editor** (symptom: office
-> files open to a loading skeleton that never finishes). After any OpenCloud (rolling) upgrade that
-> changes the web UI, re-download matching extension versions. Browsers cache aggressively and
-> OnlyOffice installs a ServiceWorker, so verify in a private window or after clearing site data for
-> both `drive.alimunee.com` and `onlyoffice.alimunee.com`. (Hit on the 7.2.0 upgrade, 2026-06-29.)
+> **⚠️ Do not re-add web extensions (draw-io / json-viewer / maps / unzip).** They load via module
+> federation and are **tightly coupled to the bundled web UI version**. The image is
+> `opencloudeu/opencloud-rolling:latest` (auto-updated by arcane), so the web UI version drifts.
+> A mismatch — too old (plain `js/<app>-*.js`) *or* too new (`remoteEntry-*.mjs` built for a newer
+> web) — fails with `cannot load application ... not a valid module federation remote entry`, and
+> because the mount masks the built-in apps dir, it breaks **all** app loading **including the
+> OnlyOffice editor** (symptom: office files open to a loading skeleton that never finishes).
+>
+> History: stale Apr-2026 bundles broke OnlyOffice on the 7.2.0 upgrade (2026-06-29). Updating to
+> the latest extension releases did NOT fix it (those target a newer web than the bundled 7.1.2),
+> so the extensions were removed entirely. If you ever want them back, pin the opencloud image to a
+> fixed tag first, then install the exact extension versions matching that release's web UI.
+>
+> Verify after any OpenCloud change in a **private window** (browsers cache the bundle and OnlyOffice
+> installs a ServiceWorker on `onlyoffice.alimunee.com`).
 
 ## Management
 

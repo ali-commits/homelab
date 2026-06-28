@@ -62,7 +62,11 @@ services:
       GATEWAY_GRPC_ADDR: 0.0.0.0:9142
     volumes:
       - ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml
-      - ./config/opencloud/apps:/var/lib/opencloud/web/assets/apps
+      # NOTE: do NOT mount custom web apps here. The web extensions
+      # (draw-io/json-viewer/maps/unzip) must exactly match the bundled web UI
+      # version; on a rolling upgrade they break module-federation loading and
+      # take the OnlyOffice editor down with them (loading skeleton forever).
+      # Left unmounted so OpenCloud uses its own built-in apps. (2026-06-29)
       - /storage/data/opencloud/config:/etc/opencloud
       - /storage/data/opencloud/data:/var/lib/opencloud
       # - clamav-socket:/var/run/clamav
