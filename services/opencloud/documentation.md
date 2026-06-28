@@ -76,11 +76,23 @@ Config files:
 
 ## Installed Web Apps
 
-Located in `config/opencloud/apps/`:
-- `draw-io` — Diagram editor
-- `json-viewer` — JSON file viewer
-- `maps` — Maps integration
-- `unzip` — In-browser zip extraction
+Located in `config/opencloud/apps/` (mounted over `/var/lib/opencloud/web/assets/apps`):
+- `draw-io` 2.0.0 — Diagram editor
+- `json-viewer` 2.0.0 — JSON file viewer
+- `maps` 3.0.0 — Maps integration
+- `unzip` 2.0.1 — In-browser zip extraction
+
+Downloaded from https://github.com/opencloud-eu/web-extensions/releases (per-app tags, e.g. `draw-io-v2.0.0`).
+
+> **⚠️ Version coupling — these MUST match the OpenCloud web UI version.** They load via module
+> federation; the entrypoint must be a `js/remoteEntry-*.mjs` file. Old bundles (plain
+> `js/<app>-*.js`) fail with `cannot load application as applicationPath is not a valid module
+> federation remote entry`, and because the mount masks the container's built-in apps dir, a single
+> stale app breaks loading for **all** apps — **including the OnlyOffice editor** (symptom: office
+> files open to a loading skeleton that never finishes). After any OpenCloud (rolling) upgrade that
+> changes the web UI, re-download matching extension versions. Browsers cache aggressively and
+> OnlyOffice installs a ServiceWorker, so verify in a private window or after clearing site data for
+> both `drive.alimunee.com` and `onlyoffice.alimunee.com`. (Hit on the 7.2.0 upgrade, 2026-06-29.)
 
 ## Management
 
