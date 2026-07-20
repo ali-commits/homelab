@@ -1,0 +1,2365 @@
+{
+  "nodes": [
+    {
+      "id": "configs_network_networkmanager_setup",
+      "label": "networkmanager-setup.sh",
+      "file_type": "code",
+      "source_file": "configs/network/networkmanager-setup.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_network_networkmanager_setup_sh__entry",
+      "label": "networkmanager-setup.sh script",
+      "file_type": "code",
+      "source_file": "configs/network/networkmanager-setup.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_scrub",
+      "label": "btrfs-scrub.sh",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_scrub_sh__entry",
+      "label": "btrfs-scrub.sh script",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_scrub_log_message",
+      "label": "log_message()",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L17",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_scrub_send_notification",
+      "label": "send_notification()",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L22",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_scrub_scrub_filesystem",
+      "label": "scrub_filesystem()",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L39",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_scrub_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L76",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_smart_monitor",
+      "label": "btrfs-smart-monitor.sh",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_smart_monitor_sh__entry",
+      "label": "btrfs-smart-monitor.sh script",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_smart_monitor_log_message",
+      "label": "log_message()",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L22",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_smart_monitor_send_notification",
+      "label": "send_notification()",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L27",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_smart_monitor_check_btrfs_health",
+      "label": "check_btrfs_health()",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L50",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_smart_monitor_check_smart_status",
+      "label": "check_smart_status()",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L88",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_smart_monitor_check_system_resources",
+      "label": "check_system_resources()",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L130",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_smart_monitor_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L156",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_btrfs_smart_monitor_cleanup",
+      "label": "cleanup()",
+      "file_type": "code",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L177",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_kopia_backup",
+      "label": "kopia-backup.sh",
+      "file_type": "code",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_kopia_backup_sh__entry",
+      "label": "kopia-backup.sh script",
+      "file_type": "code",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_kopia_backup_log_message",
+      "label": "log_message()",
+      "file_type": "code",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L53",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_kopia_backup_send_notification",
+      "label": "send_notification()",
+      "file_type": "code",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L57",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_kopia_backup_backup_subvolume",
+      "label": "backup_subvolume()",
+      "file_type": "code",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L71",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "configs_scripts_kopia_backup_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L93",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared",
+      "label": "flared",
+      "file_type": "code",
+      "source_file": "scripts/flared",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared__entry",
+      "label": "flared script",
+      "file_type": "code",
+      "source_file": "scripts/flared",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_check_env",
+      "label": "check_env()",
+      "file_type": "code",
+      "source_file": "scripts/flared",
+      "source_location": "L23",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_api",
+      "label": "api()",
+      "file_type": "code",
+      "source_file": "scripts/flared",
+      "source_location": "L57",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_dns_api",
+      "label": "dns_api()",
+      "file_type": "code",
+      "source_file": "scripts/flared",
+      "source_location": "L68",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_dns_get_record_id",
+      "label": "dns_get_record_id()",
+      "file_type": "code",
+      "source_file": "scripts/flared",
+      "source_location": "L78",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_dns_create",
+      "label": "dns_create()",
+      "file_type": "code",
+      "source_file": "scripts/flared",
+      "source_location": "L83",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_dns_delete",
+      "label": "dns_delete()",
+      "file_type": "code",
+      "source_file": "scripts/flared",
+      "source_location": "L100",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_get_config",
+      "label": "get_config()",
+      "file_type": "code",
+      "source_file": "scripts/flared",
+      "source_location": "L117",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_cmd_list",
+      "label": "cmd_list()",
+      "file_type": "code",
+      "source_file": "scripts/flared",
+      "source_location": "L122",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_cmd_add",
+      "label": "cmd_add()",
+      "file_type": "code",
+      "source_file": "scripts/flared",
+      "source_location": "L140",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_cmd_delete",
+      "label": "cmd_delete()",
+      "file_type": "code",
+      "source_file": "scripts/flared",
+      "source_location": "L174",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_usage",
+      "label": "usage()",
+      "file_type": "code",
+      "source_file": "scripts/flared",
+      "source_location": "L204",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_isolate_service_growth",
+      "label": "isolate-service-growth.sh",
+      "file_type": "code",
+      "source_file": "scripts/isolate-service-growth.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_isolate_service_growth_sh__entry",
+      "label": "isolate-service-growth.sh script",
+      "file_type": "code",
+      "source_file": "scripts/isolate-service-growth.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_isolate_service_growth_get_used",
+      "label": "get_used()",
+      "file_type": "code",
+      "source_file": "scripts/isolate-service-growth.sh",
+      "source_location": "L14",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_migrate_docker_nodatacow",
+      "label": "migrate-docker-nodatacow.sh",
+      "file_type": "code",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_migrate_docker_nodatacow_sh__entry",
+      "label": "migrate-docker-nodatacow.sh script",
+      "file_type": "code",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_migrate_docker_nodatacow_info",
+      "label": "info()",
+      "file_type": "code",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L19",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_migrate_docker_nodatacow_warn",
+      "label": "warn()",
+      "file_type": "code",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L20",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_migrate_docker_nodatacow_error",
+      "label": "error()",
+      "file_type": "code",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L21",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_migrate_docker_nodatacow_ok",
+      "label": "ok()",
+      "file_type": "code",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L22",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_revert_docker_nodatacow",
+      "label": "revert-docker-nodatacow.sh",
+      "file_type": "code",
+      "source_file": "scripts/revert-docker-nodatacow.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_revert_docker_nodatacow_sh__entry",
+      "label": "revert-docker-nodatacow.sh script",
+      "file_type": "code",
+      "source_file": "scripts/revert-docker-nodatacow.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_revert_docker_nodatacow_info",
+      "label": "info()",
+      "file_type": "code",
+      "source_file": "scripts/revert-docker-nodatacow.sh",
+      "source_location": "L15",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_revert_docker_nodatacow_warn",
+      "label": "warn()",
+      "file_type": "code",
+      "source_file": "scripts/revert-docker-nodatacow.sh",
+      "source_location": "L16",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_revert_docker_nodatacow_error",
+      "label": "error()",
+      "file_type": "code",
+      "source_file": "scripts/revert-docker-nodatacow.sh",
+      "source_location": "L17",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_revert_docker_nodatacow_ok",
+      "label": "ok()",
+      "file_type": "code",
+      "source_file": "scripts/revert-docker-nodatacow.sh",
+      "source_location": "L18",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_start_all",
+      "label": "start-all.sh",
+      "file_type": "code",
+      "source_file": "scripts/start-all.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_start_all_sh__entry",
+      "label": "start-all.sh script",
+      "file_type": "code",
+      "source_file": "scripts/start-all.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_start_all_is_excluded",
+      "label": "is_excluded()",
+      "file_type": "code",
+      "source_file": "scripts/start-all.sh",
+      "source_location": "L19",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_start_all_start",
+      "label": "start()",
+      "file_type": "code",
+      "source_file": "scripts/start-all.sh",
+      "source_location": "L27",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_storage_drain_test",
+      "label": "storage-drain-test.sh",
+      "file_type": "code",
+      "source_file": "scripts/storage-drain-test.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_storage_drain_test_sh__entry",
+      "label": "storage-drain-test.sh script",
+      "file_type": "code",
+      "source_file": "scripts/storage-drain-test.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_storage_drain_test_btrfs_used",
+      "label": "btrfs_used()",
+      "file_type": "code",
+      "source_file": "scripts/storage-drain-test.sh",
+      "source_location": "L8",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_storage_drain_test_log",
+      "label": "log()",
+      "file_type": "code",
+      "source_file": "scripts/storage-drain-test.sh",
+      "source_location": "L12",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_storage_monitor",
+      "label": "storage-monitor.sh",
+      "file_type": "code",
+      "source_file": "scripts/storage-monitor.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "scripts_storage_monitor_sh__entry",
+      "label": "storage-monitor.sh script",
+      "file_type": "code",
+      "source_file": "scripts/storage-monitor.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared",
+      "label": "flared",
+      "file_type": "code",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared__entry",
+      "label": "flared script",
+      "file_type": "code",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_check_env",
+      "label": "check_env()",
+      "file_type": "code",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L23",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_api",
+      "label": "api()",
+      "file_type": "code",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L57",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_dns_api",
+      "label": "dns_api()",
+      "file_type": "code",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L68",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_dns_get_record_id",
+      "label": "dns_get_record_id()",
+      "file_type": "code",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L78",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_dns_create",
+      "label": "dns_create()",
+      "file_type": "code",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L83",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_dns_delete",
+      "label": "dns_delete()",
+      "file_type": "code",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L100",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_get_config",
+      "label": "get_config()",
+      "file_type": "code",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L117",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_cmd_list",
+      "label": "cmd_list()",
+      "file_type": "code",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L122",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_cmd_add",
+      "label": "cmd_add()",
+      "file_type": "code",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L140",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_cmd_delete",
+      "label": "cmd_delete()",
+      "file_type": "code",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L174",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_cloudflared_flared_usage",
+      "label": "usage()",
+      "file_type": "code",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L204",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_n8n_init_data",
+      "label": "init-data.sh",
+      "file_type": "code",
+      "source_file": "services/n8n/init-data.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_n8n_init_data_sh__entry",
+      "label": "init-data.sh script",
+      "file_type": "code",
+      "source_file": "services/n8n/init-data.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_opencloud_config_onlyoffice_entrypoint_override",
+      "label": "entrypoint-override.sh",
+      "file_type": "code",
+      "source_file": "services/opencloud/config/onlyoffice/entrypoint-override.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "services_opencloud_config_onlyoffice_entrypoint_override_sh__entry",
+      "label": "entrypoint-override.sh script",
+      "file_type": "code",
+      "source_file": "services/opencloud/config/onlyoffice/entrypoint-override.sh",
+      "source_location": "L1",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "_origin": "ast"
+    }
+  ],
+  "edges": [
+    {
+      "source": "configs_network_networkmanager_setup",
+      "target": "configs_network_networkmanager_setup_sh__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/network/networkmanager-setup.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_scrub",
+      "target": "configs_scripts_btrfs_scrub_sh__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_scrub",
+      "target": "etc_default_notification_settings",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L8",
+      "weight": 1.0,
+      "context": "import",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_scrub",
+      "target": "configs_scripts_btrfs_scrub_log_message",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_scrub",
+      "target": "configs_scripts_btrfs_scrub_send_notification",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_scrub",
+      "target": "configs_scripts_btrfs_scrub_scrub_filesystem",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_scrub",
+      "target": "configs_scripts_btrfs_scrub_main",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L76",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_scrub_sh__entry",
+      "target": "configs_scripts_btrfs_scrub_main",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L88",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_scrub_send_notification",
+      "target": "configs_scripts_btrfs_scrub_log_message",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L35",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_scrub_scrub_filesystem",
+      "target": "configs_scripts_btrfs_scrub_log_message",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L43",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_scrub_scrub_filesystem",
+      "target": "configs_scripts_btrfs_scrub_send_notification",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L44",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_scrub_main",
+      "target": "configs_scripts_btrfs_scrub_log_message",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L77",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_scrub_main",
+      "target": "configs_scripts_btrfs_scrub_scrub_filesystem",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-scrub.sh",
+      "source_location": "L80",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor",
+      "target": "configs_scripts_btrfs_smart_monitor_sh__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor",
+      "target": "etc_default_notification_settings",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L9",
+      "weight": 1.0,
+      "context": "import",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor",
+      "target": "configs_scripts_btrfs_smart_monitor_log_message",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor",
+      "target": "configs_scripts_btrfs_smart_monitor_send_notification",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor",
+      "target": "configs_scripts_btrfs_smart_monitor_check_btrfs_health",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L50",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor",
+      "target": "configs_scripts_btrfs_smart_monitor_check_smart_status",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L88",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor",
+      "target": "configs_scripts_btrfs_smart_monitor_check_system_resources",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L130",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor",
+      "target": "configs_scripts_btrfs_smart_monitor_main",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L156",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor",
+      "target": "configs_scripts_btrfs_smart_monitor_cleanup",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L177",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor_sh__entry",
+      "target": "configs_scripts_btrfs_smart_monitor_main",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L185",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor_send_notification",
+      "target": "configs_scripts_btrfs_smart_monitor_log_message",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L38",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor_check_btrfs_health",
+      "target": "configs_scripts_btrfs_smart_monitor_log_message",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L54",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor_check_btrfs_health",
+      "target": "configs_scripts_btrfs_smart_monitor_send_notification",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L59",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor_check_smart_status",
+      "target": "configs_scripts_btrfs_smart_monitor_log_message",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L92",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor_check_smart_status",
+      "target": "configs_scripts_btrfs_smart_monitor_send_notification",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L103",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor_check_system_resources",
+      "target": "configs_scripts_btrfs_smart_monitor_log_message",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L131",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor_check_system_resources",
+      "target": "configs_scripts_btrfs_smart_monitor_send_notification",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L136",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor_main",
+      "target": "configs_scripts_btrfs_smart_monitor_log_message",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L157",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor_main",
+      "target": "configs_scripts_btrfs_smart_monitor_check_btrfs_health",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L160",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor_main",
+      "target": "configs_scripts_btrfs_smart_monitor_check_smart_status",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L166",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_btrfs_smart_monitor_main",
+      "target": "configs_scripts_btrfs_smart_monitor_check_system_resources",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/btrfs-smart-monitor.sh",
+      "source_location": "L171",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup",
+      "target": "configs_scripts_kopia_backup_sh__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup",
+      "target": "etc_default_kopia_backup",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L11",
+      "weight": 1.0,
+      "context": "import",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup",
+      "target": "homelab_configs_defaults_kopia_backup_env",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L15",
+      "weight": 1.0,
+      "context": "import",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup",
+      "target": "homelab_env",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L19",
+      "weight": 1.0,
+      "context": "import",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup",
+      "target": "etc_default_notification_settings",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L42",
+      "weight": 1.0,
+      "context": "import",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup",
+      "target": "homelab_configs_defaults_notification_settings",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L45",
+      "weight": 1.0,
+      "context": "import",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup",
+      "target": "configs_scripts_kopia_backup_log_message",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L53",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup",
+      "target": "configs_scripts_kopia_backup_send_notification",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L57",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup",
+      "target": "configs_scripts_kopia_backup_backup_subvolume",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L71",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup",
+      "target": "configs_scripts_kopia_backup_main",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L93",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup_sh__entry",
+      "target": "configs_scripts_kopia_backup_main",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L144",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup_send_notification",
+      "target": "configs_scripts_kopia_backup_log_message",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L66",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup_backup_subvolume",
+      "target": "configs_scripts_kopia_backup_log_message",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L75",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup_main",
+      "target": "configs_scripts_kopia_backup_log_message",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L94",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup_main",
+      "target": "configs_scripts_kopia_backup_backup_subvolume",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L109",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "configs_scripts_kopia_backup_main",
+      "target": "configs_scripts_kopia_backup_send_notification",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "configs/scripts/kopia-backup.sh",
+      "source_location": "L132",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_check_env",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "env_file",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L26",
+      "weight": 1.0,
+      "context": "import",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_api",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L57",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_dns_api",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_dns_get_record_id",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L78",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_dns_create",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L83",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_dns_delete",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L100",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_get_config",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L117",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_cmd_list",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L122",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_cmd_add",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L140",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_cmd_delete",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L174",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_usage",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L204",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared__entry",
+      "target": "services_cloudflared_flared_check_env",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L219",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared__entry",
+      "target": "services_cloudflared_flared_cmd_list",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L223",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared__entry",
+      "target": "services_cloudflared_flared_usage",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L226",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared__entry",
+      "target": "services_cloudflared_flared_cmd_add",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L227",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared__entry",
+      "target": "services_cloudflared_flared_cmd_delete",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L231",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_dns_get_record_id",
+      "target": "services_cloudflared_flared_dns_api",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L80",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_dns_create",
+      "target": "services_cloudflared_flared_dns_api",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L94",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_dns_delete",
+      "target": "services_cloudflared_flared_dns_api",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L110",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_get_config",
+      "target": "services_cloudflared_flared_api",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L118",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_cmd_list",
+      "target": "services_cloudflared_flared_api",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L127",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_cmd_add",
+      "target": "services_cloudflared_flared_api",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L165",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_cmd_add",
+      "target": "services_cloudflared_flared_dns_create",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L170",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_cmd_delete",
+      "target": "services_cloudflared_flared_api",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L195",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_cmd_delete",
+      "target": "services_cloudflared_flared_dns_delete",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/flared",
+      "source_location": "L200",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_isolate_service_growth",
+      "target": "scripts_isolate_service_growth_sh__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/isolate-service-growth.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_isolate_service_growth",
+      "target": "scripts_isolate_service_growth_get_used",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/isolate-service-growth.sh",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_migrate_docker_nodatacow",
+      "target": "scripts_migrate_docker_nodatacow_sh__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_migrate_docker_nodatacow",
+      "target": "scripts_migrate_docker_nodatacow_info",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L19",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_migrate_docker_nodatacow",
+      "target": "scripts_migrate_docker_nodatacow_warn",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_migrate_docker_nodatacow",
+      "target": "scripts_migrate_docker_nodatacow_error",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_migrate_docker_nodatacow",
+      "target": "scripts_migrate_docker_nodatacow_ok",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_migrate_docker_nodatacow_sh__entry",
+      "target": "scripts_migrate_docker_nodatacow_error",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L31",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_migrate_docker_nodatacow_sh__entry",
+      "target": "scripts_migrate_docker_nodatacow_info",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L33",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_migrate_docker_nodatacow_sh__entry",
+      "target": "scripts_migrate_docker_nodatacow_ok",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L41",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_migrate_docker_nodatacow_sh__entry",
+      "target": "scripts_migrate_docker_nodatacow_warn",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/migrate-docker-nodatacow.sh",
+      "source_location": "L52",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_revert_docker_nodatacow",
+      "target": "scripts_revert_docker_nodatacow_sh__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/revert-docker-nodatacow.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_revert_docker_nodatacow",
+      "target": "scripts_revert_docker_nodatacow_info",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/revert-docker-nodatacow.sh",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_revert_docker_nodatacow",
+      "target": "scripts_revert_docker_nodatacow_warn",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/revert-docker-nodatacow.sh",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_revert_docker_nodatacow",
+      "target": "scripts_revert_docker_nodatacow_error",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/revert-docker-nodatacow.sh",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_revert_docker_nodatacow",
+      "target": "scripts_revert_docker_nodatacow_ok",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/revert-docker-nodatacow.sh",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_revert_docker_nodatacow_sh__entry",
+      "target": "scripts_revert_docker_nodatacow_error",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/revert-docker-nodatacow.sh",
+      "source_location": "L27",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_revert_docker_nodatacow_sh__entry",
+      "target": "scripts_revert_docker_nodatacow_info",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/revert-docker-nodatacow.sh",
+      "source_location": "L34",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_revert_docker_nodatacow_sh__entry",
+      "target": "scripts_revert_docker_nodatacow_ok",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/revert-docker-nodatacow.sh",
+      "source_location": "L46",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_start_all",
+      "target": "scripts_start_all_sh__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/start-all.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_start_all",
+      "target": "scripts_start_all_is_excluded",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/start-all.sh",
+      "source_location": "L19",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_start_all",
+      "target": "scripts_start_all_start",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/start-all.sh",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_start_all_sh__entry",
+      "target": "scripts_start_all_start",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/start-all.sh",
+      "source_location": "L47",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_start_all_sh__entry",
+      "target": "scripts_start_all_is_excluded",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/start-all.sh",
+      "source_location": "L61",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_storage_drain_test",
+      "target": "scripts_storage_drain_test_sh__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/storage-drain-test.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_storage_drain_test",
+      "target": "scripts_storage_drain_test_btrfs_used",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/storage-drain-test.sh",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_storage_drain_test",
+      "target": "scripts_storage_drain_test_log",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/storage-drain-test.sh",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_storage_drain_test_sh__entry",
+      "target": "scripts_storage_drain_test_log",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/storage-drain-test.sh",
+      "source_location": "L26",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "scripts_storage_monitor",
+      "target": "scripts_storage_monitor_sh__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/storage-monitor.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_check_env",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "env_file",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L26",
+      "weight": 1.0,
+      "context": "import",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_api",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L57",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_dns_api",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_dns_get_record_id",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L78",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_dns_create",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L83",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_dns_delete",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L100",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_get_config",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L117",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_cmd_list",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L122",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_cmd_add",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L140",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_cmd_delete",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L174",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared",
+      "target": "services_cloudflared_flared_usage",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L204",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared__entry",
+      "target": "services_cloudflared_flared_check_env",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L219",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared__entry",
+      "target": "services_cloudflared_flared_cmd_list",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L223",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared__entry",
+      "target": "services_cloudflared_flared_usage",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L226",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared__entry",
+      "target": "services_cloudflared_flared_cmd_add",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L227",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared__entry",
+      "target": "services_cloudflared_flared_cmd_delete",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L231",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_dns_get_record_id",
+      "target": "services_cloudflared_flared_dns_api",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L80",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_dns_create",
+      "target": "services_cloudflared_flared_dns_api",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L94",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_dns_delete",
+      "target": "services_cloudflared_flared_dns_api",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L110",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_get_config",
+      "target": "services_cloudflared_flared_api",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L118",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_cmd_list",
+      "target": "services_cloudflared_flared_api",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L127",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_cmd_add",
+      "target": "services_cloudflared_flared_api",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L165",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_cmd_add",
+      "target": "services_cloudflared_flared_dns_create",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L170",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_cmd_delete",
+      "target": "services_cloudflared_flared_api",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L195",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_cloudflared_flared_cmd_delete",
+      "target": "services_cloudflared_flared_dns_delete",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "services/cloudflared/flared",
+      "source_location": "L200",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast"
+    },
+    {
+      "source": "services_n8n_init_data",
+      "target": "services_n8n_init_data_sh__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/n8n/init-data.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "services_opencloud_config_onlyoffice_entrypoint_override",
+      "target": "services_opencloud_config_onlyoffice_entrypoint_override_sh__entry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/opencloud/config/onlyoffice/entrypoint-override.sh",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

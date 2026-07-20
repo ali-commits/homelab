@@ -6,7 +6,7 @@
 
 | Configuration Setting | Value                         |
 | --------------------- | ----------------------------- |
-| Image                 | `linuxserver/jellyfin:latest` |
+| Image                 | `linuxserver/jellyfin:nightly` (Jellyfin 12.0, see Upgrade Notes) |
 | Hardware Acceleration | `NVIDIA GTX 1070 (NVENC)`     |
 | GPU Driver            | `NVIDIA 575.64.05, CUDA 12.9` |
 | Container Runtime     | `nvidia-container-runtime`    |
@@ -203,5 +203,25 @@ docker exec jellyfin rm -rf /config/cache/attachments/*
 
 ---
 
-**Last Updated**: August 6, 2025
-**Configuration Status**: ✅ Production Ready with GPU Acceleration
+## Upgrade Notes
+
+### 2026-06-28 — Jellyfin 12.0 (via LinuxServer `nightly`)
+
+Upgraded from 10.11.11 to Jellyfin 12.0. LinuxServer.io has **no `12`/`rc` tag** — the
+`nightly` tag tracks the 12.0 branch (`Jellyfin.Server 12.0.0.0`), staying on the same
+image family as the old `latest` tag (PUID/PGID, GPU `group_add`, and volume layout
+unchanged). Note: the official `12.0-rc1` is only on the `jellyfin/jellyfin` image, which
+uses a different config/cache layout.
+
+- **Config backup**: `/storage/data/jellyfin-config-backup-10.11.11-20260628.tar.gz` (1.5G)
+- **Rollback**: set image back to `linuxserver/jellyfin:latest`, then
+  `docker compose down && docker compose up -d`. If the DB was migrated and won't load,
+  restore the backup tarball over `/storage/data/jellyfin` first.
+- DB migration ran cleanly in ~13s on this library; GPU/NVENC confirmed working (FFmpeg 8.1.1, CUDA).
+- Harmless startup `ERR`: a stale custom plugin repo (`jellyfin-ani-sync`) returns 404 — no plugins are installed; remove the repo in Dashboard → Plugins → Repositories to silence it.
+- **TODO**: switch back to a pinned stable tag once Jellyfin **12.0 stable** ships.
+
+---
+
+**Last Updated**: June 28, 2026
+**Configuration Status**: ✅ Production Ready with GPU Acceleration (Jellyfin 12.0)

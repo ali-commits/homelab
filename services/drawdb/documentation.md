@@ -159,7 +159,7 @@ Recommend users to:
 ### Configuration Backup
 ```bash
 # Backup service configuration
-cp docker-compose.yml docker-compose.yml.backup
+cp compose.yml compose.yml.backup
 cp Dockerfile Dockerfile.backup
 cp nginx.conf nginx.conf.backup
 cp documentation.md documentation.md.backup

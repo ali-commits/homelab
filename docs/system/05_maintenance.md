@@ -103,7 +103,7 @@ docker stats --no-stream
 
 # Update containers (Arcane handles this automatically)
 # Manual update if needed:
-# cd /HOMELAB/services && find . -name "docker-compose.yml" -execdir docker-compose pull \;
+# cd /HOMELAB/services && find . -name "compose.yml" -execdir docker-compose pull \;
 ```
 
 ## Performance Optimization

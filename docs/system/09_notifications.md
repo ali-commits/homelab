@@ -95,7 +95,7 @@ NTFY_DEFAULT_PASS="pass123"
 ```
 
 ### Docker Compose
-**File**: `/HOMELAB/services/ntfy/docker-compose.yml`
+**File**: `/HOMELAB/services/ntfy/compose.yml`
 ```yaml
 
 services:
@@ -337,7 +337,7 @@ send_notification "System Update" "System updated successfully" "maintenance" 2
 
 #### Watchtower Integration
 ```yaml
-# docker-compose.yml for Watchtower
+# compose.yml for Watchtower
 environment:
   - WATCHTOWER_NOTIFICATIONS=shoutrrr
   - WATCHTOWER_NOTIFICATION_URL=ntfy://admin:pass123@localhost:8888/watchtower

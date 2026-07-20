@@ -54,7 +54,7 @@ echo ""
 # Everything else alphabetically
 for dir in "$SERVICES_DIR"/*/; do
     name=$(basename "$dir")
-    [ -f "$dir/docker-compose.yml" ] || continue
+    [ -f "$dir/compose.yml" ] || continue
     case "$name" in
         traefik|postfix|cloudflared|adguard) continue ;;
     esac

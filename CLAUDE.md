@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Layout
 
-- `services/<name>/` — Each service has its own directory with `docker-compose.yml`, `documentation.md`, and optionally `.env`
+- `services/<name>/` — Each service has its own directory with `compose.yml`, `documentation.md`, and optionally `.env`
 - `services/.env.global` — Shared environment variables across services
 - `configs/` — System-level configuration (network, security, snapper, systemd timers, Docker daemon)
 - `scripts/` — Operational scripts (`start-all.sh`, `flared`, storage monitors)
@@ -25,7 +25,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Single service operations (always cd into service dir first)
 cd /HOMELAB/services/<name> && docker compose up -d
 cd /HOMELAB/services/<name> && docker compose down && docker compose up -d
-docker compose -f /HOMELAB/services/<name>/docker-compose.yml logs -f
+docker compose -f /HOMELAB/services/<name>/compose.yml logs -f
 
 # Container status
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Health}}"
@@ -83,7 +83,7 @@ Tailscale VPN (redripper.taila7b279.ts.net) ---------> Services
 
 ## Working with Services
 
-Each service follows the same pattern: `services/<name>/docker-compose.yml` defines the stack. Credentials live in per-service `.env` files (gitignored). When adding or modifying a service:
+Each service follows the same pattern: `services/<name>/compose.yml` defines the stack. Credentials live in per-service `.env` files (gitignored). When adding or modifying a service:
 
 - Attach to the `proxy` network if it needs Traefik routing
 - Use Traefik labels for routing, SSL, and middleware (OIDC, Sablier, etc.)
@@ -94,3 +94,13 @@ Each service follows the same pattern: `services/<name>/docker-compose.yml` defi
 ## Commit Style
 
 Short lowercase messages describing the change: `fix SSO for android app`, `remove mail network`, `update docs`.
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).

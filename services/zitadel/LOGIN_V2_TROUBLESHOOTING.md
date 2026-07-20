@@ -57,7 +57,7 @@ environment:
 
 ### Configuration Files
 
-#### Working docker-compose.yml (Login v2 disabled)
+#### Working compose.yml (Login v2 disabled)
 ```yaml
 services:
   zitadel:

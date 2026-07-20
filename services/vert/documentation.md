@@ -162,7 +162,7 @@ deploy:
 4. **Memory Issues**:
    ```bash
    # Increase memory limits if needed
-   # Edit docker-compose.yml memory limits
+   # Edit compose.yml memory limits
    docker compose down && docker compose up -d
 
    # Monitor memory usage
@@ -215,7 +215,7 @@ sudo tar -czf vert-$(date +%Y%m%d).tar.gz -C services vert/
 sudo tar -xzf vert-YYYYMMDD.tar.gz -C services/
 
 # Restartrvice
-docker compose -f services/vert/docker-compose.yml restart
+docker compose -f services/vert/compose.yml restart
 ```
 
 ### No Data Backup Required

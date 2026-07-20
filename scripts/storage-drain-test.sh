@@ -16,7 +16,7 @@ log() {
 # Build ordered list: services with running containers first, sorted by name
 SERVICES=()
 for dir in "$SERVICES_DIR"/*/; do
-    [ -f "$dir/docker-compose.yml" ] || continue
+    [ -f "$dir/compose.yml" ] || continue
     name=$(basename "$dir")
     # Check if any container from this service is running
     running=$(cd "$dir" && docker compose ps -q 2>/dev/null | wc -l)

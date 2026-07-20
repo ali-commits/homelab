@@ -6,7 +6,7 @@ This document provides details for the AFFiNE service deployment using Docker Co
 
 ## Docker Compose Configuration
 
-The AFFiNE service is defined in `services/AFFiNE/docker-compose.yml`. It includes the following services:
+The AFFiNE service is defined in `services/AFFiNE/compose.yml`. It includes the following services:
 
 - `affine`: The main AFFiNE GraphQL server.
 - `affine_migration`: A job to perform database migrations for AFFiNE.

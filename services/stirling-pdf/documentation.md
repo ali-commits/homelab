@@ -126,7 +126,7 @@ Find your API key in: Account Settings → API Key
 3. **Memory Issues with Large Files**:
    ```bash
    docker stats stirling-pdf
-   # Increase limit in docker-compose.yml deploy.resources.limits.memory
+   # Increase limit in compose.yml deploy.resources.limits.memory
    ```
 
 4. **File Upload Issues**:

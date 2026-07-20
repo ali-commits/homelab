@@ -14,7 +14,7 @@
 
 ## 📁 **Configuration Files**
 
-### **docker-compose.yml** - Container Configuration
+### **compose.yml** - Container Configuration
 
 ```yaml
 services:

@@ -10,7 +10,7 @@ Day-to-day operational procedures, maintenance tasks, and emergency procedures f
 1. **Preparation**
    ```bash
    cd /HOMELAB/services/[service-name]
-   cat docker-compose.yml
+   cat compose.yml
    cat .env
    ```
 
@@ -36,8 +36,8 @@ Day-to-day operational procedures, maintenance tasks, and emergency procedures f
 
 4. **DNS Configuration Verification**
    ```bash
-   # Verify DNS configuration in docker-compose.yml
-   grep -A2 "dns:" docker-compose.yml
+   # Verify DNS configuration in compose.yml
+   grep -A2 "dns:" compose.yml
    # Should show:
    #   dns:
    #     - 8.8.8.8
@@ -127,14 +127,14 @@ tar -czf "$BACKUP_DIR/app-data-$(date +%Y%m%d).tar.gz" -C /storage/data .
 SERVICE="immich"  # Example service
 
 # Stop service
-docker compose -f services/$SERVICE/docker-compose.yml down
+docker compose -f services/$SERVICE/compose.yml down
 
 # Restore database
 gunzip -c /storage/backups/databases/YYYYMMDD/${SERVICE}-YYYYMMDD.sql.gz | \
 docker exec -i ${SERVICE}-db psql -U ${SERVICE} ${SERVICE}
 
 # Start service
-docker compose -f services/$SERVICE/docker-compose.yml up -d
+docker compose -f services/$SERVICE/compose.yml up -d
 ```
 
 #### Emergency Recovery
@@ -144,7 +144,7 @@ docker compose -f services/$SERVICE/docker-compose.yml up -d
 
 # Stop all services
 cd /HOMELAB/services
-find . -name "docker-compose.yml" -execdir docker-compose down \;
+find . -name "compose.yml" -execdir docker-compose down \;
 
 # Restore from latest backup
 LATEST_BACKUP=$(ls -t /storage/backups/configs/ | head -1)
@@ -155,13 +155,13 @@ tar -xzf "/storage/backups/configs/$LATEST_BACKUP/app-data-*.tar.gz" -C /storage
 sudo chown -R 1000:1000 /storage/data/
 
 # Restart core services first
-docker compose -f traefik/docker-compose.yml up -d
-docker compose -f zitadel/docker-compose.yml up -d
-docker compose -f postfix/docker-compose.yml up -d
+docker compose -f traefik/compose.yml up -d
+docker compose -f zitadel/compose.yml up -d
+docker compose -f postfix/compose.yml up -d
 
 # Wait and restart others
 sleep 30
-find . -name "docker-compose.yml" -not -path "./traefik/*" -not -path "./zitadel/*" -not -path "./postfix/*" -execdir docker-compose up -d
+find . -name "compose.yml" -not -path "./traefik/*" -not -path "./zitadel/*" -not -path "./postfix/*" -execdir docker-compose up -d
 ```
 
 ## Maintenance Tasks
@@ -223,8 +223,8 @@ curl -f https://${SERVICE}.alimunee.com/
 # Emergency service restart
 SERVICE="traefik"  # Critical service
 
-docker compose -f /HOMELAB/services/$SERVICE/docker-compose.yml down
-docker compose -f /HOMELAB/services/$SERVICE/docker-compose.yml up -d
+docker compose -f /HOMELAB/services/$SERVICE/compose.yml down
+docker compose -f /HOMELAB/services/$SERVICE/compose.yml up -d
 
 # Verify recovery
 sleep 10

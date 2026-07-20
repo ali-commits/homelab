@@ -26,7 +26,7 @@
 
 2. Deploy Traefik:
    ```bash
-   docker compose -f services/traefik/docker-compose.yml up -d
+   docker compose -f services/traefik/compose.yml up -d
    ```
 
 ## Usage

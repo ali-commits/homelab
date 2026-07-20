@@ -44,7 +44,7 @@ echo ""
 # ── Step 1: Stop all services ──────────────────────────────────────────────────
 info "Step 1/7 — Stopping all services..."
 for dir in "$SERVICES_DIR"/*/; do
-    [ -f "$dir/docker-compose.yml" ] || continue
+    [ -f "$dir/compose.yml" ] || continue
     name=$(basename "$dir")
     cd "$dir"
     if docker compose ps -q 2>/dev/null | grep -q .; then
@@ -109,14 +109,14 @@ info "Starting services..."
 # Infrastructure first
 for svc in "${INFRA_SERVICES[@]}"; do
     dir="$SERVICES_DIR/$svc"
-    [ -f "$dir/docker-compose.yml" ] || continue
+    [ -f "$dir/compose.yml" ] || continue
     echo "  Starting $svc..."
     cd "$dir" && docker compose up -d --quiet-pull 2>/dev/null
 done
 
 # Everything else
 for dir in "$SERVICES_DIR"/*/; do
-    [ -f "$dir/docker-compose.yml" ] || continue
+    [ -f "$dir/compose.yml" ] || continue
     name=$(basename "$dir")
     [[ " ${INFRA_SERVICES[*]} " == *" $name "* ]] && continue
     echo "  Starting $name..."

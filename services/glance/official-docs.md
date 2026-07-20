@@ -109,7 +109,7 @@ token: ${secret:github_token}
 
 Alternatively, you can load the contents of a file who's path is provided by an environment variable:
 
-`docker-compose.yml`
+`compose.yml`
 ```yaml
 services:
   glance:
@@ -2177,7 +2177,7 @@ Alternatively, you can also define the values within your `glance.yml` via the `
 For services with multiple containers you can specify a `glance.id` on the "main" container and `glance.parent` on each "child" container:
 
 <details>
-<summary>View <code>docker-compose.yml</code></summary>
+<summary>View <code>compose.yml</code></summary>
 <br>
 
 ```yaml

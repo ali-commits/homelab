@@ -166,7 +166,7 @@ sudo chown -R 999:999 /storage/n8n/db
 # Monitor resource usage
 docker stats n8n n8n-postgres
 
-# Add memory limits to docker-compose.yml if needed
+# Add memory limits to compose.yml if needed
 ```
 
 ### Performance Optimization

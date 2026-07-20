@@ -26,7 +26,7 @@ echo ""
 # Stop all services first
 echo "▶ Stopping all services..."
 for dir in "$SERVICES_DIR"/*/; do
-    [ -f "$dir/docker-compose.yml" ] || continue
+    [ -f "$dir/compose.yml" ] || continue
     (cd "$dir" && docker compose down --remove-orphans 2>/dev/null)
 done
 docker container prune -f 2>/dev/null > /dev/null

@@ -318,7 +318,7 @@ docker inspect outline | grep traefik
 The PostgreSQL instance is configured with basic settings. For better performance with large datasets:
 
 ```bash
-# Add to outline-db environment in docker-compose.yml
+# Add to outline-db environment in compose.yml
 command: >
   postgres
   -c shared_buffers=256MB
@@ -329,7 +329,7 @@ command: >
 
 ### Redis Configuration
 
-Redis is configured with persistence (RDB snapshots every 60 seconds). Adjust in `docker-compose.yml` if needed:
+Redis is configured with persistence (RDB snapshots every 60 seconds). Adjust in `compose.yml` if needed:
 
 ```yaml
 command: redis-server --save 300 10 --maxmemory 512mb --maxmemory-policy allkeys-lru

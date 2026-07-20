@@ -118,24 +118,24 @@ docker image prune -a
 ```bash
 # Emergency service restart
 SERVICE="traefik"  # or any critical service
-docker compose -f /HOMELAB/services/$SERVICE/docker-compose.yml down
-docker compose -f /HOMELAB/services/$SERVICE/docker-compose.yml up -d
+docker compose -f /HOMELAB/services/$SERVICE/compose.yml down
+docker compose -f /HOMELAB/services/$SERVICE/compose.yml up -d
 ```
 
 ### Complete Infrastructure Recovery
 ```bash
 # Stop all services
 cd /HOMELAB/services
-find . -name "docker-compose.yml" -execdir docker-compose down \;
+find . -name "compose.yml" -execdir docker-compose down \;
 
 # Start core services first
-docker compose -f traefik/docker-compose.yml up -d
-docker compose -f zitadel/docker-compose.yml up -d
-docker compose -f postfix/docker-compose.yml up -d
+docker compose -f traefik/compose.yml up -d
+docker compose -f zitadel/compose.yml up -d
+docker compose -f postfix/compose.yml up -d
 
 # Wait and start others
 sleep 30
-find . -name "docker-compose.yml" -not -path "./traefik/*" -not -path "./zitadel/*" -not -path "./postfix/*" -execdir docker-compose up -d \;
+find . -name "compose.yml" -not -path "./traefik/*" -not -path "./zitadel/*" -not -path "./postfix/*" -execdir docker-compose up -d \;
 ```
 
 ---

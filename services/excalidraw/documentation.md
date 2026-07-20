@@ -123,7 +123,7 @@ Recommend users to:
 ### Configuration Backup
 ```bash
 # Backup docker-compose configuration
-cp docker-compose.yml docker-compose.yml.backup
+cp compose.yml compose.yml.backup
 cp documentation.md documentation.md.backup
 ```
 

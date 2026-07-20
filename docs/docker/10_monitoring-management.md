@@ -16,7 +16,7 @@ Services for system monitoring, container management, infrastructure oversight, 
 
 ### Management Platforms
 - **Arcane** - Modern Docker management UI ([📖](../../services/arcane/documentation.md))
-- **Sablier** - Wake-on-demand scaling for low-traffic services ([📖](../../services/sablier/docker-compose.yml))
+- **Sablier** - Wake-on-demand scaling for low-traffic services ([📖](../../services/sablier/compose.yml))
 
 ## Secrets Management
 

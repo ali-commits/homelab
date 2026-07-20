@@ -175,7 +175,7 @@ docker compose logs paperless-gpt | grep -i process
 ### Data to Backup
 - **Prompts**: `/storage/data/paperless-gpt/prompts/` - Custom prompt configurations
 - **Enhanced PDFs**: `/storage/data/paperless-gpt/pdf/` - Locally saved enhanced PDFs
-- **Configuration**: `.env` file and `docker-compose.yml`
+- **Configuration**: `.env` file and `compose.yml`
 
 ### Backup Commands
 ```bash
@@ -183,7 +183,7 @@ docker compose logs paperless-gpt | grep -i process
 tar -czf paperless-gpt-backup-$(date +%Y%m%d).tar.gz \
   /storage/data/paperless-gpt/prompts/ \
   services/paperless-gpt/.env \
-  services/paperless-gpt/docker-compose.yml
+  services/paperless-gpt/compose.yml
 
 # Backup enhanced PDFs (if CREATE_LOCAL_PDF is enabled)
 tar -czf paperless-gpt-pdfs-$(date +%Y%m%d).tar.gz \

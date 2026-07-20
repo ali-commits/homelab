@@ -225,7 +225,7 @@ mkdir -p /storage/backups/beszel/$(date +%Y%m%d)
 cp -r /storage/data/beszel/ /storage/backups/beszel/$(date +%Y%m%d)/
 
 # Backup docker-compose configuration
-cp docker-compose.yml .env /storage/backups/beszel/$(date +%Y%m%d)/
+cp compose.yml .env /storage/backups/beszel/$(date +%Y%m%d)/
 ```
 
 ### Restore Procedure
@@ -238,7 +238,7 @@ docker compose down
 cp -r /storage/backups/beszel/YYYYMMDD/beszel/ /storage/data/
 
 # Restore configuration
-cp /storage/backups/beszel/YYYYMMDD/docker-compose.yml .
+cp /storage/backups/beszel/YYYYMMDD/compose.yml .
 cp /storage/backups/beszel/YYYYMMDD/.env .
 
 # Start services

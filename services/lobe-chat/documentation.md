@@ -270,7 +270,7 @@ docker exec lobe_chat env | grep -E "(ZITADEL|AUTH)"
 **Solutions**:
 ```bash
 # Ensure using pgvector image
-grep "image.*postgres" docker-compose.yml
+grep "image.*postgres" compose.yml
 # Should show: pgvector/pgvector:pg16
 
 # Check vector extension installation

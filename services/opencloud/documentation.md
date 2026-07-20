@@ -77,7 +77,7 @@ Config files:
 ## Web Apps / Extensions — intentionally NOT installed
 
 No custom web extensions are installed, and the `./config/opencloud/apps` volume mount has been
-**removed** from `docker-compose.yml`. OpenCloud uses its own built-in apps dir.
+**removed** from `compose.yml`. OpenCloud uses its own built-in apps dir.
 
 > **⚠️ Do not re-add web extensions (draw-io / json-viewer / maps / unzip).** They load via module
 > federation and are **tightly coupled to the bundled web UI version**. The image is

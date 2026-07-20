@@ -1,6 +1,6 @@
 services:
   jellyfin:
-    image: linuxserver/jellyfin:latest
+    image: linuxserver/jellyfin:nightly # v12 (rollback: linuxserver/jellyfin:latest = 10.11.11)
     container_name: jellyfin
     restart: unless-stopped
     environment:

@@ -67,7 +67,7 @@ All groups are defined in `config.yml`. Session duration is set per-service via 
     - my-service-db   # include all containers that must wake together
 ```
 
-**2. Add labels to the service's `docker-compose.yml`:**
+**2. Add labels to the service's `compose.yml`:**
 ```yaml
 labels:
   - traefik.http.middlewares.my-service-sablier.plugin.sablier.sablierUrl=http://sablier:10000
