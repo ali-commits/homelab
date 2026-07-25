@@ -1,26 +1,93 @@
 # Vaultwarden
 
+**Status**: deployed and in use since 2026-07-25 · image pinned to `1.37.0` ·
+signups closed after the initial account was created.
+
 ## Purpose
 Vaultwarden is a lightweight, self-hosted alternative to Bitwarden that provides a Rust-based implementation of the Bitwarden server API. It is compatible with all Bitwarden clients (web, mobile, desktop, browser extensions) and offers a resource-efficient solution for personal and family password management with end-to-end encryption.
 
+> **Scope: passwords, not machine secrets.** Vaultwarden implements Bitwarden's
+> *Password Manager* API only. **Bitwarden Secrets Manager is not implemented**
+> and upstream has declined to add it — it is a separately licensed product
+> requiring proprietary web-vault code plus machine accounts and RBAC that
+> Vaultwarden does not model. `bws`, access tokens, service accounts and the
+> Secrets Manager SDKs will not work here. Use
+> [Infisical](../infisical/documentation.md) (`secrets.alimunee.com`) for machine
+> secrets. See [docs/docker/04_authentication.md](../../docs/docker/04_authentication.md)
+> for the full split.
+
+> **The image is pinned on purpose.** This service holds every credential, so an
+> upgrade should be a decision rather than a side effect of a pull. 1.37.0 also
+> carries nine security advisories and is the minimum version supporting
+> Bitwarden clients 2026.7.0+ — running older risks confusing client-side
+> connection and certificate errors. Re-pin deliberately when upgrading.
+
 ## Configuration
 
-| Variable          | Description                                    | Default                 | Required |
+| Variable          | Description                                    | Value in use            | Required |
 | ----------------- | ---------------------------------------------- | ----------------------- | -------- |
-| ADMIN_TOKEN       | Admin panel access token                       | -                       | Yes      |
-| SIGNUPS_ALLOWED   | Allow new user registrations                   | true                    | No       |
+| ADMIN_TOKEN       | Admin panel token — **Argon2 PHC hash**        | `$argon2id$...`         | Yes      |
+| SIGNUPS_ALLOWED   | Allow new user registrations                   | false (after setup)     | No       |
 | SIGNUPS_VERIFY    | Require email verification for signups         | true                    | No       |
-| SMTP_HOST         | SMTP server hostname                           | postfix                 | Yes      |
-| SMTP_FROM         | Email sender address                            | vaultwarden@alimunee.com| Yes      |
-| SMTP_FROM_NAME    | Email sender display name                       | Vaultwarden             | No       |
-| SMTP_PORT         | SMTP server port                                | 25                      | Yes      |
-| SMTP_SECURITY     | SMTP security method (starttls, force_tls, none)| starttls                | Yes      |
-| SMTP_USERNAME     | SMTP authentication username                   | -                       | No       |
-| SMTP_PASSWORD     | SMTP authentication password                   | -                       | No       |
+| IP_HEADER         | Header carrying the real client IP             | CF-Connecting-IP        | No       |
+| IP_HEADER_TRUSTED_PROXIES | Which proxies may set that header       | local                   | No       |
+| ENABLE_WEBSOCKET  | Live sync notifications (main port since 1.30) | true                    | No       |
+| SMTP_HOST         | SMTP relay hostname                            | postfix_relay           | Yes      |
+| SMTP_FROM         | Email sender address                           | vaultwarden@alimunee.com| Yes      |
+| SMTP_FROM_NAME    | Email sender display name                      | Vaultwarden             | No       |
+| SMTP_PORT         | SMTP relay port                                | 25                      | Yes      |
+| SMTP_SECURITY     | SMTP security method                           | off                     | Yes      |
+| SMTP_USERNAME     | SMTP auth username                             | *(empty)*               | No       |
+| SMTP_PASSWORD     | SMTP auth password                             | *(empty)*               | No       |
+
+> **SMTP must be port 25 with `SMTP_SECURITY=off`.** `postfix_relay` listens on
+> **25 only** — its compose publishes `587:587` to the host, but nothing serves
+> that port inside the container, so `SMTP_PORT=587` fails to connect and blocks
+> registration whenever `SIGNUPS_VERIFY=true`. Postfix accepts unauthenticated
+> mail from private ranges (`SMTP_NETWORKS`) and handles TLS itself on the
+> upstream hop to Brevo.
+
+> **`SMTP_USERNAME` / `SMTP_PASSWORD` must be absent, not empty.** Leaving them
+> declared but blank makes Vaultwarden treat credentials as supplied and
+> negotiate AUTH; Postfix advertises no AUTH mechanism, and registration fails
+> with:
+>
+> ```
+> SMTP client error: internal client error: No compatible authentication mechanism was found
+> ```
+>
+> The message points at authentication mechanisms, which invites tinkering with
+> `SMTP_SECURITY` or TLS — but the fix is to send no credentials at all. Delete
+> both lines from `.env` rather than emptying them, and do not re-declare them in
+> the compose `environment:` block. Confirm with:
+>
+> ```bash
+> docker exec vaultwarden printenv SMTP_USERNAME   # must exit non-zero
+> ```
+>
+> To check whether the relay offers AUTH at all, look for an `AUTH` line in the
+> EHLO response — this deployment has none, which is expected and correct:
+>
+> ```bash
+> docker exec vaultwarden curl -sS --url smtp://postfix_relay:25 \
+>   --mail-from vaultwarden@alimunee.com --mail-rcpt postmaster@alimunee.com \
+>   -T /dev/null -v 2>&1 | grep '^< 250'
+> ```
+
+> **`ADMIN_TOKEN` must be `$`-escaped in `.env`.** Compose interpolates the
+> project `.env`, so an Argon2 PHC string is read as variable references and
+> arrives blank. Write every `$` as `$$` in `.env`; the container receives the
+> correct single-`$` value. Verify with
+> `docker exec vaultwarden printenv ADMIN_TOKEN`. For the same reason
+> `ADMIN_TOKEN` is **not** re-declared as `${ADMIN_TOKEN}` in the compose
+> `environment:` block — it is supplied by `env_file` directly.
 
 ### Ports
-- **80**: Web interface (HTTPS via Traefik)
-- **3012**: WebSocket notifications (internal)
+- **80**: Web interface and WebSocket notifications (HTTPS terminated upstream)
+
+> There is no port 3012. The standalone WebSocket listener was folded into the
+> main port in Vaultwarden 1.30; a Traefik router pointing at 3012 targets a port
+> nothing is listening on and breaks live sync.
 
 ### Domains
 - **External**: https://vaultwarden.alimunee.com
@@ -34,22 +101,65 @@ Vaultwarden is a lightweight, self-hosted alternative to Bitwarden that provides
 
 ## Setup
 
-### 1. Generate Admin Token
+### 1. Generate the Admin Token
+
+Vaultwarden wants an Argon2id PHC hash, not a plaintext secret — with plaintext
+it logs a warning on every start. You still type the *original* secret at
+`/admin`; only the stored form is hashed.
+
+`vaultwarden hash` needs a TTY and fails when piped, so generate it with
+`argon2` using Vaultwarden's "bitwarden" preset (m=65540, t=3, p=4):
 
 ```bash
-# Generate secure admin token
-openssl rand -base64 32
-
-# Update .env file with generated token
+SECRET='<the admin password you want to type at /admin>'
+docker run --rm -i alpine:3.20 sh -c '
+  apk add --no-cache argon2 openssl >/dev/null 2>&1
+  read -r pw
+  printf "%s" "$pw" | argon2 "$(openssl rand -base64 32)" -e -id -k 65540 -t 3 -p 4
+' <<<"$SECRET"
 ```
 
-### 2. Configure SMTP (Optional but Recommended)
+Put the result in `.env` with every `$` doubled (see the escaping note above),
+then confirm the container received it intact:
 
-The service is pre-configured to use the Postfix SMTP relay. If you need custom SMTP settings:
+```bash
+docker exec vaultwarden printenv ADMIN_TOKEN   # expect a single-$ PHC string
+docker logs vaultwarden | grep -i "plain text" # expect no output
+```
 
-1. Update `.env` file with your SMTP credentials
-2. Set `SMTP_SECURITY` to match your provider (starttls, force_tls, or none)
-3. If authentication is required, set `SMTP_USERNAME` and `SMTP_PASSWORD`
+### 2. Configure SMTP
+
+Pre-configured against the `postfix_relay` container on the `proxy` network.
+Use **port 25** with **`SMTP_SECURITY=off`** and empty credentials — see the
+warning above for why 587/starttls silently fails here.
+
+Verify the relay is actually reachable before relying on registration email:
+
+```bash
+docker exec vaultwarden curl -sS --url smtp://postfix_relay:25 \
+  --mail-from vaultwarden@alimunee.com --mail-rcpt postmaster@alimunee.com \
+  -T /dev/null -v 2>&1 | grep -E '^< (220|250)'
+```
+
+A `220 mail.alimunee.com ESMTP Postfix` banner means the path works.
+
+For an end-to-end test that exercises Vaultwarden's own SMTP client — the thing
+that actually fails during registration — use the admin test endpoint and then
+read the relay log, which is where delivery is either confirmed or explained:
+
+```bash
+CJ=$(mktemp)
+curl -sS -o /dev/null -c "$CJ" -X POST https://vaultwarden.alimunee.com/admin \
+  -H 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "token=<admin token>"
+curl -sS -b "$CJ" -X POST https://vaultwarden.alimunee.com/admin/test/smtp \
+  -H 'Content-Type: application/json' -d '{"email":"you@example.com"}'
+rm -f "$CJ"
+
+docker logs postfix_relay --tail 20 | grep -E 'from=|to=|status='
+```
+
+`status=sent (250 ...)` confirms the whole chain. An empty response body from the
+test endpoint with HTTP 200 means success; errors come back as a message string.
 
 ### 3. Deploy the Service
 
@@ -67,13 +177,29 @@ docker compose up -d
 3. **Access admin panel**: 
    - Navigate to https://vaultwarden.alimunee.com/admin
    - Use the `ADMIN_TOKEN` from your `.env` file
-4. **Disable signups** (recommended after initial setup):
+4. **Disable signups** — do this immediately after creating your account. The
+   vault is publicly reachable, so until it is closed anyone who finds the URL
+   can register on it.
+
    ```bash
-   # Update .env file
-   SIGNUPS_ALLOWED=false
-   
-   # Restart service
-   docker compose restart vaultwarden
+   sed -i 's/^SIGNUPS_ALLOWED=.*/SIGNUPS_ALLOWED=false/' .env
+   docker compose up -d --force-recreate
+   ```
+
+   > Use `up -d --force-recreate`, **not** `docker compose restart`. `restart`
+   > reuses the existing container with its original environment and silently
+   > ignores `.env` changes — you would believe signups were closed while they
+   > stayed open.
+
+   Verify by asserting the behaviour rather than trusting the setting. A closed
+   instance answers `400`:
+
+   ```bash
+   docker exec vaultwarden printenv SIGNUPS_ALLOWED     # expect: false
+   curl -sS -o /dev/null -w '%{http_code}\n' -X POST \
+     https://vaultwarden.alimunee.com/identity/accounts/register \
+     -H 'Content-Type: application/json' \
+     -d '{"email":"probe@example.com","masterPasswordHash":"x","key":"x","kdf":0,"kdfIterations":600000}'
    ```
 
 ### 5. Configure Clients
@@ -246,8 +372,8 @@ curl -f http://localhost/ -H "Host: vaultwarden.alimunee.com"
 # Verify environment variables
 docker exec vaultwarden env | grep -E "(DOMAIN|SMTP|ADMIN)"
 
-# Check WebSocket endpoint
-docker exec vaultwarden netstat -tlnp | grep 3012
+# Confirm the admin token reached the container as an intact PHC hash
+docker exec vaultwarden printenv ADMIN_TOKEN
 
 # View admin token (from .env)
 grep ADMIN_TOKEN .env

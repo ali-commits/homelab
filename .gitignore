@@ -4,6 +4,12 @@ ignore/
 .vscode/
 *.code-workspace
 .env
+# Backups and variants of .env hold the same secrets as .env itself; the bare
+# `.env` rule does not match .env.bak / .env.local / .env.save and they would
+# otherwise be committed to a public repository.
+.env.*
+!.env.example
+!.env.template
 .pnpm
 
 # Ignore sensitive configuration files

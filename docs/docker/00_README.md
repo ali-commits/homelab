@@ -65,7 +65,7 @@
 | [**pdfcraft**](../../services/pdfcraft/compose.yml)           | [📖](../../services/pdfcraft/documentation.md)      | 80               | proxy                                               | pdfcraft.alimunee.com     | Client-side PDF toolkit (90+ tools)       |
 | [**syncthing**](../../services/syncthing/compose.yml)         | [📖](../../services/syncthing/documentation.md)     | 8384,22000,21027 | proxy                                               | sync.alimunee.com         | Decentralized file synchronization        |
 | [**traefik**](../../services/traefik/compose.yml)             | [📖](../../services/traefik/documentation.md)       | 80,443,8080      | proxy                                               | - (port 8080 dashboard)   | Reverse proxy & load balancer             |
-| [**vaultwarden**](../../services/vaultwarden/compose.yml)     | [📖](../../services/vaultwarden/documentation.md)   | 80,3012          | proxy                                               | vaultwarden.alimunee.com  | Password manager (Bitwarden-compatible)   |
+| [**vaultwarden**](../../services/vaultwarden/compose.yml)     | [📖](../../services/vaultwarden/documentation.md)   | 80               | proxy                                               | vaultwarden.alimunee.com  | Password manager (Bitwarden-compatible)   |
 | [**zitadel**](../../services/zitadel/compose.yml)             | [📖](../../services/zitadel/documentation.md)       | 8081,3001        | proxy, zitadel_internal                             | zitadel.alimunee.com      | Modern SSO & identity management          |
 
 ## Architecture Overview

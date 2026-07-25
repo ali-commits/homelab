@@ -2,9 +2,10 @@
 
 ## Overview
 
-Centralized authentication and identity management using Zitadel for SSO capabilities across homelab services.
+Centralized authentication and identity management using Zitadel for SSO across
+homelab services, plus Vaultwarden as the self-hosted credential store.
 
-## Service
+## Services
 
 ### Zitadel - Modern SSO & Identity Management
 - **Purpose**: Centralized authentication and identity management
@@ -12,6 +13,41 @@ Centralized authentication and identity management using Zitadel for SSO capabil
 - **Domain**: zitadel.alimunee.com
 - **Network**: proxy, zitadel_internal
 - **Documentation**: [📖](../../services/zitadel/documentation.md)
+
+### Vaultwarden - Password & Secret Manager
+- **Purpose**: Self-hosted Bitwarden-compatible vault; works with the official
+  Bitwarden browser, desktop and mobile clients
+- **Port**: 80
+- **Domain**: vaultwarden.alimunee.com
+- **Network**: proxy
+- **Documentation**: [📖](../../services/vaultwarden/documentation.md)
+
+> Vaultwarden is independent of Zitadel — it holds its own accounts rather than
+> authenticating through SSO. That separation is deliberate: if it delegated
+> login to Zitadel, a Zitadel outage would lock you out of the credentials needed
+> to repair Zitadel.
+
+### Credentials vs. secrets — which service to use
+
+Vaultwarden implements Bitwarden's **Password Manager** API only. It does **not**
+implement **Bitwarden Secrets Manager**, and upstream has declined to: that is a
+separately licensed product needing proprietary web-vault code plus machine
+accounts and RBAC that Vaultwarden does not model. `bws`, access tokens, service
+accounts and the Secrets Manager SDKs therefore do not work against it.
+
+Use [Infisical](../../services/infisical/documentation.md)
+(`secrets.alimunee.com`) for machine secrets instead — it provides the machine
+identities, per-environment scoping, CLI/SDK injection and audit logging that
+Secrets Manager would have.
+
+| Concern | Service |
+| ------- | ------- |
+| Human credentials — logins, TOTP, cards, secure notes | Vaultwarden |
+| Machine secrets — API keys, service tokens, `.env` injection | Infisical |
+| Break-glass — credentials needed to *repair* the homelab | Off-site (e.g. Bitwarden cloud), never only here |
+
+That last row is the important one. Anything required to bring the homelab back
+up must not live solely inside the homelab, or an outage becomes unrecoverable.
 
 ## SSO Integration
 
