@@ -73,7 +73,7 @@ The backup script also forces a `kopia maintenance run --full` at the end of eac
 | `/storage/data`   | ✅ Active | ~154 GB      | Docker service configs/DBs (incl. ~144 GB OpenCloud drive files) |
 | `/storage/Immich` | ✅ Active | ~127 GB      | Photo and video library                     |
 
-> `/storage/media` (Jellyfin library), `/storage/share`, and the rest of `/storage` are **not** backed up off-site.
+> `/storage/media` (Jellyfin library), `/storage/shared`, and the rest of `/storage` are **not** backed up off-site.
 
 ## Management Commands
 

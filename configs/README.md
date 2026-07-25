@@ -109,7 +109,7 @@ Automated monitoring and maintenance systems (see monitoring section below)
 
 | Component | Specification | Purpose |
 |-----------|---------------|---------|
-| **OS** | Fedora 42 Server | Modern server platform |
+| **OS** | Fedora 43 Server | Modern server platform |
 | **CPU** | AMD Ryzen Threadripper 2920X (12-core/24-thread) | High-performance processing |
 | **RAM** | 32GB DDR4 | Service hosting |
 | **Storage** | 1TB NVMe + 3.6TB HDD | System + Data |

@@ -73,6 +73,12 @@ services:
       - ZITADEL_API_URL=https://zitadel.alimunee.com
       - NEXT_PUBLIC_BASE_PATH=/ui/v2/login
       - ZITADEL_SERVICE_USER_TOKEN_FILE=/current-dir/login-client.pat
+      # Theme customization (see apps/login/THEME_CUSTOMIZATION.md in zitadel repo)
+      - NEXT_PUBLIC_THEME_ROUNDNESS=mid
+      - NEXT_PUBLIC_THEME_LAYOUT=top-to-bottom
+      - NEXT_PUBLIC_THEME_SPACING=regular
+      - NEXT_PUBLIC_THEME_APPEARANCE=material
+      - NEXT_PUBLIC_THEME_BACKGROUND_IMAGE=https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2400&q=70
     user: "${UID:-1000}"
     dns:
       - 8.8.8.8

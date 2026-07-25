@@ -1,8 +1,8 @@
 # Docker Infrastructure Overview
 
 ## Quick Status Dashboard
-- **Total Services**: 42 deployed and running (14 managed via Sablier wake-on-demand)
-- **Last Updated**: June 11, 2026
+- **Total Services**: 42 deployed and running (13 managed via Sablier wake-on-demand)
+- **Last Updated**: July 25, 2026
 - **Infrastructure Health**: ✅ All systems operational
 
 ## Service Categories & Quick Access
@@ -66,6 +66,7 @@
 | [**syncthing**](../services/syncthing/compose.yml)         | [📖](../services/syncthing/documentation.md)     | 8384,22000,21027 | proxy                                               | sync.alimunee.com         | Decentralized file synchronization        |
 | [**traefik**](../services/traefik/compose.yml)             | [📖](../services/traefik/documentation.md)       | 80,443,8080      | proxy                                               | - (port 8080 dashboard)   | Reverse proxy & load balancer             |
 | [**vaultwarden**](../services/vaultwarden/compose.yml)     | [📖](../services/vaultwarden/documentation.md)   | 80,3012          | proxy                                               | vaultwarden.alimunee.com  | Password manager (Bitwarden-compatible)   |
+| [**vert**](../services/vert/compose.yml)                   | [📖](../services/vert/documentation.md)          | 80               | proxy                                               | convert.alimunee.com      | Client-side file format conversion (WASM) |
 | [**zitadel**](../services/zitadel/compose.yml)             | [📖](../services/zitadel/documentation.md)       | 8081,3001        | proxy, zitadel_internal                             | zitadel.alimunee.com      | Modern SSO & identity management          |
 
 ## Architecture Overview

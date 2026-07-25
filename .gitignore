@@ -12,3 +12,6 @@ configs/defaults/*
 calligraphy-compare*
 .github
 
+# graphify knowledge-graph output (regenerate with: graphify extract .)
+graphify-out/
+

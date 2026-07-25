@@ -95,4 +95,4 @@ journalctl -u NetworkManager -f
 - IPv6 is configured for auto (SLAAC) alongside manual IPv4
 
 ---
-*Updated: August 5, 2025 for Fedora 42 homelab system*
+*Written: August 5, 2025 (Fedora 42) · still current on Fedora 43 as of July 25, 2026*

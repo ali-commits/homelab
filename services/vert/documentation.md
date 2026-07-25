@@ -1,7 +1,7 @@
 # VERT
 
 ## Purpose
-VERT is a self-hosted filn service that provides client-side file format conversion with privacy-focused processing. It uses WebAssembly to convert files the user's browser, supporting 250+ formats including documents, images, audio, and video without uploading files to any server.
+VERT is a self-hosted file conversion service that provides client-side file format conversion with privacy-focused processing. It uses WebAssembly to convert files in the user's browser, supporting 250+ formats including documents, images, audio, and video without uploading files to any server.
 
 ## Configuration
 

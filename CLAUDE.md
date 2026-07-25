@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**RedRipper** is a single-node homelab running 39+ containerized services on Fedora Server with Docker Compose. The host is an AMD Threadripper 2920X / 32GB RAM / GTX 1070 with dual-tier Btrfs storage (1TB NVMe + 3.6TB HDD). Static IP: `192.168.1.2`.
+**RedRipper** is a single-node homelab running 42 containerized services on Fedora 43 Server with Docker Compose. The host is an AMD Threadripper 2920X / 32GB RAM / GTX 1070 with dual-tier Btrfs storage (1TB NVMe + 3.6TB HDD). Static IP: `192.168.1.2`.
 
 ## Repository Layout
 
@@ -65,10 +65,10 @@ Tailscale VPN (redripper.taila7b279.ts.net) ---------> Services
 ### Startup Order (`start-all.sh`)
 1. Infrastructure first: traefik, postfix, cloudflared, adguard
 2. All remaining services alphabetically
-3. Sablier-managed services are then stopped for wake-on-demand (affine, chartdb, drawdb, excalidraw, glance, it-tools, linkwarden, lobe-chat, outline, paperless-gpt, paperless-ngx, stirling-pdf)
+3. Sablier-managed services are then stopped for wake-on-demand (affine, chartdb, drawdb, excalidraw, glance, it-tools, linkwarden, lobe-chat, outline, paperless-gpt, paperless-ngx, pdfcraft, stirling-pdf)
 
 ### Key Infrastructure Services
-- **Traefik v3.6** — Reverse proxy with Let's Encrypt SSL, Sablier plugin for wake-on-demand
+- **Traefik v3.7** — Reverse proxy with Let's Encrypt SSL, Sablier plugin for wake-on-demand
 - **Zitadel** — SSO/OIDC identity provider
 - **Cloudflared** — Zero-trust tunnel (no port forwarding)
 - **AdGuard Home** — DNS filtering (ports 53, 3333, 8989)
@@ -78,7 +78,7 @@ Tailscale VPN (redripper.taila7b279.ts.net) ---------> Services
 
 ### Storage Layout
 - **NVMe (1TB)**: `/` (root, snapper), `/storage/data` (snapper), `/var/lib/docker`
-- **HDD (3.6TB)**: `/storage/media`, `/storage/Immich` (snapper), `/storage/share` (snapper)
+- **HDD (3.6TB)**: `/storage/media`, `/storage/Immich` (snapper), `/storage/shared` (snapper)
 - **Backups**: Snapper snapshots (hourly/daily) + Kopia daily to Backblaze B2 (S3-compatible API)
 
 ## Working with Services

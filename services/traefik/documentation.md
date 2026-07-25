@@ -6,7 +6,7 @@
 
 | Variable  | Description            | Default            | Required |
 | --------- | ---------------------- | ------------------ | -------- |
-| Version   | Traefik version        | v3.5               | Yes      |
+| Version   | Traefik version        | 3.7                | Yes      |
 | Dashboard | Web UI access          | Port 8080          | No       |
 | TLS       | Certificate management | Let's Encrypt ACME | Yes      |
 | Networks  | Docker networks        | proxy              | Yes      |
