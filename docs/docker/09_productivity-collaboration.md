@@ -15,6 +15,7 @@ Work-focused services for productivity, document management, collaboration, and 
 
 ### Document Processing
 - **Paperless-ngx** - Document management with OCR ([📖](../../services/paperless-ngx/documentation.md))
+- **PDFCraft** - Web-based PDF tool collection ([📖](../../services/pdfcraft/documentation.md))
 - **Stirling PDF** - PDF manipulation & processing tools ([📖](../../services/stirling-pdf/documentation.md))
 - **Vert.sh** - WebAssembly file converter supporting 250+ formats ([📖](../../services/vert/documentation.md))
 
@@ -22,6 +23,7 @@ Work-focused services for productivity, document management, collaboration, and 
 
 ### Information Organization
 - **AFFiNE** - Knowledge base (Notion alternative) ([📖](../../services/affine/documentation.md))
+- **Outline** - Team knowledge base & wiki ([📖](../../services/outline/documentation.md))
 - **Linkwarden** - Bookmark & link manager ([📖](../../services/linkwarden/documentation.md))
 
 ## Office & Collaboration

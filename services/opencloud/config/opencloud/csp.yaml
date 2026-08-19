@@ -7,6 +7,8 @@ directives:
     - "https://raw.githubusercontent.com/opencloud-eu/awesome-apps/"
     - "https://update.opencloud.eu/"
     - "${OC_OIDC_ISSUER}"
+    - "https://${ONLYOFFICE_DOMAIN|onlyoffice.alimunee.com}/"
+    - "wss://${ONLYOFFICE_DOMAIN|onlyoffice.alimunee.com}/"
   default-src:
     - "'none'"
   font-src:

@@ -23,6 +23,10 @@ Foundation services providing routing, networking, DNS, and system-level functio
 - **Domain**: adguard.alimunee.com
 - **Documentation**: [📖](../../services/adguard/documentation.md)
 
+### Sablier - Middleware for Scaling Containers to Zero
+- **Purpose**: Automatic wake-on-demand scaling for idle services
+- **Documentation**: [📖](../../services/sablier/documentation.md)
+
 ## Network Architecture
 
 ### Docker Networks

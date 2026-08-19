@@ -172,7 +172,7 @@ sudo du -sh /storage/* | sort -hr
 | **Backups**     | External S3      | Protected against hardware failure     |
 
 ### Backup Recommendations
-- 🔴 **Critical**: Regular external backups required. See [backups.md](./backups.md) for the off-site S3 backup strategy.
+- 🔴 **Critical**: Regular external backups required. See [08_backups.md](./08_backups.md) for the off-site S3 backup strategy.
 - 🔴 **Important**: Test restore procedures regularly
 - 🟡 **Note**: Snapshots protect against user error, not hardware failure
 - 🟡 **Future**: Consider RAID1 for critical data when drives available
