@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**RedRipper** is a single-node homelab running 42 containerized services on Fedora 43 Server with Docker Compose. The host is an AMD Threadripper 2920X / 32GB RAM / GTX 1070 with dual-tier Btrfs storage (1TB NVMe + 3.6TB HDD). Static IP: `192.168.1.2`.
+**RedRipper** is a single-node homelab running 44 containerized services on Fedora 43 Server with Docker Compose. The host is an AMD Threadripper 2920X / 32GB RAM / GTX 1070 with dual-tier Btrfs storage (1TB NVMe + 3.6TB HDD). Static IP: `192.168.1.2`.
 
 ## Repository Layout
 
