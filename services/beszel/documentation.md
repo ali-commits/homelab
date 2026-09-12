@@ -219,13 +219,13 @@ docker compose logs -f
 
 ```bash
 # Create backup directory
-mkdir -p /storage/backups/beszel/$(date +%Y%m%d)
+mkdir -p /storage/data/beszel/dumps/$(date +%Y%m%d)
 
 # Backup hub data
-cp -r /storage/data/beszel/ /storage/backups/beszel/$(date +%Y%m%d)/
+cp -r /storage/data/beszel/ /storage/data/beszel/dumps/$(date +%Y%m%d)/
 
 # Backup docker-compose configuration
-cp compose.yml .env /storage/backups/beszel/$(date +%Y%m%d)/
+cp compose.yml .env /storage/data/beszel/dumps/$(date +%Y%m%d)/
 ```
 
 ### Restore Procedure
@@ -235,11 +235,11 @@ cp compose.yml .env /storage/backups/beszel/$(date +%Y%m%d)/
 docker compose down
 
 # Restore data
-cp -r /storage/backups/beszel/YYYYMMDD/beszel/ /storage/data/
+cp -r /storage/data/beszel/dumps/YYYYMMDD/beszel/ /storage/data/
 
 # Restore configuration
-cp /storage/backups/beszel/YYYYMMDD/compose.yml .
-cp /storage/backups/beszel/YYYYMMDD/.env .
+cp /storage/data/beszel/dumps/YYYYMMDD/compose.yml .
+cp /storage/data/beszel/dumps/YYYYMMDD/.env .
 
 # Start services
 docker compose up -d

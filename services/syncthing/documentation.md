@@ -23,7 +23,7 @@ Syncthing is a continuous file synchronization program that synchronizes files b
 
 ## Dependencies
 - **Networks**: proxy (for Traefik routing)
-- **Storage**: /storage/syncthing/ (sync data), /storage/data/syncthing/config (configuration)
+- **Storage**: `/storage/data/syncthing/` — `data/` (synced files), `config/` (configuration)
 
 ## Setup
 
@@ -63,7 +63,7 @@ Syncthing is a continuous file synchronization program that synchronizes files b
 5. Share folders as needed
 
 ### Folder Management
-- **Local Path**: Maps to /storage/syncthing/ on host
+- **Local Path**: Maps to /storage/data/syncthing/data on host
 - **Container Path**: /var/syncthing/data
 - **Permissions**: Managed by PUID/PGID (1000:1000)
 
@@ -95,7 +95,6 @@ Configure in Syncthing web UI:
 2. **Permission Problems**:
    ```bash
    # Fix ownership of sync directory
-   sudo chown -R 1000:1000 /storage/syncthing/
    sudo chown -R 1000:1000 /storage/data/syncthing/
    ```
 
@@ -143,7 +142,7 @@ docker compose restart syncthing
 
 ### Data Backup
 - Syncthing data is automatically synchronized across devices
-- Additional backup via Btrfs snapshots of /storage/syncthing/
+- Additional backup via Btrfs snapshots of /storage/data/syncthing/
 - Consider excluding large media files from sync and backup separately
 
 ### Recovery Steps

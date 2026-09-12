@@ -26,7 +26,7 @@ Paperless-ngx is a community-supported document management system that transform
 - **OCR**: Apache Tika (paperless-tika)
 - **PDF Processing**: Gotenberg (paperless-gotenberg)
 - **Networks**: proxy, paperless_internal, db_network
-- **Storage**: /storage/paperless-ngx/ (documents), /storage/data/paperless-ngx/ (app data)
+- **Storage**: `/storage/data/paperless-ngx/` — `data/`, `media/`, `consume/`, `export/`, `db/`, `redis/`
 
 ## Setup
 
@@ -51,7 +51,7 @@ Paperless-ngx is a community-supported document management system that transform
    - Set up consumption rules and workflows
 
 4. **Configure document consumption**:
-   - Place documents in `/storage/paperless-ngx/consume/`
+   - Place documents in `/storage/data/paperless-ngx/consume/`
    - Documents are automatically processed and imported
    - Use subdirectories for automatic tagging
 
@@ -62,8 +62,8 @@ Paperless-ngx is a community-supported document management system that transform
 - **Features**: Document search, tagging, OCR results, workflow management
 
 ### Document Processing
-- **Consume Directory**: `/storage/paperless-ngx/consume/`
-- **Export Directory**: `/storage/paperless-ngx/export/`
+- **Consume Directory**: `/storage/data/paperless-ngx/consume/`
+- **Export Directory**: `/storage/data/paperless-ngx/export/`
 - **Supported Formats**: PDF, images (PNG, JPG, TIFF), Office documents
 
 ### OCR and Search
@@ -98,8 +98,8 @@ Configure OIDC/SAML in Paperless settings:
 
 ### Backup Integration
 - **Database**: Included in PostgreSQL backup routines
-- **Documents**: Btrfs snapshots of /storage/paperless-ngx/
-- **Export**: Regular exports to /storage/paperless-ngx/export/
+- **Documents**: Btrfs snapshots of /storage/data/paperless-ngx/
+- **Export**: Regular exports to /storage/data/paperless-ngx/export/
 
 ## Troubleshooting
 ### Debug Commands

@@ -367,7 +367,7 @@ docker exec lobe_chat_db pg_dump -U lobe_chat -d lobe_chat > lobe_chat_backup_$(
 
 # Automated backup script
 #!/bin/bash
-BACKUP_DIR="/storage/backups/lobe-chat"
+BACKUP_DIR="/storage/data/lobe-chat/dumps"
 mkdir -p $BACKUP_DIR
 docker exec lobe_chat_db pg_dump -U lobe_chat -d lobe_chat | gzip > $BACKUP_DIR/lobe_chat_$(date +%Y%m%d_%H%M%S).sql.gz
 
@@ -386,7 +386,7 @@ find $BACKUP_DIR -name "lobe_chat_*.sql.gz" -mtime +7 -delete
 
 ```bash
 # Backup service configuration
-cp -r /storage/data/lobe-chat /storage/backups/lobe-chat-config-$(date +%Y%m%d)
+cp -r /storage/data/lobe-chat "/storage/data/lobe-chat/dumps/lobe-chat-config-$(date +%Y%m%d)"
 
 # Backup environment variables (excluding secrets)
 grep -v -E "(PASSWORD|SECRET|KEY)" services/lobe-chat/.env > lobe-chat-config.env
@@ -403,6 +403,6 @@ gunzip -c lobe_chat_backup.sql.gz | docker exec -i lobe_chat_db psql -U lobe_cha
 
 # Restore configuration
 docker compose down
-cp -r /storage/backups/lobe-chat-config-YYYYMMDD/* /storage/data/lobe-chat/
+cp -r /storage/data/lobe-chat/dumps/lobe-chat-config-YYYYMMDD/* /storage/data/lobe-chat/
 docker compose up -d
 ```

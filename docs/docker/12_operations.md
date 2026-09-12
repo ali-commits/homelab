@@ -83,31 +83,52 @@ OAUTH_CLIENT_SECRET=[from-zitadel]
 
 ## Backup & Recovery
 
+Three mechanisms cover this host, and it is worth knowing which one covers what
+before adding a fourth:
+
+- **Kopia** (`configs/scripts/kopia-backup.sh`, nightly via `kopia-backup.timer`)
+  snapshots `/storage/data` and `/storage/Immich` to Backblaze B2, retaining 10
+  daily / 4 weekly / 3 monthly. Anything written under `/storage/data` is
+  off-site the next morning.
+- **Per-service logical dumps** in `/storage/data/<service>/dumps/`. Forgejo's
+  is automated today (`configs/scripts/forgejo-dump.sh`, nightly, 7 days kept) —
+  it is the reference to copy, because a live Postgres directory is not a
+  restorable backup on its own.
+- **Snapper** btrfs snapshots in `/.snapshots/` for same-host rollback.
+
 ### Database Backups
 ```bash
 #!/bin/bash
 # Automated database backup script
-BACKUP_DIR="/storage/backups/databases/$(date +%Y%m%d)"
-mkdir -p "$BACKUP_DIR"
+# Dumps are written beside each service's own data so the nightly Kopia job
+# carries them to Backblaze B2 (see forgejo-dump.sh for the fuller version).
+STAMP=$(date +%Y%m%d)
 
 # PostgreSQL services
 POSTGRES_SERVICES="immich paperless-ngx zitadel karakeep infisical n8n affine linkwarden"
 
 for service in $POSTGRES_SERVICES; do
-    docker exec ${service}-db pg_dump -U ${service} -d ${service} > "$BACKUP_DIR/${service}-$(date +%Y%m%d).sql"
-    gzip "$BACKUP_DIR/${service}-$(date +%Y%m%d).sql"
+    BACKUP_DIR="/storage/data/${service}/dumps"
+    sudo mkdir -p "$BACKUP_DIR"
+    docker exec ${service}-db pg_dump -U ${service} -d ${service} \
+        | gzip > "$BACKUP_DIR/${service}-${STAMP}.sql.gz"
 done
 
 # MongoDB services
-docker exec komodo-mongo mongodump --db komodo --out "$BACKUP_DIR/"
-tar -czf "$BACKUP_DIR/komodo-$(date +%Y%m%d).tar.gz" -C "$BACKUP_DIR" komodo/
-rm -rf "$BACKUP_DIR/komodo/"
+sudo mkdir -p /storage/data/komodo/dumps
+docker exec komodo-mongo mongodump --archive --gzip > "/storage/data/komodo/dumps/komodo-${STAMP}.archive.gz"
 ```
 
 ### Configuration Backups
+
+Service configuration is not in `/storage` at all: `compose.yml`, the `.env`
+files and everything under `configs/` live in `/HOMELAB`, which is a git
+repository — that is the versioned copy. The tarballs below are a belt-and-braces
+archive, written under `/storage/data` so the Kopia job carries them off-site:
+
 ```bash
 #!/bin/bash
-BACKUP_DIR="/storage/backups/configs/$(date +%Y%m%d)"
+BACKUP_DIR="/storage/data/backups/configs/$(date +%Y%m%d)"
 mkdir -p "$BACKUP_DIR"
 
 # Backup service configurations
@@ -130,7 +151,7 @@ SERVICE="immich"  # Example service
 docker compose -f services/$SERVICE/compose.yml down
 
 # Restore database
-gunzip -c /storage/backups/databases/YYYYMMDD/${SERVICE}-YYYYMMDD.sql.gz | \
+gunzip -c /storage/data/${SERVICE}/dumps/${SERVICE}-YYYYMMDD.sql.gz | \
 docker exec -i ${SERVICE}-db psql -U ${SERVICE} ${SERVICE}
 
 # Start service
@@ -146,10 +167,19 @@ docker compose -f services/$SERVICE/compose.yml up -d
 cd /HOMELAB/services
 find . -name "compose.yml" -execdir docker-compose down \;
 
-# Restore from latest backup
-LATEST_BACKUP=$(ls -t /storage/backups/configs/ | head -1)
-tar -xzf "/storage/backups/configs/$LATEST_BACKUP/service-configs-*.tar.gz" -C /HOMELAB/
-tar -xzf "/storage/backups/configs/$LATEST_BACKUP/app-data-*.tar.gz" -C /storage/data/
+# Restore the data tree from the newest Kopia snapshot. The repository URL and
+# KOPIA_PASSWORD live in /etc/default/kopia-backup — the file the nightly job
+# sources — and the repository is owned by root:
+sudo -i
+source /etc/default/kopia-backup
+kopia snapshot list /storage/data          # pick the snapshot ID
+kopia snapshot restore <snapshot-id> /storage/data
+
+# Restore the configuration repo. Its off-site copy is GitHub
+# (git@github.com:ali-commits/homelab.git) — a PUBLIC repository, which is why
+# no secret may be committed to it: .env files are gitignored and compose files
+# reference ${VAR} names only.
+git clone git@github.com:ali-commits/homelab.git /HOMELAB
 
 # Fix permissions
 sudo chown -R 1000:1000 /storage/data/

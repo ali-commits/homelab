@@ -20,8 +20,8 @@ n8n is a powerful workflow automation tool that allows you to connect different 
 - **Database**: PostgreSQL 16 (internal network)
 
 ### Storage Volumes
-- **n8n Data**: `/storage/n8n/data` → `/home/node/.n8n`
-- **Database**: `/storage/n8n/db` → `/var/lib/postgresql/data`
+- **n8n Data**: `/storage/data/n8n/data` → `/home/node/.n8n`
+- **Database**: `/storage/data/n8n/db` → `/var/lib/postgresql/data`
 
 ## Dependencies
 - **Networks**: `proxy`, `db_network`, `n8n_internal`
@@ -32,9 +32,9 @@ n8n is a powerful workflow automation tool that allows you to connect different 
 
 ### 1. Create Storage Directories
 ```bash
-sudo mkdir -p /storage/n8n/{data,db}
-sudo chown -R 1000:1000 /storage/n8n/data
-sudo chown -R 999:999 /storage/n8n/db
+sudo mkdir -p /storage/data/n8n/{data,db}
+sudo chown -R 1000:1000 /storage/data/n8n/data
+sudo chown -R 999:999 /storage/data/n8n/db
 ```
 
 ### 2. Configure Environment
@@ -155,10 +155,10 @@ N8N_LOG_LEVEL=debug
 #### Permission Issues
 ```bash
 # Fix data directory permissions
-sudo chown -R 1000:1000 /storage/n8n/data
+sudo chown -R 1000:1000 /storage/data/n8n/data
 
 # Fix database directory permissions
-sudo chown -R 999:999 /storage/n8n/db
+sudo chown -R 999:999 /storage/data/n8n/db
 ```
 
 #### Memory Issues
@@ -196,7 +196,7 @@ curl -H "Authorization: Bearer YOUR_API_KEY" \
 ### Complete Backup
 ```bash
 # Backup data directory
-sudo tar -czf n8n_data_backup_$(date +%Y%m%d).tar.gz -C /storage/n8n data
+sudo tar -czf n8n_data_backup_$(date +%Y%m%d).tar.gz -C /storage/data/n8n data
 
 # Backup database
 docker exec n8n-postgres pg_dump -U n8n_admin n8n | gzip > n8n_db_backup_$(date +%Y%m%d).sql.gz
