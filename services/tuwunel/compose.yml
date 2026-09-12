@@ -1,0 +1,97 @@
+services:
+  tuwunel:
+    image: ghcr.io/matrix-construct/tuwunel:${TUWUNEL_VERSION:-latest}
+    container_name: tuwunel
+    restart: unless-stopped
+    # A first boot after an upgrade can run a database migration that must not be
+    # interrupted, and compose's default 10 s grace would kill the server midway.
+    stop_grace_period: 30m
+    env_file:
+    - .env
+    environment:
+    - TZ=Asia/Kuala_Lumpur
+    # The image defaults to a loopback bind; Traefik reaches this container over the
+    # docker network, so it has to listen on every interface.
+    - TUWUNEL_ADDRESS=0.0.0.0
+    - TUWUNEL_PORT=8008
+    - TUWUNEL_DATABASE_PATH=/var/lib/tuwunel
+    # PERMANENT. Baked into every user ID; changing it means wiping the database.
+    - TUWUNEL_SERVER_NAME=${MATRIX_SERVER_NAME}
+    # Private server for invited friends only: nothing federates, and registration
+    # is possible only with the shared token below.
+    - TUWUNEL_ALLOW_FEDERATION=false
+    - TUWUNEL_ALLOW_REGISTRATION=true
+    - TUWUNEL_REGISTRATION_TOKEN=${REGISTRATION_TOKEN}
+    # Client auto-discovery, answered for the root domain by the extra router below.
+    - TUWUNEL_WELL_KNOWN__CLIENT=https://matrix.alimunee.com
+    - TUWUNEL_WELL_KNOWN__SERVER=matrix.alimunee.com:443
+    # Attachments and video clips go to the HDD tier, which is deliberately not
+    # backed up off-site; the message database stays on the backed-up NVMe tier.
+    - TUWUNEL_STORAGE_PROVIDER__MEDIA__LOCAL__BASE_PATH=/media
+    # Conduit's default suffix was a lightning bolt, Tuwunel's is a heart. Neither
+    # belongs in a friend's display name.
+    - TUWUNEL_NEW_USER_DISPLAYNAME_SUFFIX=
+    # 50 MiB, up from the 24 MiB default, so a phone video actually sends.
+    - TUWUNEL_MAX_REQUEST_SIZE=52428800
+    # database_path is btrfs (CoW), where RocksDB's fallocate preallocation of
+    # write-ahead logs cannot reserve space and can pin far more disk than the logs
+    # hold. Tuwunel logs this warning on every boot until it is set.
+    - TUWUNEL_ROCKSDB_ALLOW_FALLOCATE=false
+    volumes:
+    - /storage/data/tuwunel/db:/var/lib/tuwunel
+    - /storage/media/tuwunel/media:/media
+    - /etc/localtime:/etc/localtime:ro
+    dns:
+    - 8.8.8.8
+    - 1.1.1.1
+    networks:
+    - proxy
+    labels:
+    - traefik.enable=true
+    - traefik.http.routers.tuwunel.rule=Host(`matrix.alimunee.com`)
+    - traefik.http.services.tuwunel.loadbalancer.server.port=8008
+    - traefik.docker.network=proxy
+    # Auto-discovery has to be answered at the ROOT domain, otherwise a client given
+    # the server name "alimunee.com" cannot find this host. Higher priority so it
+    # wins over whatever eventually claims the root domain's default router.
+    - traefik.http.routers.tuwunel-wk.rule=Host(`alimunee.com`) && PathPrefix(`/.well-known/matrix`)
+    - traefik.http.routers.tuwunel-wk.service=tuwunel
+    - traefik.http.routers.tuwunel-wk.priority=100
+    # No healthcheck block on purpose: the image ships its own (tuwunel
+    # --health-check) and contains no shell or curl to override it with.
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+
+  element-web:
+    image: vectorim/element-web:${ELEMENT_VERSION:-latest}
+    container_name: element-web
+    restart: unless-stopped
+    environment:
+    - TZ=Asia/Kuala_Lumpur
+    volumes:
+    - ./element-config.json:/app/config.json:ro
+    - /etc/localtime:/etc/localtime:ro
+    dns:
+    - 8.8.8.8
+    - 1.1.1.1
+    networks:
+    - proxy
+    labels:
+    - traefik.enable=true
+    - traefik.http.routers.element.rule=Host(`element.alimunee.com`)
+    - traefik.http.services.element.loadbalancer.server.port=80
+    - traefik.docker.network=proxy
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 64M
+
+networks:
+  proxy:
+    external: true
