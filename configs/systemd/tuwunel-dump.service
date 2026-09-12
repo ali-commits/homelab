@@ -1,0 +1,15 @@
+[Unit]
+Description=Tuwunel Database Dump Service
+After=network-online.target docker.service
+Requires=docker.service
+Wants=tuwunel-dump.timer
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/tuwunel-dump.sh
+User=root
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

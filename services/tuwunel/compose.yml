@@ -37,8 +37,23 @@ services:
     # write-ahead logs cannot reserve space and can pin far more disk than the logs
     # hold. Tuwunel logs this warning on every boot until it is set.
     - TUWUNEL_ROCKSDB_ALLOW_FALLOCATE=false
+    # Managed RocksDB online backup. Kopia already snapshots /storage/data, but
+    # copying a live RocksDB directory is not a consistent backup; this repository
+    # is. It lives under the Kopia scope so it rides to B2 with everything else.
+    # --option outranks every other config source, so the three backup settings
+    # stay together here instead of being split across environment variables.
+    command:
+    - --option
+    - 'database_backup_path="/var/lib/tuwunel-backups"'
+    - --option
+    - database_backups_to_keep=7
+    # Runs on SIGUSR2, which is what /usr/local/bin/tuwunel-dump.sh sends nightly.
+    - --option
+    - 'admin_signal_execute=["server backup-database"]'
     volumes:
     - /storage/data/tuwunel/db:/var/lib/tuwunel
+    # Backup repository only; never point this at the live database directory.
+    - /storage/data/tuwunel/dumps:/var/lib/tuwunel-backups
     - /storage/media/tuwunel/media:/media
     - /etc/localtime:/etc/localtime:ro
     dns:

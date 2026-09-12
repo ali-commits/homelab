@@ -1,0 +1,13 @@
+[Unit]
+Description=Daily Tuwunel Database Dump Timer
+Requires=tuwunel-dump.service
+
+[Timer]
+# 23:45 - deliberately just ahead of the 00:17 Kopia run, so that night's off-site
+# snapshot already carries a fresh dump instead of yesterday's. No randomisation:
+# a delay here would push the dump past the snapshot it is meant to land in.
+OnCalendar=*-*-* 23:45:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
