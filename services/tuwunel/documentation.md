@@ -282,6 +282,35 @@ rules still apply, so a muted or mentions-only room stays quiet.
   gateway signed with an Apple certificate, and a self-hosted gateway cannot be one.
   iPhone users get nothing while the app is closed; they can use Element Web.
 
+### Verified on a real device (2026-09-12)
+
+Proof rather than theory: an Android phone running Element X — the F-Droid /
+UnifiedPush build — registered this pusher, and a message from another account
+reached its **lock screen** with Element X in the background:
+
+    pushkey   https://notification.alimunee.com/upv0WAywyM1YjV?up=1
+    app_id    im.vector.app.android
+    data.url  https://notification.alimunee.com/_matrix/push/v1/notify
+    format    event_id_only
+
+The shape is worth noting: the client registers the **full** gateway path rather
+than a bare base URL, and appends `?up=1` to the push key. A bare base URL is
+delivered too (proven with a simulated pusher), so both shapes work and a failing
+push is a configuration problem, never a URL-shape problem. The one shape that
+does fail is a *topic* sitting in the path — `…/<topic>/_matrix/push/v1/notify`
+returns 404.
+
+Sound the whole pipeline out in this order, because each step hides the next:
+
+1. `sqlite3` on ntfy's cache — does an `up*` topic exist for the phone at all?
+   No topic means the distributor never registered, and nothing downstream matters.
+2. `GET /_matrix/client/v3/pushers` with the account's own token — is there a
+   pusher, and does its `data.url` point at ntfy?
+3. Send a real message and re-check the cache for that topic.
+4. **Lock the screen and repeat.** This is the step a desktop simulation cannot
+   cover: Doze is what drops a push the server delivered correctly, and it is the
+   only failure mode left once steps 1-3 pass.
+
 ### Verifying the chain without a phone
 
 ```bash
