@@ -1,0 +1,13 @@
+[Unit]
+Description=Messaging Stack Reachability Check
+After=network-online.target
+Wants=check-messaging.timer
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/check-messaging.sh
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

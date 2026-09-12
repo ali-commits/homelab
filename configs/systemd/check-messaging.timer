@@ -1,0 +1,13 @@
+[Unit]
+Description=Messaging Stack Reachability Check Timer
+Requires=check-messaging.service
+
+[Timer]
+# Frequent enough that an outage is noticed before a friend reports it, slow
+# enough to stay invisible. The script only notifies on state changes.
+OnCalendar=*:0/5:00
+AccuracySec=30s
+Persistent=false
+
+[Install]
+WantedBy=timers.target
