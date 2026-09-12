@@ -14,6 +14,8 @@ Core storage architecture using Btrfs filesystem with Docker volumes for persist
 │   ├── immich/        → Immich ML models & cache
 │   ├── arcane/        → Arcane management data
 │   ├── karakeep/      → Karakeep data & search index
+│   ├── forgejo/       → Git repositories, Postgres, runner state, dumps
+│   ├── tuwunel/       → Matrix homeserver database (media lives on /storage/media)
 │   ├── paperless-ngx/ → Paperless config & database
 │   ├── stirling-pdf/  → PDF processing config
 │   ├── kavita/        → Digital library config
@@ -67,6 +69,7 @@ Core storage architecture using Btrfs filesystem with Docker volumes for persist
 | **N8N**           | PostgreSQL            | `/storage/data/n8n/db`             |
 | **AFFiNE**        | PostgreSQL (pgvector) | `/storage/data/affine/postgres`    |
 | **Linkwarden**    | PostgreSQL            | `/storage/data/linkwarden/db`      |
+| **Forgejo**       | PostgreSQL            | `/storage/data/forgejo/db`         |
 
 ### Database Volume Configuration
 ```yaml
@@ -168,13 +171,12 @@ sudo chown -R 999:999 /storage/data/[service]/db/
 
 ### Backup Locations
 ```bash
-# Database backups
-/storage/backups/databases/YYYYMMDD/
+# Kopia snapshots /storage/data and /storage/Immich to Backblaze B2 nightly
+# (configs/scripts/kopia-backup.sh, 10 daily / 4 weekly / 3 monthly retained).
+# Per-service logical dumps sit beside their own data, so they ride that job:
+/storage/data/<service>/dumps/          # e.g. /storage/data/forgejo/dumps/
 
-# Configuration backups
-/storage/backups/configs/YYYYMMDD/
-
-# Btrfs snapshots
+# Btrfs snapshots of / and /storage
 /.snapshots/
 ```
 

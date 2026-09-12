@@ -1,8 +1,8 @@
 # Docker Infrastructure Overview
 
 ## Quick Status Dashboard
-- **Total Services**: 42 deployed and running (13 managed via Sablier wake-on-demand)
-- **Last Updated**: July 25, 2026
+- **Total Services**: 44 deployed and running (13 managed via Sablier wake-on-demand)
+- **Last Updated**: September 12, 2026
 - **Infrastructure Health**: ✅ All systems operational
 
 ## Service Categories & Quick Access
@@ -17,7 +17,7 @@
 | **Notifications & SMTP**         | 2     | ntfy, Postfix                                                            | [📖](06_notifications-smtp.md)         |
 | **Data Services**                | 10    | Immich, Karakeep, AFFiNE                                                 | [📖](07_data-services.md)              |
 | **Media & Entertainment**        | 9     | Jellyfin, *arr stack, Kavita                                             | [📖](08_media-entertainment.md)        |
-| **Productivity & Collaboration** | 12    | OpenCloud, N8N, Syncthing, Vert.sh, Excalidraw, ChartDB, DrawDB             | [📖](09_productivity-collaboration.md) |
+| **Productivity & Collaboration** | 13    | OpenCloud, N8N, Forgejo, Syncthing, Vert.sh, Excalidraw, ChartDB, DrawDB, Tuwunel | [📖](09_productivity-collaboration.md) |
 | **Monitoring & Management**      | 6     | Uptime Kuma, Beszel, Infisical, Arcane, Glance, Sablier                  | [📖](10_monitoring-management.md)      |
 
 ## Complete Service Reference
@@ -37,6 +37,7 @@
 | [**arcane**](../../services/arcane/compose.yml)               | [📖](../../services/arcane/documentation.md)        | 3552             | proxy                                               | manage.alimunee.com       | Modern Docker management UI               |
 | [**flaresolverr**](../../services/flaresolverr/compose.yml)   | [📖](../../services/flaresolverr/documentation.md)  | 8191             | proxy                                               | flaresolverr.alimunee.com | Cloudflare bypass service                 |
 | [**flood**](../../services/flood/compose.yml)                 | [📖](../../services/flood/documentation.md)         | 3000             | proxy                                               | flood.alimunee.com        | Modern qBittorrent web UI                 |
+| [**forgejo**](../../services/forgejo/compose.yml)             | [📖](../../services/forgejo/documentation.md)       | 3000,2222        | proxy, forgejo_internal                             | git.alimunee.com          | Self-hosted git forge & Actions CI        |
 | [**glance**](../../services/glance/compose.yml)               | [📖](../../services/glance/documentation.md)        | 8080             | proxy                                               | glance.alimunee.com       | System dashboard & monitoring             |
 | [**immich**](../../services/immich/compose.yml)               | [📖](../../services/immich/documentation.md)        | 2283             | proxy, immich_internal                              | photos.alimunee.com       | Photo management & AI features (GPU ML)   |
 | [**infisical**](../../services/infisical/compose.yml)         | [📖](../../services/infisical/documentation.md)     | 8080             | proxy, infisical_internal                           | secrets.alimunee.com      | Secrets & environment management          |
@@ -65,6 +66,7 @@
 | [**pdfcraft**](../../services/pdfcraft/compose.yml)           | [📖](../../services/pdfcraft/documentation.md)      | 80               | proxy                                               | pdfcraft.alimunee.com     | Client-side PDF toolkit (90+ tools)       |
 | [**syncthing**](../../services/syncthing/compose.yml)         | [📖](../../services/syncthing/documentation.md)     | 8384,22000,21027 | proxy                                               | sync.alimunee.com         | Decentralized file synchronization        |
 | [**traefik**](../../services/traefik/compose.yml)             | [📖](../../services/traefik/documentation.md)       | 80,443,8080      | proxy                                               | - (port 8080 dashboard)   | Reverse proxy & load balancer             |
+| [**tuwunel**](../../services/tuwunel/compose.yml)             | [📖](../../services/tuwunel/documentation.md)       | 8008,80 (internal) | proxy                                               | matrix.alimunee.com, element.alimunee.com | Matrix chat (Tuwunel + Element)           |
 | [**vaultwarden**](../../services/vaultwarden/compose.yml)     | [📖](../../services/vaultwarden/documentation.md)   | 80               | proxy                                               | vaultwarden.alimunee.com  | Password manager (Bitwarden-compatible)   |
 | [**zitadel**](../../services/zitadel/compose.yml)             | [📖](../../services/zitadel/documentation.md)       | 8081,3001        | proxy, zitadel_internal                             | zitadel.alimunee.com      | Modern SSO & identity management          |
 

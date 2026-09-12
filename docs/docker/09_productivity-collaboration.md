@@ -32,6 +32,14 @@ Work-focused services for productivity, document management, collaboration, and 
 
 - **OpenCloud + OnlyOffice** - Dedicated OnlyOffice instance for OpenCloud at `onlyoffice.alimunee.com` (bundled in OpenCloud stack)
 
+## Messaging & Chat
+
+### Private Matrix Chat
+- **Tuwunel + Element** - Self-hosted, end-to-end encrypted messaging for family and friends at `element.alimunee.com` ([📖](../../services/tuwunel/documentation.md))
+  - Homeserver identity is the root domain, so user IDs read `@you:alimunee.com`; the client API is at `matrix.alimunee.com` and the root domain serves the delegation files
+  - Reachable from the open internet through the Cloudflare Tunnel, for people with no Tailscale
+  - Registration is invite-token only, federation is disabled, and attachments live on `/storage/media/tuwunel/` outside the backed-up database
+
 ## Workflow Automation
 
 ### Automation Platform
@@ -41,6 +49,12 @@ Work-focused services for productivity, document management, collaboration, and 
 
 ### Developer Utilities
 - **IT-Tools** - Developer utilities & online tools ([📖](../../services/it-tools/documentation.md))
+
+### Version Control & CI
+- **Forgejo** - Self-hosted git forge (the GitHub replacement) with Forgejo Actions CI at `git.alimunee.com` ([📖](../../services/forgejo/documentation.md))
+  - Sign-in goes through Zitadel SSO; HTTPS and SSH (`:2222`) both work for push and pull
+  - New repositories default to private; the instance is reachable from the open internet
+  - Nightly logical dump to `/storage/data/forgejo/dumps/` (7 days) on top of the Kopia snapshot
 
 ## Visual Design & Diagramming
 
@@ -59,6 +73,8 @@ Work-focused services for productivity, document management, collaboration, and 
 ├── data/                   → Service configurations and databases
 │   ├── opencloud/         → OpenCloud config & user data
 │   ├── paperless-ngx/     → Document storage
+│   ├── forgejo/           → Git repositories, Postgres, runner state, dumps
+│   ├── tuwunel/           → Matrix homeserver database
 │   └── syncthing/         → Synchronized files
 └── shared/                → Cross-service shared data
 ```
