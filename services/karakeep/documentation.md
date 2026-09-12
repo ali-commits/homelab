@@ -37,7 +37,7 @@ Karakeep is a self-hosted, AI-powered bookmark manr that allows you to save link
 
 ## Dependencies
 - **Database**: PostgreSQL 16 (karakeep-db)
-- **Search**: Meilisearch v1.12.8 (karakeep-meilisearch)
+- **Search**: Meilisearch v1.53.2 (karakeep-meilisearch)
 - **AI**: Google Gemini API for automatic tagging and summarization
 - **SSO**: Zitadel OIDC provider
 - **Networks**: proxy, karakeep_internal, db_network

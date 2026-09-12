@@ -27,7 +27,6 @@ services:
       - OAUTH_PROVIDER_NAME=Zitadel
       - OAUTH_SCOPE=openid email profile
       - OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING=true
-
     volumes:
       - /storage/data/karakeep/data:/data
       - /etc/localtime:/etc/localtime:ro
@@ -45,7 +44,6 @@ services:
     depends_on:
       - karakeep-db
       - meilisearch
-
   karakeep-db:
     image: postgres:16-alpine
     container_name: karakeep-db
@@ -64,14 +62,13 @@ services:
       - karakeep_internal
       - db_network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d karakeep -U karakeep" ]
+      test: ["CMD-SHELL", "pg_isready -d karakeep -U karakeep"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
-
   meilisearch:
-    image: getmeili/meilisearch:v1.12.8
+    image: docker.io/getmeili/meilisearch:v1.53.2
     container_name: karakeep-meilisearch
     restart: unless-stopped
     environment:
@@ -82,7 +79,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - karakeep_internal
-
 networks:
   proxy:
     external: true
