@@ -160,6 +160,45 @@ Then remove the service directory and every reference from the six touchpoints
 above, and re-run the audit — it will flag a stale index row pointing at a
 directory that no longer exists.
 
+## Pitfalls that cost real time
+
+**A new tunnel hostname resolves publicly but not on the host.** `flared add` creates
+the DNS record immediately, but the host's own resolver can keep serving a cached
+NXDOMAIN for the negative-TTL window, so `dig <name> @1.1.1.1` succeeds while `curl`
+says "Could not resolve host". Check the public resolvers first, then `sudo
+resolvectl flush-caches`. Do not conclude the routing is broken — and do not "fix"
+anything in the tunnel.
+
+**Cloudflare's browser-integrity rule bans the `python-urllib` user agent** on every
+hostname in the zone, including ones deployed long ago. It answers `403` with
+`"error code: 1010"` in the body, which looks like an application rejection. Test
+APIs through the tunnel with `curl` (or any real client UA) — Element X iOS/Android
+and `curl/8.x` all pass. A 1010 from a script is never a service bug.
+
+**Do not add a curl/wget healthcheck to an image with no shell.** Check first:
+`docker image inspect <img> --format '{{.Config.Healthcheck}}'`. Rust/distroless
+images often ship their own (Tuwunel runs `tuwunel --health-check`); overriding it
+with a shell test leaves the container permanently "unhealthy" because the test
+process itself cannot start.
+
+**Check the upstream default bind address.** Servers that default to `127.0.0.1`
+are unreachable from Traefik over the docker network. Set an explicit all-interfaces
+bind in the environment (Tuwunel: `TUWUNEL_ADDRESS=0.0.0.0`) even when no host port
+is published.
+
+**Read the first boot logs for host-specific warnings and fix them, not just the
+logs.** This host is btrfs (CoW), where RocksDB's fallocate preallocation misbehaves;
+Tuwunel warns on every boot until `TUWUNEL_ROCKSDB_ALLOW_FALLOCATE=false`. A warning
+that repeats each restart is a config defect, not noise.
+
+**Verify a config option took effect by exercising the feature, not by trusting the
+log line.** Tuwunel prints "Connected to storage provider name=media" whether or not
+the custom path was honoured. Only after uploading a real file and finding it on disk
+(after setting `TUWUNEL_STORAGE_PROVIDER__MEDIA__LOCAL__BASE_PATH`, the media landed
+in `/storage/media/...` rather than inside the database directory) is the setting
+proven. Same for any "created" vs "loaded" distinction: a second boot should say
+loaded, which is how you confirm the data volume is really persistent.
+
 ## Adopting an unmanaged container
 
 Occasionally something is running from a bare `docker run` and has no directory
