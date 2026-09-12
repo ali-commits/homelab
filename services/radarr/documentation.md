@@ -2,7 +2,7 @@
 
 **Purpose**: Automated movie collection manager and downloader
 
-📖 **For notification setup, see [System Notifications Guide](/HOMELAB/docs/system/notifications.md#media-stack-notifications)**
+📖 **For notification setup, see [System Notifications Guide](/HOMELAB/docs/system/09_notifications.md#media-stack-notifications)**
 
 | Configuration Setting | Value                       |
 | --------------------- | --------------------------- |

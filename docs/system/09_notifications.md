@@ -16,8 +16,10 @@ The homelab uses [ntfy](https://ntfy.sh/) as a self-hosted notification service 
 - **Cache**: `/storage/data/ntfy/cache/`
 
 ### Authentication
-- **Default User**: `v`
-- **Default Password**: `pass123`
+- **Admin user and password**: defined in `/storage/data/ntfy/etc/server.yml`, mirrored in
+  `/etc/default/notification-settings` for scripts.
+- **Never commit them.** This repository is public, and the password quoted here in the past
+  is therefore public too — it has to be rotated, not merely deleted.
 - **Config File**: `/etc/default/notification-settings`
 
 ## Available Channels/Topics
@@ -70,6 +72,63 @@ ntfy subscribe https://notification.alimunee.com/media
 4. Topic: Choose from the available topics above
 5. Authentication: Use the admin credentials if required
 
+## Matrix Chat Notifications (UnifiedPush)
+
+Chat notifications from the self-hosted Matrix server (`matrix.alimunee.com`) ride on the
+same ntfy. ntfy fills both roles at once: it is the **UnifiedPush distributor's server**
+and it answers the **Matrix push-gateway** endpoint that clients look for on the push
+provider's own domain. No additional gateway container is needed.
+
+### The chain
+
+1. A phone runs **Element X** plus the **ntfy app**, which acts as the UnifiedPush
+   distributor: it creates its own random topic (`up` + 12 hex characters) on this ntfy and
+   keeps a connection to it.
+2. Element X asks the distributor's domain for a gateway —
+   `GET https://notification.alimunee.com/_matrix/push/v1/notify` — and ntfy answers
+   `{"unifiedpush":{"gateway":"matrix"}}`, so nothing is configured on the phone.
+3. Element X registers a *pusher* with Tuwunel: `data.url` = the ntfy base URL, `pushkey` =
+   its own topic URL.
+4. For each message that passes the recipient's push rules, Tuwunel appends the
+   spec-mandated `/_matrix/push/v1/notify` path and POSTs the payload. ntfy verifies the
+   `pushkey` starts with its configured `base-url`, then republishes to that single topic.
+5. The ntfy app wakes Element X, which fetches the event (`format: event_id_only`) and shows
+   the notification.
+
+Pushes are **per recipient device**, not broadcasts: each device holds its own topic and
+pusher, and only devices of accounts in the room are pushed to. Push rules still apply, so
+a muted or mentions-only room stays quiet.
+
+### Requirements
+
+- `base-url: "https://notification.alimunee.com"` in `/storage/data/ntfy/etc/server.yml`.
+  ntfy rejects any push whose `pushkey` does not start with this value, so a stale hostname
+  there silently discards every chat notification.
+- Public DNS and the Cloudflare tunnel for that hostname — phones are not on the tailnet.
+
+### Platform support
+
+- **Android**: works. Install Element X from **F-Droid** (`app-fdroid-*.apk`; Play Store and
+  universal builds are Google-signed and ship Firebase instead of UnifiedPush) plus the ntfy
+  app, and disable battery optimisation for the ntfy app or Android drops pushes when idle.
+- **iOS**: impossible self-hosted. Apple delivers notifications only through an Apple-signed
+  gateway, which cannot be self-hosted. iPhone users get nothing while the app is closed.
+
+### Verifying a push without a phone
+
+```bash
+# newest topics ntfy has seen — a fresh up* topic means a device registered a pusher
+sqlite3 -readonly /storage/data/ntfy/cache/cache.db \
+  "select topic, count(*), datetime(max(time),'unixepoch','localtime') from messages group by topic order by max(time) desc limit 10;"
+
+# reproduce the chain with throwaway accounts (needs the invite token in the service .env)
+bash /HOMELAB/configs/scripts/test-matrix-push.sh
+```
+
+See the [Tuwunel service documentation](../../services/tuwunel/documentation.md) for the
+homeserver side of the same path, and
+[services/ntfy/documentation.md](../../services/ntfy/documentation.md) for the gateway role.
+
 ## Priority Levels
 
 Notifications use these priority levels:
@@ -91,7 +150,7 @@ Notifications use these priority levels:
 NTFY_URL="https://notification.alimunee.com"
 NTFY_DEFAULT_TOPIC="system-alerts"
 NTFY_DEFAULT_USER="admin"
-NTFY_DEFAULT_PASS="pass123"
+NTFY_DEFAULT_PASS="<password-from-server.yml>"
 ```
 
 ### Docker Compose
@@ -147,7 +206,7 @@ curl -X POST https://notification.alimunee.com/watchtower \
 
 # Test Media notification
 curl -X POST http://localhost:8888/media \
-    -u "admin:pass123" \
+    -u "admin:<password-from-server.yml>" \
     -H "Title: Download Complete" \
     -H "Priority: 1" \
     -H "Tags: media,radarr" \
@@ -236,7 +295,7 @@ curl -X POST http://localhost:8888/test-topic \
 
 #### External Access Issues
 1. Check Traefik configuration and logs
-2. Verify DNS resolution for `ntfy.alimunee.com`
+2. Verify DNS resolution for `notification.alimunee.com`
 3. Test internal access first: `curl http://localhost:8888`
 4. Check firewall rules and port forwarding
 
@@ -276,7 +335,7 @@ send_notification() {
     local priority="${4:-3}"
 
     curl -s -X POST "http://localhost:8888/$topic" \
-        -u "admin:pass123" \
+        -u "admin:<password-from-server.yml>" \
         -H "Title: $title" \
         -H "Priority: $priority" \
         -H "Tags: homelab,custom" \
@@ -340,17 +399,17 @@ send_notification "System Update" "System updated successfully" "maintenance" 2
 # compose.yml for Watchtower
 environment:
   - WATCHTOWER_NOTIFICATIONS=shoutrrr
-  - WATCHTOWER_NOTIFICATION_URL=ntfy://admin:pass123@localhost:8888/watchtower
+  - WATCHTOWER_NOTIFICATION_URL=ntfy://admin:<password-from-server.yml>@localhost:8888/watchtower
 ```
 
 #### Media Stack Integration
 Each service can be configured with webhook URLs:
 ```bash
 # Example webhook URL for media services
-http://admin:pass123@localhost:8888/media
+http://admin:<password-from-server.yml>@localhost:8888/media
 ```
 
 ---
 
-*Last updated: 2025-06-25*
+*Last updated: 2026-09-12*
 *Service status: ✅ Operational*

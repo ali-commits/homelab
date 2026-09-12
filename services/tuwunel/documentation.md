@@ -236,6 +236,68 @@ The token is either wrong, rotated, or `TUWUNEL_ALLOW_REGISTRATION` was set to
 Expected on a self-hosted server without a gateway signed for APNs. Android
 (ntfy/UnifiedPush) is fully self-hostable; iOS is not.
 
+## Notifications
+
+Phone notifications ride on **ntfy**, which already runs here for system alerts.
+ntfy covers both halves of the chain — it is the UnifiedPush distributor's server
+*and* the Matrix push gateway — so no extra container is involved.
+
+### The chain, in order
+
+1. A phone runs **Element X** plus the **ntfy** app, which acts as the UnifiedPush
+   *distributor*. The distributor creates its own random topic on this homelab's
+   ntfy (`up` + 12 hex characters) and keeps a connection to it.
+2. Element X looks for a gateway on the distributor's own domain —
+   `GET https://notification.alimunee.com/_matrix/push/v1/notify` — and ntfy answers
+   `{"unifiedpush":{"gateway":"matrix"}}`. Nothing has to be typed into the phone.
+3. Element X registers a *pusher* with Tuwunel: `data.url` = the ntfy base URL,
+   `pushkey` = its own topic URL.
+4. For each message that passes the recipient's push rules, Tuwunel appends the
+   spec-mandated path (`/_matrix/push/v1/notify`, the default `notification_push_path`)
+   and POSTs the Matrix payload there. ntfy checks the `pushkey` starts with its
+   configured `base-url`, then republishes the payload to that single topic.
+5. The ntfy app wakes Element X, which fetches the event (`format: event_id_only`)
+   and shows the notification.
+
+Pushes are **per recipient device**, never broadcast: each device has its own topic
+and its own pusher, and only devices of accounts in that room receive anything. Push
+rules still apply, so a muted or mentions-only room stays quiet.
+
+### Server-side requirements
+
+| Requirement | Where | Why |
+| --- | --- | --- |
+| `base-url: "https://notification.alimunee.com"` | `/storage/data/ntfy/etc/server.yml` | ntfy refuses any push whose `pushkey` does not start with the configured base URL, so a stale hostname here silently discards every chat notification. |
+| Public DNS + tunnel for that hostname | Cloudflare | Phones are outside the tailnet; the whole chain is public by necessity. |
+| `notification_push_path` at its default | `services/tuwunel/compose.yml` | The path is *appended* to the registered URL, so it cannot be configured away — the option only strips a suffix a client already supplied. |
+| `push_everything = false` (default) | Tuwunel | Pushes respect each user's push rules instead of notifying on everything. |
+
+### Platform support
+
+- **Android — works.** Install Element X from **F-Droid** (`app-fdroid-*.apk`; the
+  Play Store and "universal" builds are Google-signed and ship Firebase instead of
+  UnifiedPush) plus the ntfy app, then disable battery optimisation for the ntfy app,
+  or Android silently drops pushes once the phone is idle.
+- **iOS — not possible self-hosted.** Apple only delivers notifications through a
+  gateway signed with an Apple certificate, and a self-hosted gateway cannot be one.
+  iPhone users get nothing while the app is closed; they can use Element Web.
+
+### Verifying the chain without a phone
+
+```bash
+# every topic ntfy has seen, newest first — a fresh up* topic means a device registered
+sqlite3 -readonly /storage/data/ntfy/cache/cache.db \
+  "select topic, count(*), datetime(max(time),'unixepoch','localtime') from messages group by topic order by max(time) desc limit 10;"
+
+# reproduce the whole path with two throwaway accounts, then clean up
+bash /HOMELAB/configs/scripts/test-matrix-push.sh
+```
+
+A `404` in Tuwunel's log with `retry_in_seconds` means the POST never reached ntfy;
+a `{"rejected":[...]}` in the gateway's reply means the phone's push key is stale —
+reinstalling the ntfy app issues a new topic, and Element X has to register its
+pusher again before pushes resume.
+
 ## Monitoring
 
 `check-messaging.sh` (every 5 minutes, `check-messaging.timer`) requests both
