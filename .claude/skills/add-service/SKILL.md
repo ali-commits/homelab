@@ -214,3 +214,35 @@ Write the compose file to match what is actually running, `docker compose up -d`
 to take ownership, verify the service still behaves, and only then work through
 the documentation touchpoints. Confirm with the user before recreating a
 container that holds live data.
+
+## Give the service a real backup before calling it done
+
+A live database directory is not a backup. Copying a running Postgres, SQLite or
+RocksDB directory - even with Kopia or rsync - can capture a torn state, and the
+snapshot looks fine right up until someone tries to restore it. Check whether the
+application ships its own backup machinery before inventing any:
+
+- RocksDB services (Tuwunel and most Matrix homeservers built on it) expose a
+  managed online-backup repository: `database_backup_path` +
+  `database_backups_to_keep`, driven by an admin command that can be scheduled
+  through a signal - `admin_signal_execute = ["server backup-database"]` on
+  `SIGUSR2`. No downtime, and no second process touching the live database.
+- Postgres services take `pg_dump`; Forgejo has its own dump command.
+
+Three rules that make the difference between a backup and a hopeful copy:
+
+1. Put the backup directory **inside the Kopia snapshot scope**
+   (`/storage/data/<svc>/...`), or the off-site copy will never carry it.
+2. Schedule the dump to land just **before** the Kopia run - otherwise the
+   snapshot ships yesterday's dump. `Persistent=true` on such a timer also fires
+   a catch-up run on the next boot, which is harmless but looks like a mystery
+   extra execution while you are testing.
+3. Verify three things instead of trusting an exit code: retention actually
+   prunes (run past the limit, read the count back), a restore into a **scratch
+   directory** opens the database, and the restored data contains something
+   recognisable (an account, a row count). Restoring the newest backup into
+   `/tmp` is cheap and is the only evidence the backup is worth having.
+
+Secrets have the same trap. A service `.env` usually sits in the service
+directory - gitignored *and* outside `/storage/data` - so it is in neither the
+repo nor the snapshot. Have the dump script copy it next to the dumps (mode 600).
