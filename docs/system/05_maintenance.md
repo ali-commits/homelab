@@ -54,6 +54,44 @@ sudo smartctl -H /dev/nvme0n1
 sudo smartctl -H /dev/sda
 ```
 
+### Time Synchronisation
+```bash
+# Offset, source and leap status
+chronyc tracking
+
+# Is the clock actually synchronised?
+timedatectl | sed -n '1,7p'
+
+# Source list — a '^?' entry or 'Reach 0' is a source that never answered
+chronyc sources -v
+
+# Step the clock immediately, once the source list is correct
+sudo chronyc makestep
+```
+
+**Configured in `/etc/chrony.conf`**: `pool 2.fedora.pool.ntp.org iburst` plus
+`server time.cloudflare.com iburst`. Back the file up before editing
+(`sudo cp -a /etc/chrony.conf /etc/chrony.conf.orig-$(date +%Y%m%d)`) and restart
+`chronyd` afterwards.
+
+**A configured source is not a working source.** This host once carried a single
+hardcoded NTP server that had quietly stopped answering, with no DHCP-supplied
+fallback. The clock drifted **354 seconds fast** while `chronyc` still looked
+configured, and the damage surfaced as authentication failures rather than clock
+failures: every OIDC and API token in the stack (Zitadel, Forgejo, Tuwunel,
+Element) is timestamp-validated, and Google service-account authentication failed
+outright with `invalid_grant: Invalid JWT`. Keep at least two independent sources.
+
+Verify the fix against something outside the host — `chronyc` alone can report
+healthy against a source that is itself wrong:
+
+```bash
+for h in https://www.google.com https://cloudflare.com; do
+  hdr=$(curl -sSI "$h" | grep -i '^date:' | sed 's/^[Dd]ate: //')
+  echo "$h offset=$(( $(date -u +%s) - $(date -u -d "$hdr" +%s) ))s"
+done
+```
+
 ### Btrfs Maintenance
 ```bash
 # Manual scrub (can take hours)
