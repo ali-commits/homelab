@@ -1,0 +1,15 @@
+[Unit]
+Description=Forgejo Dump Service
+After=network-online.target docker.service
+Requires=docker.service
+Wants=forgejo-dump.timer
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/forgejo-dump.sh
+User=root
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
