@@ -3,7 +3,7 @@ services:
     # Pinned deliberately. This holds every credential, so an upgrade is a
     # decision rather than a side effect of a pull. 1.37.0 carries nine security
     # advisories and is the minimum required by Bitwarden clients 2026.7.0+.
-    image: vaultwarden/server:1.37.0
+    image: docker.io/vaultwarden/server:1.37.2
     container_name: vaultwarden
     restart: unless-stopped
     env_file:
@@ -62,7 +62,6 @@ services:
           memory: 512M
         reservations:
           memory: 128M
-
 networks:
   proxy:
     external: true

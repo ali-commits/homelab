@@ -1,6 +1,6 @@
 # Vaultwarden
 
-**Status**: deployed and in use since 2026-07-25 · image pinned to `1.37.0` ·
+**Status**: deployed and in use since 2026-07-25 · image pinned to `1.37.2` ·
 signups closed after the initial account was created.
 
 ## Purpose
@@ -17,10 +17,13 @@ Vaultwarden is a lightweight, self-hosted alternative to Bitwarden that provides
 > for the full split.
 
 > **The image is pinned on purpose.** This service holds every credential, so an
-> upgrade should be a decision rather than a side effect of a pull. 1.37.0 also
-> carries nine security advisories and is the minimum version supporting
-> Bitwarden clients 2026.7.0+ — running older risks confusing client-side
-> connection and certificate errors. Re-pin deliberately when upgrading.
+> upgrade should be a decision rather than a side effect of a pull. The 1.37.0
+> release carried nine security fixes and is the minimum version supporting
+> Bitwarden clients 2026.7.0+; 1.37.2 is the current patch level and the minimum
+> for clients 2026.8.0+ — it also fixes the sendmail executable permission check
+> the SMTP relay path depends on, and logs the user email on successful logins.
+> Running older risks confusing client-side connection and certificate errors.
+> Re-pin deliberately when upgrading.
 
 ## Configuration
 
@@ -426,7 +429,7 @@ sudo tar -czf vaultwarden-complete-$(date +%Y%m%d).tar.gz \
 ```bash
 # Add to backup script (example)
 #!/bin/bash
-BACKUP_DIR="/storage/backups/vaultwarden"
+BACKUP_DIR="/storage/data/vaultwarden/dumps"
 mkdir -p "$BACKUP_DIR"
 docker exec vaultwarden sqlite3 /data/db.sqlite3 .dump | gzip > \
   "$BACKUP_DIR/vaultwarden-db-$(date +%Y%m%d).sql.gz"
@@ -467,7 +470,9 @@ docker exec vaultwarden sqlite3 /data/db.sqlite3 .dump | gzip > \
 3. **Regular Backups**: Automated database backups
 4. **Strong Admin Token**: Use cryptographically secure random token
 5. **Monitor Access**: Review admin panel logs regularly
-6. **Update Regularly**: Keep Vaultwarden image updated via Watchtower
+6. **Update Deliberately**: There is no Watchtower in this stack. Upgrading means
+   editing `image:` in `compose.yml` and re-pinning, after reading the upstream
+   release notes for client-compatibility requirements
 
 ## Use Cases
 
