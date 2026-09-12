@@ -90,10 +90,13 @@ before adding a fourth:
   snapshots `/storage/data` and `/storage/Immich` to Backblaze B2, retaining 10
   daily / 4 weekly / 3 monthly. Anything written under `/storage/data` is
   off-site the next morning.
-- **Per-service logical dumps** in `/storage/data/<service>/dumps/`. Forgejo's
-  is automated today (`configs/scripts/forgejo-dump.sh`, nightly, 7 days kept) —
-  it is the reference to copy, because a live Postgres directory is not a
-  restorable backup on its own.
+- **Per-service logical dumps** in `/storage/data/<service>/dumps/`. Two are
+  automated today: `configs/scripts/forgejo-dump.sh` and
+  `configs/scripts/tuwunel-dump.sh` (both nightly, 7 kept). They are the reference
+  to copy, because a live Postgres or RocksDB directory is not a restorable
+  backup on its own. Forgejo writes a plain `pg_dump`; Tuwunel asks the running
+  server for a managed RocksDB backup over `SIGUSR2` (`server backup-database`),
+  which stays consistent without stopping the server.
 - **Snapper** btrfs snapshots in `/.snapshots/` for same-host rollback.
 
 ### Database Backups

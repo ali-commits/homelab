@@ -23,9 +23,12 @@ Two containers, one functional unit:
 
 ### Environment Variables
 
-All configuration is environment-based; there is no `tuwunel.toml`. `[global]`
-keys map to `TUWUNEL_<KEY>`, and nested tables use a `__` split
-(`[global.well_known] server` → `TUWUNEL_WELL_KNOWN__SERVER`).
+Configuration is environment-based; there is no `tuwunel.toml`. `[global]` keys map
+to `TUWUNEL_<KEY>`, and nested tables use a `__` split
+(`[global.well_known] server` → `TUWUNEL_WELL_KNOWN__SERVER`). The backup settings
+are the exception: they are passed as `--option` flags in `compose.yml`, which
+outrank environment variables, config files and everything else — see
+[Backup](#backup).
 
 | Variable | Value | Why it is set |
 | --- | --- | --- |
@@ -82,11 +85,13 @@ No host ports are published, so neither service is exposed on the LAN directly.
 ### 1. Create Storage Directories
 
 ```bash
-sudo mkdir -p /storage/data/tuwunel/db /storage/media/tuwunel/media
+sudo mkdir -p /storage/data/tuwunel/db /storage/data/tuwunel/dumps /storage/media/tuwunel/media
 sudo chown -R 1000:1000 /storage/data/tuwunel /storage/media/tuwunel
 ```
 
-The database must stay on the backed-up tier; media deliberately does not.
+The database and the backup repository must stay on the backed-up tier; media
+deliberately does not. `dumps/` is where the managed RocksDB backups land, and it
+is created by `tuwunel-dump.sh` if missing.
 
 ### 2. Generate The Invite Token
 
@@ -231,29 +236,109 @@ The token is either wrong, rotated, or `TUWUNEL_ALLOW_REGISTRATION` was set to
 Expected on a self-hosted server without a gateway signed for APNs. Android
 (ntfy/UnifiedPush) is fully self-hostable; iOS is not.
 
+## Monitoring
+
+`check-messaging.sh` (every 5 minutes, `check-messaging.timer`) requests both
+public endpoints **through Cloudflare**, exactly as a friend's phone does, so one
+failure covers the whole path: DNS, the tunnel, TLS, Traefik, and the container.
+An endpoint only counts as healthy if it returns `200` *and* the expected body
+marker appears (`versions` for the homeserver, `Element` for the client).
+
+It notifies through ntfy (`system-alerts`) **only on a state change** — one
+message when an endpoint goes down, one when it recovers — so a weekend-long
+outage produces two notifications, not five hundred. State lives in
+`/var/lib/messaging-check/`, transitions in `/var/log/messaging-check.log`.
+
+To exercise the alert path without bothering anyone, both the destination and the
+state directory can be overridden:
+
+```bash
+STATE_DIR=/tmp/cmtest NTFY_URL=http://127.0.0.1:9999 /usr/local/bin/check-messaging.sh
+```
+
 ## Backup
 
 ### Data to Backup
 
 | Path | Contents | Backed up? |
 | --- | --- | --- |
-| `/storage/data/tuwunel/db/` | RocksDB database — accounts, rooms, message history, state, and the server's identity | Yes (Kopia → B2 `redripper`, via the `/storage/data` scope) |
-| `/storage/data/tuwunel/.env` | Server name and invite token | Yes (same scope) |
-| `/storage/data/tuwunel/.credentials` | Admin password and invite token in plain text, mode 600 — the copy to read when handing out invites; delete it once you have them stored somewhere else | Yes (same scope) |
+| `/storage/data/tuwunel/dumps/` | Managed RocksDB backup repository — the 7 most recent backups, written nightly by `tuwunel-dump.sh` | Yes (Kopia → B2 `redripper`, via the `/storage/data` scope) |
+| `/storage/data/tuwunel/db/` | Live RocksDB database — accounts, rooms, message history, state, and the server's identity | Yes, but a copy taken while the server runs is not guaranteed consistent — **restore from `dumps/` instead** |
+| `/storage/data/tuwunel/dumps/tuwunel.env` | Copy of the service `.env` (server name, invite token), mode 600, refreshed nightly | Yes |
+| `/HOMELAB/services/tuwunel/.env` | The live service env | **No** — gitignored, and `/HOMELAB` is outside the `/storage/data` scope. The copy above is the backed-up one. |
+| `/storage/data/tuwunel/.credentials` | Admin password and invite token in plain text, mode 600 — the copy to read when handing out invites; delete it once you have them stored somewhere else | Yes |
 | `/storage/media/tuwunel/media/` | Attachments, images, video | **No** — deliberately excluded to keep backups small |
 
-`/HOMELAB/services/tuwunel/` is in git; `.env` is not.
+### How the nightly backup works
+
+Kopia snapshots `/storage/data` already, but copying a live RocksDB directory is
+not a consistent backup. Tuwunel therefore runs its own managed online backup,
+which needs no downtime and is consistent by construction.
+
+`compose.yml` sets three options, as `--option` on the command line because that
+outranks both environment variables and config files:
+
+| Option | Value | Effect |
+| --- | --- | --- |
+| `database_backup_path` | `/var/lib/tuwunel-backups` | Repository path, bind-mounted from `/storage/data/tuwunel/dumps` |
+| `database_backups_to_keep` | `7` | RocksDB prunes the oldest after each successful backup |
+| `admin_signal_execute` | `["server backup-database"]` | Runs that admin command when the server receives `SIGUSR2` |
+
+`tuwunel-dump.sh` (timer at 23:45, just ahead of the 00:17 Kopia run so the same
+night's off-site snapshot carries a fresh dump) then sends `SIGUSR2`, waits for a
+new backup id under `dumps/private/`, refreshes the `.env` copy, and **fails
+loudly** if no new backup appears — a silent signal handler is exactly the failure
+this guards against. Retention was verified by pushing past the limit: the server
+logged `Done. Currently have 7 backups` and the oldest directories were pruned.
+
+The timer carries `Persistent=true`, so a boot after a missed 23:45 run triggers a
+catch-up dump. That is intentional and harmless — the backup is repeatable.
 
 ### Restore Process
 
-1. Restore `/storage/data/tuwunel/db/` from the Kopia snapshot.
-2. Recreate `.env` with the **same `MATRIX_SERVER_NAME`** — a different value
-   against a restored database produces mismatched user IDs and a broken server.
-3. `docker compose create && docker compose start` from
+Restore from the **managed repository**, not from the live directory. The
+procedure below was verified on 2026-09-12 by restoring the newest backup into a
+scratch directory: it opened with `schema version 17` and reported
+`Found 1 local user account(s): @ali:alimunee.com`.
+
+1. Stop the server, and keep a copy of the current database for rollback:
+
+   ```bash
+   cd /HOMELAB/services/tuwunel && docker compose stop tuwunel
+   sudo cp -a /storage/data/tuwunel/db /storage/data/tuwunel/db.pre-restore-$(date +%F)
+   ```
+
+2. Restore with a one-time container that uses the normal paths. `--restore-backup`
+   takes the newest backup; `--restore-backup=N` selects a specific id.
+   `--maintenance` keeps it off the network and `server shutdown` ends it.
+
+   ```bash
+   docker run --rm --network none \
+     -v /storage/data/tuwunel/db:/var/lib/tuwunel \
+     -v /storage/data/tuwunel/dumps:/var/lib/tuwunel-backups \
+     -e TUWUNEL_SERVER_NAME=alimunee.com \
+     -e TUWUNEL_DATABASE_PATH=/var/lib/tuwunel \
+     -e TUWUNEL_DATABASE_BACKUP_PATH=/var/lib/tuwunel-backups \
+     -e TUWUNEL_ROCKSDB_ALLOW_FALLOCATE=false \
+     ghcr.io/matrix-construct/tuwunel:latest \
+     --restore-backup --maintenance --execute "server shutdown"
+   ```
+
+   Tuwunel refuses this setting from config files, the environment and `-O`, so an
+   old value cannot trigger a second, destructive restore on a later boot. Success
+   looks like `Restored database backup backup_id=N` in the output.
+
+3. Restore the `.env` from the copy that rode the backup — `dumps/tuwunel.env` —
+   keeping the **same `MATRIX_SERVER_NAME`**: a different value against a restored
+   database produces mismatched user IDs and a broken server.
+
+4. `docker compose create && docker compose start` from
    `/HOMELAB/services/tuwunel/`, and confirm `server_name=` in the boot log.
-4. Restore `/storage/media/tuwunel/media/` if you have a copy — message history
+
+5. Restore `/storage/media/tuwunel/media/` if you have a copy — message history
    returns without it, but attachments show as unavailable.
-5. Re-publish the hostnames with `./scripts/flared add matrix` and
+
+6. Re-publish the hostnames with `./scripts/flared add matrix` and
    `./scripts/flared add element` if the tunnel route was lost.
 
 Members' existing sessions keep working after a restore, but E2EE history still

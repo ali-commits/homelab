@@ -114,11 +114,26 @@ curl -f https://service.alimunee.com/api/health
 curl -f https://service.alimunee.com/ping
 ```
 
+### Messaging Stack Check
+
+The Matrix stack has its own check because it is the one service friends reach
+without Tailscale, so it depends on the public path working end to end:
+`check-messaging.sh` on a 5-minute timer requests
+`https://matrix.alimunee.com/_matrix/client/versions` and
+`https://element.alimunee.com/` through Cloudflare, requiring a `200` plus a body
+marker, and notifies ntfy (`system-alerts`) only when an endpoint changes state.
+
+Uptime Kuma and Beszel remain the dashboard-facing tools (`uptime-kuma` is at
+`uptime.alimunee.com`); their monitors are configured in the UI and therefore are
+not in this repository. The reachability check above lives in git so the
+definition is reviewable alongside the service. See
+[`services/tuwunel/documentation.md`](../../services/tuwunel/documentation.md#monitoring).
+
 ### Alert Configuration
 
 #### Uptime Kuma Monitors
 - **HTTP Monitors**: 30-second intervals for web services
-- **Ping Monitors**: 60-second intervalsinfrastructure
+- **Ping Monitors**: 60-second intervals for infrastructure
 - **Port Monitors**: 120-second intervals for databases
 
 #### Alert Thresholds
